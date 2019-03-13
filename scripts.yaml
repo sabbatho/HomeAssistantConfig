@@ -1,0 +1,64 @@
+#
+  lametric_youtube:
+    sequence:
+    - delay: '00:00:03'
+    - service: notify.lametric_media_play_notify
+      data_template:
+        message: "{{ states.media_player.sovrum.attributes.media_title }}"
+    - delay: '00:00:03'
+    - service: shell_command.lametric_youtube
+#
+  lametric_twitch:
+    sequence:
+    - delay: '00:00:03'
+    - service: notify.lametric_media_play_notify
+      data_template:
+        message: "{{ states.media_player.sovrum.attributes.media_title }}"
+    - delay: '00:00:03'
+    - service: shell_command.lametric_twitch
+#
+  lametric_plex_movie:
+    sequence:
+    - delay: '00:00:03'
+    - service: notify.lametric_media_play_notify
+      data_template:
+        message: "{{ states.media_player.sovrum.attributes.media_title }}"
+    - delay: '00:00:03'
+    - service: shell_command.lametric_plex
+#
+  lametric_plex_tvshow:
+    sequence:
+    - delay: '00:00:03'
+    - service: notify.lametric_media_play_notify
+      data_template:
+        message: "{{ states.media_player.sovrum.attributes.media_series_title }} - Season: {{ states.media_player.sovrum.attributes.media_season }} - Episode: {{ states.media_player.sovrum.attributes.media_episode }}"
+    - delay: '00:00:03'
+    - service: shell_command.lametric_plex
+#
+  lametric_spotify:
+    sequence:
+    - delay: '00:00:03'
+    - service: notify.lametric_media_play_notify
+      data_template:
+        message: "{{ states.media_player.sovrum.attributes.media_artist }} - {{ states.media_player.sovrum.attributes.media_title }}"
+    - delay: '00:00:03'
+    - service: shell_command.lametric_spotify
+#
+  lametric_netflix:
+    sequence:
+    - delay: '00:00:03'
+    - service: notify.lametric_media_play_notify
+      data_template:
+        message: "{{ states.media_player.sovrum.attributes.media_content_id }}"
+    - delay: '00:00:03'
+    - service: shell_command.lametric_netflix
+#
+  lametric_unknown:
+    sequence:
+    - delay: '00:00:03'
+    - service: notify.lametric_media_play_notify
+      data_template:
+        message: "{{ states.media_player.sovrum.attributes.media_title }}"
+    - delay: '00:00:03'
+    - service: shell_command.lametric_unknown
+#

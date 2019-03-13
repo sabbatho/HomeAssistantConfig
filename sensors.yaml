@@ -1,0 +1,67 @@
+- platform: yr
+  monitored_conditions:
+  - temperature
+  - windSpeed
+  - symbol
+  - precipitation
+#
+- platform: uptime
+#
+- platform: time_date
+  display_options:
+  - 'time'
+  - 'date'
+#
+- platform: synologydsm
+  host: !secret synologydsm_host
+  username: !secret synologydsm_username
+  password: !secret synologydsm_password
+  monitored_conditions:
+  - volume_percentage_used
+  - volume_size_total
+#
+- platform: template
+  sensors:
+    smhi_wind_speed:
+      friendly_name: SMHI wind speed
+      unit_of_measurement: 'm/s'
+      value_template: "{{ ( states.weather.smhi_home.attributes.wind_speed | float * 1000 / 3600 ) | round(1) }}"
+    smhi_temperature:
+      friendly_name: SMHI temperature
+      unit_of_measurement: '°C'
+      value_template: "{{ states.weather.smhi_home.attributes.temperature }}"
+#
+- platform: filesize
+  scan_interval: 600
+  file_paths:
+  - /config/home-assistant.log
+#
+- platform: systemmonitor
+  resources:
+  - type: disk_use_percent
+    arg: /config
+  - type: load_1m
+  - type: load_5m
+  - type: load_15m
+#
+- platform: trafikverket_weatherstation
+  name: Trafikverket Rotebro
+  api_key: !secret trafikverketapikey
+  station: Rotebro
+  monitored_conditions:
+  - air_temp
+  - road_temp
+  - precipitation
+  - wind_direction_text
+  - wind_speed
+#
+- platform: command_line
+  scan_interval: 14400
+  name: HASS Current Version
+  command: python3 -c "import requests; print(requests.get('https://pypi.python.org/pypi/homeassistant/json').json()['info']['version'])"
+#
+- platform: command_line
+  scan_interval: 14400
+  name: HASS Installed version
+  command: "head -5 /config/.HA_VERSION"
+#
