@@ -1,0 +1,51 @@
+- platform: wake_on_lan
+  mac_address: !secret tvdatormac
+  name: tv_dator
+  host: !secret tvdatorn
+  turn_off:
+    service: shell_command.shutdown_tvdator
+#
+- platform: wake_on_lan
+  mac_address: !secret speldator1mac
+  name: speldator1
+  host: !secret speldator1
+  turn_off:
+    service: shell_command.shutdown_speldator1
+#
+- platform: wake_on_lan
+  mac_address: !secret speldator2mac
+  name: speldator2
+  host: !secret speldator2
+  turn_off:
+    service: shell_command.shutdown_speldator2
+#
+- platform: template
+  switches:
+    tv_starkare:
+      value_template: "{{ is_state_attr('remote.vardagsrum', 'current_activity', 'tv och stärkare') }}"
+      turn_on:
+        service: remote.turn_on
+        data:
+          entity_id: remote.vardagsrum
+          activity: 'tv och stärkare'
+      turn_off:
+        service: remote.turn_on
+        data:
+          entity_id: remote.vardagsrum
+          activity: 'PowerOff'
+#
+- platform: template
+  switches:
+    sovrumstv:
+      value_template: "{{ is_state_attr('remote.sovrum', 'current_activity', 'tv sovrum') }}"
+      turn_on:
+        service: remote.turn_on
+        data:
+          entity_id: remote.sovrum
+          activity: 'tv sovrum'
+      turn_off:
+        service: remote.turn_on
+        data:
+          entity_id: remote.sovrum
+          activity: 'PowerOff'
+#
