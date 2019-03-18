@@ -1,0 +1,185 @@
+resources:
+  - url: /local/group-card/group-card.js
+    type: js
+title: Home
+views:
+  - title: Hem
+    badges: []
+    path: default_view
+    cards:
+      - entities:
+          - sensor.time
+          - sensor.date
+          - sensor.privatephonebatt
+          - device_tracker.jimmy_huawei
+          - device_tracker.jimmy_mobil_priv
+          - sensor.privatephonecall
+          - sensor.privatephonecharge
+          - sensor.workphonebatt
+          - person.hanna
+        show_header_toggle: false
+        title: Tid & datum
+        type: entities
+      - entities:
+          - sensor.servers_temperature_2
+          - sensor.volume_used_volume_1
+          - sensor.total_size_volume_1
+          - sensor.uptime
+          - sensor.disk_use_percent_config
+          - sensor.home_assistant_log
+          - switch.accesspoint
+        show_header_toggle: false
+        title: Serverrum
+        type: entities
+      - entities:
+          - sun.sun
+          - sensor.yr_symbol
+          - sensor.trafikverket_rotebro_precipitation_type
+          - sensor.framsidan
+          - sensor.trafikverket_rotebro_air_temperature
+          - sensor.yr_temperature
+          - sensor.smhi_temperature
+          - sensor.yr_wind_speed
+          - sensor.smhi_wind_speed
+          - sensor.trafikverket_rotebro_wind_speed
+          - sensor.trafikverket_rotebro_wind_direction_text
+        show_header_toggle: false
+        title: Väder & sol
+        type: entities
+      - entity: weather.smhi_home
+        type: weather-forecast
+      - entities:
+          - switch.akvarium_dag
+          - sensor.akvarium_720
+          - sensor.akvarium_mini
+        show_header_toggle: false
+        title: Akvarium
+        type: entities
+      - entities:
+          - switch.tetris
+          - switch.vardags_eld
+          - switch.vardags_tavla
+          - sensor.vardagsrum
+          - switch.tv_starkare
+          - switch.tv_dator
+          - switch.vaxt3
+          - light.trust_e27_color_1
+        show_header_toggle: false
+        title: Vardagsrum
+        type: entities
+      - entity: media_player.tvdatorn
+        type: conditional
+        conditions:
+          - entity: media_player.tvdatorn
+            state_not: "unavailable"
+        card:
+          type: media-control
+          entity: media_player.tvdatorn
+      - entities:
+          - switch.sovrum
+          - sensor.sovrummet_temperature_2
+          - switch.flakt
+          - switch.speldator2
+          - switch.speldator1
+          - switch.sovrumstv
+          - switch.sovrum2
+          - switch.ljud_dator
+          - sensor.ljud_dator_power
+        show_header_toggle: false
+        title: Sovrum
+        type: entities
+      - entity: media_player.sovrum
+        type: media-control
+      - entities:
+          - entity: switch.hall_vitrin
+          - entity: light.osram_smart_e27_color_1
+        show_header_toggle: false
+        title: Hall
+        type: entities
+      - entities:
+          - entity: switch.vaxt2
+          - entity: sensor.kok
+          - entity: sensor.frys
+          - entity: sensor.kylskap
+        show_header_toggle: false
+        title: Kök
+        type: entities
+      - entities:
+          - switch.terrasstak
+          - sensor.terrassen_temperature_2
+        show_header_toggle: false
+        title: Terrass
+        type: entities
+      - entities:
+          - switch.kamera1
+          - switch.kamera2
+        show_header_toggle: true
+        title: Övervakning
+        type: entities
+      - entities:
+          - switch.kok_fonster
+          - light.vardags_fonster
+        show_header_toggle: true
+        title: Fönster
+        type: entities
+      - entities:
+          - switch.blomladan
+        show_header_toggle: true
+        title: Julbelysning
+        type: entities
+  - title: Temperaturhistorik
+    path: temperaturhistorik
+    panel: true
+    badges: []
+    cards:
+      - show_header_toggle: false
+        type: vertical-stack
+        cards:
+          - title: Akvarium - 14 dagar
+            type: history-graph
+            hours_to_show: 336
+            refresh_interval: 3600
+            entities:
+              - sensor.akvarium_720
+              - sensor.akvarium_mini
+          - title: Ute - 14 dagar
+            type: history-graph
+            hours_to_show: 336
+            refresh_interval: 3600
+            entities:
+              - sensor.trafikverket_rotebro_air_temperature
+              - sensor.framsidan
+              - sensor.smhi_temperature
+              - sensor.yr_temperature
+          - title: Svullo använt - 14 dagar
+            type: history-graph
+            hours_to_show: 336
+            refresh_interval: 3600
+            entities:
+              - sensor.volume_used_volume_1
+          - title: HASS SD använt - 14 dagar
+            type: history-graph
+            hours_to_show: 336
+            refresh_interval: 3600
+            entities:
+              - sensor.disk_use_percent_config
+  - title: Alla Automationer
+    path: all_automations
+    panel: true
+    badges: []
+    cards:
+      - type: custom:group-card
+        card:
+          type: entities
+          title: All automations
+          show_header_toggle: false
+        group: group.all_automations
+  - title: Länkakriv
+    path: lankarkiv
+    badges: []
+    cards:
+      - entities:
+          !include weblinks.yaml
+        show_header_toggle: false
+        title: Länkar
+        type: entities
