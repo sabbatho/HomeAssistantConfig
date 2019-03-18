@@ -20,7 +20,6 @@ history_graph: !include historygraphs.yaml
 notify: !include notifications.yaml
 rest_command: !include rest_commands.yaml
 rss_feed_template: !include rss_feed.yaml
-weblink: !include weblinks.yaml
 #
 frontend:
 #
