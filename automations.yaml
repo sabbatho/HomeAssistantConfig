@@ -3,7 +3,7 @@
   alias: Notifiering mobil ny uppdatering
   trigger:
   - platform: time_pattern
-    hours: '/2'
+    hours: '/4'
   condition:
     condition : and
     conditions:
@@ -91,10 +91,6 @@
       - wed
       - thu
       - fri
-    - condition: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state.attributes.elevation }}"
-      below: -0.5
     - condition: state
       entity_id: person.jimmy
       state: 'home'
@@ -114,10 +110,6 @@
     - condition: time
       weekday:
       - mon
-    - condition: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state.attributes.elevation }}"
-      below: -0.5
     - condition: state
       entity_id: person.hanna
       state: 'home'
@@ -389,10 +381,6 @@
     - condition: state
       entity_id: device_tracker.jimmy_huawei
       state: 'home'
-    - condition: numeric_state
-      entity_id: sun.sun
-      value_template: "{{ state.attributes.elevation }}"
-      below: 0.5
   action:
   - service: switch.turn_on
     data:
@@ -410,9 +398,6 @@
       entity_id: switch.vardags_tavla
   - service: switch.turn_off
     data:
-      entity_id: switch.vardagsrum2
-  - service: switch.turn_off
-    data:
       entity_id: switch.vaxt3
 #
 - id: 'plex_idle'
@@ -428,9 +413,6 @@
       entity_id: switch.vardags_tavla
   - service: switch.turn_on
     data:
-      entity_id: switch.vardagsrum2
-  - service: switch.turn_on
-    data:
       entity_id: switch.vaxt3
 #
 - id: 'plex_paused'
@@ -444,9 +426,6 @@
   - service: switch.turn_on
     data:
       entity_id: switch.vardags_tavla
-  - service: switch.turn_on
-    data:
-      entity_id: switch.vardagsrum2
   - service: switch.turn_on
     data:
       entity_id: switch.vaxt3
@@ -506,19 +485,10 @@
   action:
   - service: switch.turn_on
     data:
-      entity_id: switch.sovrum
-  - service: switch.turn_on
-    data:
       entity_id: switch.sovrum2
   - service: switch.turn_on
     data:
       entity_id: switch.vardags_tavla
-  - service: switch.turn_on
-    data:
-      entity_id: switch.hall_vitrin
-  - service: switch.turn_on
-    data:
-      entity_id: switch.vardagsrum2
 #
 - id: 'wakeup_day_off_always'
   alias: Går upp Ledig always
@@ -544,12 +514,18 @@
   - service: switch.turn_on
     data:
       entity_id: switch.ljud_dator
+  - service: switch.turn_on
+    data:
+      entity_id: switch.hall_vitrin
+  - service: switch.turn_on
+    data:
+      entity_id: switch.sovrum
 #
 - id: 'coming_home_always'
   alias: Kommer hem always
   trigger:
   - platform: state
-    entity_id: device_tracker.dc729bc79fef
+    entity_id: device_tracker.jimmy_mobil_priv
     to: 'home'
   condition:
   - condition: and
@@ -579,17 +555,18 @@
   - service: switch.turn_on
     data:
       entity_id: switch.vaxt3
-  - delay:
-      seconds: 1
   - service: switch.turn_on
     data:
       entity_id: switch.ljud_dator
+  - service: switch.turn_on
+    data:
+      entity_id: switch.hall_vitrin
 #
 - id: 'coming_home_light'
   alias: Kommer hem light
   trigger:
   - platform: state
-    entity_id: device_tracker.dc729bc79fef
+    entity_id: device_tracker.jimmy_mobil_priv
     to: 'home'
   condition:
   - condition: and
@@ -611,12 +588,6 @@
   - service: switch.turn_on
     data:
       entity_id: switch.vardags_tavla
-  - service: switch.turn_on
-    data:
-      entity_id: switch.hall_vitrin
-  - service: switch.turn_on
-    data:
-      entity_id: switch.vardagsrum2
 #
 - id: 'leaving_home'
   alias: Inte hemma
@@ -658,9 +629,6 @@
       entity_id: switch.vaxt3
   - delay:
       seconds: 1
-  - service: switch.turn_off
-    data:
-      entity_id: switch.vardagsrum2
   - service: switch.turn_off
     data:
       entity_id: switch.flakt
@@ -736,9 +704,6 @@
       seconds: 1
   - service: switch.turn_off
     data:
-      entity_id: switch.vardagsrum2
-  - service: switch.turn_off
-    data:
       entity_id: switch.speldator1
   - service: switch.turn_off
     data:
@@ -775,13 +740,13 @@
   - condition: and
     conditions:
     - condition: state
-      entity_id: device_tracker.000420e8a4c3
+      entity_id: device_tracker.harmony_1
       state: 'not_home'
     - condition: state
-      entity_id: device_tracker.88835ddf750d
+      entity_id: device_tracker.lametric_bedroom
       state: 'not_home'
     - condition: state
-      entity_id: device_tracker.000420fd0d3d
+      entity_id: device_tracker.harmony_2
       state: 'not_home'
   action:
   - service: switch.turn_off
