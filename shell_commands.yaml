@@ -1,0 +1,26 @@
+  shutdown_speldator1: 'bash /config/shell_coms/shutdown/shutdown_speldator1.txt'
+  shutdown_speldator2: 'bash /config/shell_coms/shutdown/shutdown_speldator2.txt'
+  shutdown_tvdator: 'bash /config/shell_coms/shutdown/shutdown_tvdator.txt'
+#
+  lametric_bright: 'bash /config/shell_coms/lametric_brightness/lametric_bright.txt'
+  lametric_dark: 'bash /config/shell_coms/lametric_brightness/lametric_dark.txt'
+#
+  lametric_youtube: 'bash /config/shell_coms/lametric_media_playing/lametric_execute_youtube.txt'
+  lametric_twitch: 'bash /config/shell_coms/lametric_media_playing/lametric_execute_twitch.txt'
+  lametric_plex: 'bash /config/shell_coms/lametric_media_playing/lametric_execute_plex.txt'
+  lametric_spotify: 'bash /config/shell_coms/lametric_media_playing/lametric_execute_spotify.txt'
+  lametric_netflix: 'bash /config/shell_coms/lametric_media_playing/lametric_execute_netflix.txt'
+  lametric_unknown: 'bash /config/shell_coms/lametric_media_playing/lametric_execute_unknown.txt'
+#
+  lametric_privatmobil: 'bash /config/shell_coms/lametric_notifications/lametric_privatmobil_execute.txt'
+  lametric_jobbmobil: 'bash /config/shell_coms/lametric_notifications/lametric_jobbmobil_execute.txt'
+#
+  lametric_temp_framsidan: 'bash /config/shell_coms/lametric_notifications/lametric_temp_framsidan_execute.txt'
+  lametric_temp_yr: 'bash /config/shell_coms/lametric_notifications/lametric_temp_yr_execute.txt'
+  lametric_temp_smhi: 'bash /config/shell_coms/lametric_notifications/lametric_temp_smhi_execute.txt'
+#
+  lametric_vind_yr: 'bash /config/shell_coms/lametric_notifications/lametric_vind_yr_execute.txt'
+  lametric_vind_smhi: 'bash /config/shell_coms/lametric_notifications/lametric_vind_smhi_execute.txt'
+#
+  lametric_svullo_anvant: 'bash /config/shell_coms/lametric_notifications/lametric_svullo_anvant_execute.txt'
+#
