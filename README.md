@@ -21,6 +21,7 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Telldus plugin z-wave switch](https://telldus.com/produkt/remote-controlled-outlet-telldus-z-wave/)__ - most used in my home
 * __[Telldus z-wave plugin switch](https://telldus.com/produkt/plugin-receiver-mini-z-wave/)__ - have a few left, most have broken
 * __[Osram smart+ E27 color](https://smartplus.ledvance.com/products/indoor-lighting/index.jsp)__ - pretty good colors, used to show outside temperature
+* __[Osram smart+ E14 candle tunable](https://smartplus.ledvance.com/products/indoor-lighting/index.jsp)__ - window lights, turning on with sun sensor
 * __[Trust E27 color](https://www.trust.com/en/product/71145-zigbee-rgb-tunable-led-bulb-zled-rgb9)__ - not very good with colors, used as regular white lamp because of the colors not being so good
 * __[Ikea trådfri E14 LED1649C5](https://www.ikea.com/gb/en/products/lighting/smart-lighting/tr%C3%A5dfri-led-bulb-e14-400-lumen-wireless-dimmable-warm-white-chandelier-opal-white-art-60365271/)__ - Still trying to connect, not working for mer yet, sad face
 
