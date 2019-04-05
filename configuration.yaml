@@ -9,6 +9,14 @@ homeassistant:
   whitelist_external_dirs:
   - /config
   - /ssl
+  auth_providers:
+  - type: homeassistant
+  - type: legacy_api_password
+    api_password: !secret http_password
+  - type: trusted_networks
+    trusted_networks:
+    - !secret trustednet
+    - 172.30.32.0/24
 #
 sensor: !include sensors.yaml
 group: !include groups.yaml
@@ -22,19 +30,16 @@ rest_command: !include rest_commands.yaml
 rss_feed_template: !include rss_feed.yaml
 #
 frontend:
+  themes: !include themes.yaml
 #
 lovelace:
   mode: yaml
 #
 http:
   api_password: !secret http_password
-  base_url: !secret http_url
-  ssl_certificate: /ssl/fullchain.pem
-  ssl_key: /ssl/privkey.pem
-  login_attempts_threshold: 3
-  trusted_networks:
-  - !secret trustednet
-  - 172.30.32.0/24
+#  base_url: !secret http_url
+#  ssl_certificate: /ssl/fullchain.pem
+#  ssl_key: /ssl/privkey.pem
 #
 config:
 #
@@ -90,4 +95,6 @@ lametric:
 tellduslive:
 #
 system_health:
+#
+stream:
 #
