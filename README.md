@@ -16,7 +16,7 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Logitech harmony Hub](https://www.logitech.com/en-gb/product/harmony-hub)__
 * __[Fibaro universal sensor](https://www.fibaro.com/en/products/universal-binary-sensor/)__
 * __[Lametric TIME](https://lametric.com/en-US/time/overview)__
-* __[Chromecast 2nd gen](https://store.google.com/product/chromecast)__
+* __[Chromecast ultra](https://store.google.com/product/chromecast_ultra)__ - had to be this one since the others won't stream 1080p 60hz
 * __[Synology NAS, one of the older ones](https://www.synology.com/)__
 * __[Telldus plugin z-wave switch](https://telldus.com/produkt/remote-controlled-outlet-telldus-z-wave/)__ - most used in my home
 * __[Telldus z-wave plugin switch](https://telldus.com/produkt/plugin-receiver-mini-z-wave/)__ - have a few left, most have broken
