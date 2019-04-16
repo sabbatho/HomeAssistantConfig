@@ -40,7 +40,8 @@ I have searched around in others repos and communitys so i feel it's only fair t
 # Addons, components and special configs
 * __[MariaDB](https://www.home-assistant.io/addons/mariadb/)__ - much more stable with MariaDB instead of standard SQLite
 * __[Configurator](https://www.home-assistant.io/addons/configurator)__ - almost only use this for configuration
-* __[Duck DNS](https://www.home-assistant.io/addons/duckdns/)__ - not much to say, LetsEncrypt also enabled
+* __[Duck DNS](https://www.home-assistant.io/components/duckdns/)__ - Using the component for DuckDNS, not the addon
+* __[Let's Encrypt](https://www.home-assistant.io/addons/lets_encrypt/)__ - Using the standalone let's encrypt addon
 * __[deCONZ](https://www.home-assistant.io/addons/deconz)__ - Zigbee controller
 * __[Samba share](https://www.home-assistant.io/addons/samba/)__ - only started when i need it
 * __[SSH server](https://www.home-assistant.io/addons/ssh/)__ - only started when i need it
