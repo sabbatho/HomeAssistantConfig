@@ -3,8 +3,10 @@
 </p>
 
 # Welcome! :)
-I bought my first PI and started with [Home Assistant](https://home-assistant.io/) around the 25th of october 2018, using Telldus and z-wave. The last january 2019 i bought raspbee and started tinkering with zigbee, chaging to conbee around 25th of march 2019 to prepare for changing to a NUC or similar. I find the PI working ok, it's slow though and the SD might be the reason for strange restarts and having to restart now and then. So in the near future i will be changing to something more long term.
+I bought my first PI and started with [Home Assistant](https://home-assistant.io/) around the 25th of october 2018, using Telldus and z-wave. Last of january 2019 i bought Raspbee and started tinkering with zigbee, chaging to conbee around 25th of march 2019 to prepare for changing to a NUC or similar. I find the PI working ok, it's slow though and the SD might be the reason for strange restarts and having to restart now and then. So in the near future i will be changing to something more long term.
+
 So these are most of the [Home Assistant](https://home-assistant.io/) configuration files that i use. I am not in any shape or form educated to do programming. My primary use for HA is automation, my aim is to not be forced to press buttons or touch screens. Instead rules and automations should be smart enough to do what i want, of course with what i have. So no fancy frontend, just the most used and for fault searching.
+
 For me this is alot of fun and to learn writing code.
 I have searched around in others repos and communitys so i feel it's only fair that i give back what i can. :)
 
