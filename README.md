@@ -28,6 +28,8 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Trust E27 color](https://www.trust.com/en/product/71145-zigbee-rgb-tunable-led-bulb-zled-rgb9)__ - not very good with colors, used as regular white lamp because of the colors not being so good
 * __[Ikea trådfri E14 LED1649C5](https://www.ikea.com/gb/en/products/lighting/smart-lighting/tr%C3%A5dfri-led-bulb-e14-400-lumen-wireless-dimmable-warm-white-chandelier-opal-white-art-60365271/)__ - Works with ConBee but not Raspbee for me
 * __[Philips HUE motion sensor](https://www2.meethue.com/en-us/p/hue-motion-sensor/046677473389)__ - Triggers lights in hallway and auto off when no motion
+* __[Sonoff Basic](https://sonoff.itead.cc/en/)__ - Tasmota flashed and MQTT configured
+* __[Sonoff TH10](https://sonoff.itead.cc/en/)__ - Tasmota flashed and MQTT configured
 
 # Software windows clients
 * __[Switch OFF](http://www.airytec.com/en/)__ - remote shutdown windows computers
@@ -72,8 +74,8 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Command line sensor](https://www.home-assistant.io/components/sensor.command_line/)__ - tracking current version and installed version for pushbullet notifications
 * __[File size sensor](https://www.home-assistant.io/components/sensor.filesize/)__ - tracking file size of .log, mostly used it when i was troubleshooting problems i had
 * __[Shell commands](https://www.home-assistant.io/components/shell_command/)__ - used for communicating with lametric and swtich off software. A few ugly bash scripts for the lamteric stuff
-
-
+* __[Mosquitto MQTT broker](https://www.home-assistant.io/addons/mosquitto/)__ - At the moment for Sonoff devices only
+* __[MQTT](https://www.home-assistant.io/components/mqtt/)__ - At the moment for Sonoff devices only
 
 
 
