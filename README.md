@@ -75,7 +75,7 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[File size sensor](https://www.home-assistant.io/components/sensor.filesize/)__ - tracking file size of .log, mostly used it when i was troubleshooting problems i had
 * __[Shell commands](https://www.home-assistant.io/components/shell_command/)__ - used for communicating with lametric and swtich off software. A few ugly bash scripts for the lamteric stuff
 * __[Shoppinglist](https://www.home-assistant.io/components/shopping_list/)__ - What am i gonna buy?
-* __[Workday](https://www.home-assistant.io/components/workday/)__ - used for wakeup automations on workdays
+* __[Workday](https://www.home-assistant.io/components/workday/)__ - used for wakeup automations on workdays only
 * __[Mosquitto MQTT broker](https://www.home-assistant.io/addons/mosquitto/)__ - At the moment for Sonoff devices only
 * __[MQTT](https://www.home-assistant.io/components/mqtt/)__ - At the moment for Sonoff devices only
 
