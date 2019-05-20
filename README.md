@@ -71,6 +71,7 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Synology DSM](https://www.home-assistant.io/components/sensor.synologydsm/)__ - tracking disc free
 * __[Trafikverket](https://www.home-assistant.io/components/sensor.trafikverket_weatherstation/)__ - tracking temprature and precipitation
 * __[System monitor](https://www.home-assistant.io/components/sensor.systemmonitor/)__ - tracking disc free on SDcard
+* __[System health](https://www.home-assistant.io/components/system_health/)__ - For about page
 * __[Command line sensor](https://www.home-assistant.io/components/sensor.command_line/)__ - tracking current version and installed version for pushbullet notifications
 * __[File size sensor](https://www.home-assistant.io/components/sensor.filesize/)__ - tracking file size of .log, mostly used it when i was troubleshooting problems i had
 * __[Shell commands](https://www.home-assistant.io/components/shell_command/)__ - used for communicating with lametric and swtich off software. A few ugly bash scripts for the lamteric stuff
