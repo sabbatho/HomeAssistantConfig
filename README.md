@@ -13,7 +13,7 @@ I have searched around in others repos and communitys so i feel it's only fair t
 # Hardware:
 * __[Raspberry Pi3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)__  - with SDcard 16GB class 10
 * __[ConBee](https://phoscon.de/en/conbee)__ - changed from Raspbee to prepare for future migration to NUC
-* __[Aeon Labs Z-stick Gen5 USB-adapter](https://aeotec.com/z-wave-usb-stick)__
+* __[Aeon Labs Z-stick Gen5 USB-adapter](https://aeotec.com/z-wave-usb-stick)__ - Z-wave
 * TellStick.NET (to be removed from setup)
 * TellStick ZNet Lite v2 (to be removed from setup)
 * __[Logitech harmony Hub](https://www.logitech.com/en-gb/product/harmony-hub)__
@@ -29,7 +29,7 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Ikea trådfri E14 LED1649C5](https://www.ikea.com/gb/en/products/lighting/smart-lighting/tr%C3%A5dfri-led-bulb-e14-400-lumen-wireless-dimmable-warm-white-chandelier-opal-white-art-60365271/)__ - Works with ConBee but not Raspbee for me
 * __[Philips HUE motion sensor](https://www2.meethue.com/en-us/p/hue-motion-sensor/046677473389)__ - Triggers lights in hallway and auto off when no motion
 * __[Sonoff Basic](https://sonoff.itead.cc/en/)__ - Tasmota flashed and MQTT configured
-* __[Sonoff TH10](https://sonoff.itead.cc/en/)__ - Tasmota flashed and MQTT configured
+* __[Sonoff TH10](https://sonoff.itead.cc/en/)__ - Tasmota flashed and MQTT configured, with temperature sensor
 
 # Software windows clients
 * __[Switch OFF](http://www.airytec.com/en/)__ - remote shutdown windows computers
