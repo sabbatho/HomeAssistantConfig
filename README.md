@@ -14,8 +14,6 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Raspberry Pi3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)__  - with SDcard 16GB class 10
 * __[ConBee](https://phoscon.de/en/conbee)__ - changed from Raspbee to prepare for future migration to NUC
 * __[Aeon Labs Z-stick Gen5 USB-adapter](https://aeotec.com/z-wave-usb-stick)__ - Z-wave
-* TellStick.NET (to be removed from setup)
-* TellStick ZNet Lite v2 (to be removed from setup)
 * __[Logitech harmony Hub](https://www.logitech.com/en-gb/product/harmony-hub)__
 * __[Fibaro universal sensor](https://www.fibaro.com/en/products/universal-binary-sensor/)__
 * __[Lametric TIME](https://lametric.com/en-US/time/overview)__
@@ -53,7 +51,6 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Samba share](https://www.home-assistant.io/addons/samba/)__ - only started when i need it
 * __[SSH server](https://www.home-assistant.io/addons/ssh/)__ - only started when i need it
 * __[Dropbox Sync](https://github.com/danielwelch/hassio-dropbox-sync)__ - automated backup
-* __[Telldus Live](https://www.home-assistant.io/components/tellduslive/)__ - to be removed, way to unstable for my taste
 * __[SMHI](https://www.home-assistant.io/components/smhi/)__ - sending data to the lametric
 * __[YR](https://www.home-assistant.io/components/sensor.yr/)__ - sending data to the lametric
 * __[Owntracks](https://www.home-assistant.io/components/owntracks/)__ - device tracking
