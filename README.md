@@ -3,16 +3,19 @@
 </p>
 
 # Welcome! :)
-I bought my first PI and started with [Home Assistant](https://home-assistant.io/) around the 25th of october 2018, using Telldus and z-wave. Last of january 2019 i bought Raspbee and started tinkering with zigbee, chaging to conbee around 25th of march 2019 to prepare for changing to a NUC or similar. I find the PI working ok, it's slow though and the SD might be the reason for strange restarts and having to restart now and then. So in the near future i will be changing to something more long term.
+I bought my first PI and started with [Home Assistant](https://home-assistant.io/) around the 25th of october 2018, using Telldus and z-wave. Last of january 2019 i bought Raspbee and started tinkering with zigbee, changing to conbee around 25th of march 2019 to prepare for changing to a NUC or similar. I find the PI working ok, it's slow though and the SD might be the reason for strange restarts and having to restart now and then. So in the near future i will be changing to something more long term.
+So yeah, having an SD-card crash i instantly went to buy an NUC and have used it since 27th of august 2019. Installed Ubuntu server and Docker on the NUC to finally install hassio. Works pretty good :) I'm not very used to Linux so some trial and error.
+Must add that i am sad i didn't change from my PI earlier, crazy how much faster the NUC is.
 
 So these are most of the [Home Assistant](https://home-assistant.io/) configuration files that i use. I am not in any shape or form educated to do programming. My primary use for HA is automation, my aim is to not be forced to press buttons or touch screens. Instead rules and automations should be smart enough to do what i want, of course with what i have. So no fancy frontend, just the most used and for fault searching.
 
 For me this is alot of fun and to learn writing code.
 I have searched around in others repos and communitys so i feel it's only fair that i give back what i can. :)
 
+
 # Hardware:
-* __[Raspberry Pi3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)__  - with SDcard 16GB class 10
-* __[ConBee](https://phoscon.de/en/conbee)__ - changed from Raspbee to prepare for future migration to NUC
+* __[Intel NUC 8 i3](https://www.intel.com/content/www/us/en/products/boards-kits/nuc.html)__  - 256Gb SSD and 16Gb of ram, i know the ram is overkill for Home Assistant but since i am using Docker i have plans to expand for this NUC to do more.
+* __[ConBee](https://phoscon.de/en/conbee)__ - Zigbee
 * __[Aeon Labs Z-stick Gen5 USB-adapter](https://aeotec.com/z-wave-usb-stick)__ - Z-wave
 * __[Logitech harmony Hub](https://www.logitech.com/en-gb/product/harmony-hub)__
 * __[Fibaro universal sensor](https://www.fibaro.com/en/products/universal-binary-sensor/)__
@@ -29,6 +32,7 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Philips HUE motion sensor](https://www2.meethue.com/en-us/p/hue-motion-sensor/046677473389)__ - Triggers lights in hallway and auto off when no motion
 * __[Sonoff Basic](https://sonoff.itead.cc/en/)__ - Tasmota flashed and MQTT configured
 * __[Sonoff TH10](https://sonoff.itead.cc/en/)__ - Tasmota flashed and MQTT configured, with temperature sensor
+* __[Aqara motion sensor](https://www.aqara.com/en/human_motion_sensor.html)__ - Triggers lights in rooms
 
 # Software windows clients
 * __[Switch OFF](http://www.airytec.com/en/)__ - remote shutdown windows computers
@@ -43,14 +47,11 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Simple RSS Widget](https://play.google.com/store/apps/details?id=de.j4velin.rssWidget&hl=en)__ - different status feeds
 
 # Addons, components and special configs
-* __[MariaDB](https://www.home-assistant.io/addons/mariadb/)__ - much more stable with MariaDB instead of standard SQLite
-* __[Configurator](https://www.home-assistant.io/addons/configurator)__ - almost only use this for configuration
-* __[Duck DNS](https://www.home-assistant.io/components/duckdns/)__ - Using the component for DuckDNS, not the addon
-* __[Let's Encrypt](https://www.home-assistant.io/addons/lets_encrypt/)__ - Using the standalone let's encrypt addon
+* __[Duck DNS](https://www.home-assistant.io/addons/duckdns/)__ - Having trouble now and then with updates.
+* __[Let's Encrypt](https://www.home-assistant.io/addons/duckdns/)__ - Using the one built in DuckDNS addon
 * __[deCONZ](https://www.home-assistant.io/addons/deconz)__ - Zigbee controller
 * __[Samba share](https://www.home-assistant.io/addons/samba/)__ - only started when i need it
-* __[SSH server](https://www.home-assistant.io/addons/ssh/)__ - only started when i need it
-* __[Dropbox Sync](https://github.com/danielwelch/hassio-dropbox-sync)__ - automated backup
+* __[Google drive sync](https://github.com/sabeechen/hassio-google-drive-backup)__ - automated backup
 * __[SMHI](https://www.home-assistant.io/components/smhi/)__ - sending data to the lametric
 * __[YR](https://www.home-assistant.io/components/sensor.yr/)__ - sending data to the lametric
 * __[Owntracks](https://www.home-assistant.io/components/owntracks/)__ - device tracking
@@ -77,6 +78,11 @@ I have searched around in others repos and communitys so i feel it's only fair t
 * __[Workday](https://www.home-assistant.io/components/workday/)__ - used for wakeup automations on workdays only
 * __[Mosquitto MQTT broker](https://www.home-assistant.io/addons/mosquitto/)__ - At the moment for Sonoff devices only
 * __[MQTT](https://www.home-assistant.io/components/mqtt/)__ - At the moment for Sonoff devices only
+* __[TasmoAdmin](https://github.com/hassio-addons/addon-tasmoadmin)__ - Manage Tasmota devices
+* __[Visual Studio Code](https://github.com/hassio-addons/addon-vscode)__ - Editing installation
+* __[Wireguard](https://github.com/hassio-addons/addon-wireguard)__ - VPN
+* __[Chrony](https://github.com/hassio-addons/addon-chrony)__ - Server time management
+
 
 
 
