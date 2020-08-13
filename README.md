@@ -3,9 +3,11 @@
 </p>
 
 # Welcome! :)
-I bought my first PI and started with [Home Assistant](https://home-assistant.io/) around the 25th of october 2018, using Telldus and z-wave. Last of january 2019 i bought Raspbee and started tinkering with zigbee, changing to conbee around 25th of march 2019 to prepare for changing to a NUC or similar. I find the PI working ok, it's slow though and the SD might be the reason for strange restarts and having to restart now and then. So in the near future i will be changing to something more long term.
+I bought my first PI and started with [Home Assistant](https://home-assistant.io/) around the 25th of october 2018, using Telldus and z-wave.
+Last of january 2019 i bought Raspbee and started tinkering with zigbee, changing to conbee around 25th of march 2019 to prepare for changing to a NUC or similar. I find the PI working ok, it's slow though and the SD might be the reason for strange restarts and having to restart now and then. So in the near future i will be changing to something more long term.
 So yeah, having an SD-card crash i instantly went to buy an NUC and have used it since 27th of august 2019. Installed Ubuntu server and Docker on the NUC to finally install hassio. Works pretty good :) I'm not very used to Linux so some trial and error.
 Must add that i am sad i didn't change from my PI earlier, crazy how much faster the NUC is.
+And now at 2020-08-13 there has been no errors what so ever with the NUC. Super happy i changed!
 
 So these are most of the [Home Assistant](https://home-assistant.io/) configuration files that i use. I am not in any shape or form educated to do programming. My primary use for HA is automation, my aim is to not be forced to press buttons or touch screens. Instead rules and automations should be smart enough to do what i want, of course with what i have. So no fancy frontend, just the most used and for fault searching.
 
