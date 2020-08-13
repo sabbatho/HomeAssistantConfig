@@ -44,7 +44,9 @@ I have searched around in others repos and communitys so i feel it's only fair t
 # Software android clients
 * __[Tasker](https://tasker.joaoapps.com/)__ - for battery info, charging status and incoming call notifications
 * __[Overlook Whiz](https://apkpure.com/overlook-whiz/com.overlook.android.whiz)__ - Simple way to monitor my connection and external functions
-* __[Pushbullet](https://www.pushbullet.com/)__ - most important notifications
+* __[Pushbullet](https://www.pushbullet.com/)__ - Notifications
+* __[Discord](https://discord.com/)__ - Notifications
+* __[Home Assistant Companion](https://play.google.com/store/apps/details?id=io.homeassistant.companion.android/)__ - Notifications
 * __[Owntracks](https://owntracks.org/)__ - for more advanced device tracking automations
 * __[Simple RSS Widget](https://play.google.com/store/apps/details?id=de.j4velin.rssWidget&hl=en)__ - different status feeds
 
