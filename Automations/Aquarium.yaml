@@ -1,0 +1,153 @@
+############################################
+##                                        ##
+## Aquarium Lights automations            ##
+##                                        ##
+############################################
+
+
+- alias: "aquarium_light_off_weekday"
+  id: "Akvarium lyse Av vardag"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: '22:00:00'
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_tomorrow
+      state: 'on'
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.akvarium_mini
+    - service: switch.turn_off
+      data:
+        entity_id: switch.akvarium_720_matsal
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.akvarium_400
+    - service: switch.turn_off
+      data:
+        entity_id: switch.akvarium_hobbyrum_720_v
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.akvarium_1200
+#
+- alias: "aquarium_light_off_weekend"
+  id: "Akvarium lyse Av helg"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: '23:59:00'
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_tomorrow
+      state: 'off'
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.akvarium_mini
+    - service: switch.turn_off
+      data:
+        entity_id: switch.akvarium_720_matsal
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.akvarium_400
+    - service: switch.turn_off
+      data:
+        entity_id: switch.akvarium_hobbyrum_720_v
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.akvarium_1200
+#
+- alias: "aquarium_light_on_weekday"
+  id: "Akvarium lyse På vardag"
+  mode: single
+  initial_state: true
+  trigger: 
+    - platform: time
+      at: '13:00:00'
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_sensor
+      state: 'on'
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.akvarium_mini
+    - service: switch.turn_on
+      data:
+        entity_id: switch.akvarium_720_matsal
+    - delay:
+        seconds: 1
+    - service: switch.turn_on
+      data:
+        entity_id: switch.akvarium_400
+    - service: switch.turn_on
+      data:
+        entity_id: switch.akvarium_hobbyrum_720_v
+    - delay:
+        seconds: 1
+    - service: switch.turn_on
+      data:
+        entity_id: switch.akvarium_1200
+#
+- alias: "aquarium_light_on_weekend"
+  id: "Akvarium lyse På helg"
+  initial_state: true
+  mode: single
+  trigger: 
+    - platform: time
+      at: '11:00:00'
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_sensor
+      state: 'off'
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.akvarium_mini
+    - service: switch.turn_on
+      data:
+        entity_id: switch.akvarium_720_matsal
+    - delay:
+        seconds: 1
+    - service: switch.turn_on
+      data:
+        entity_id: switch.akvarium_400
+    - service: switch.turn_on
+      data:
+        entity_id: switch.akvarium_hobbyrum_720_v
+    - delay:
+        seconds: 1
+    - service: switch.turn_on
+      data:
+        entity_id: switch.akvarium_1200
+#
+- alias: "Akvarium för varmt 720 matsal"
+  id: "Akvarium för varmt 720 matsal"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: time
+    at: '11:00:00'
+  - platform: time
+    at: '18:00:00'
+  condition:
+  - "{{ states('sensor.akvarium_720_matsal') | float > 29 }}"
+#  - condition: template
+#    value_template: "{{ states('sensor.akvarium_720_matsal') | float > 29 }}"
+  action:
+  - service: notify.mobile_app_clt_l29
+    data: 
+      message: "Börjar bli lite varmt i 720 i matsalen {{ states('sensor.akvarium_720_matsal') }}"
+#

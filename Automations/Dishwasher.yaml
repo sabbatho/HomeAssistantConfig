@@ -1,0 +1,89 @@
+#
+
+#
+
+- id: "lametric_dishes_time_left"
+  alias: "LaMetric_-_dishes time left"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: 6
+    - platform: time_pattern
+      minutes: 16
+    - platform: time_pattern
+      minutes: 26
+    - platform: time_pattern
+      minutes: 36
+    - platform: time_pattern
+      minutes: 46
+    - platform: time_pattern
+      minutes: 56
+  condition:
+    - condition: state
+      entity_id: switch.diskmaskin_power
+      state: "on"
+    - "{{ states('sensor.diskmaskin_program_progress') > '100' }}"
+#    - "{{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int > 1 }}"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+  action:
+    - service: notify.lametric
+      data:
+#        message: "{{ states('sensor.diskmaskin_program_progress') }}% klart, och kommer vara klar{{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom(' %H:%M ') }}"
+#        message: "{{ states('sensor.diskmaskin_program_progress') }}% klart, och kommer vara klar om {{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int }} minuter, kl{{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom(' %H:%M ') }}"
+        message: "{{ states('sensor.diskmaskin_program_progress') }}% klart, {{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int }} minuter kvar, klar {{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom('%H:%M') }}"
+        data:
+          icon: "a17590"
+          icon_type: "none"
+          priority: "info"
+          cycles: 2
+#
+- alias: "notification_dishes_done"
+  id: "Notifiering när diskmaskinen är klar"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: switch.diskmaskin_power
+      from: "on"
+      to: "off"
+      for: "00:03:00"
+  condition:
+    - "{{ is_state('sensor.diskmaskin_program_progress', '100') }}"
+#    - "{{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int > 1 }}"
+    - condition: state
+      entity_id: binary_sensor.clt_l29_is_charging
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.h8324_is_charging
+      state: 'off'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+  action:
+    - service: notify.lametric
+      data:
+        message: "Diskmaskinen är klar!"
+        data:
+          icon: 'a17590'
+          icon_type: 'none'
+          sound: 'notification'
+          priority: 'warning'
+          cycles: 2
+    - service: notify.hanna_jimmy
+      data:
+        title: "Diskmaskin klar"
+        message: "Öppna luckan så det torkar"
+#

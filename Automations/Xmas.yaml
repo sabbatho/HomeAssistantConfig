@@ -1,0 +1,183 @@
+############################################
+##                                        ##
+## X-mas automations                      ##
+##                                        ##
+############################################
+
+
+
+############################################
+##                                        ##
+## Inside                                 ##
+##                                        ##
+############################################
+
+- id: 'xmas_lights_on_inside'
+  alias: Julbelysning På inne
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: 15
+    - platform: time_pattern
+      minutes: 45
+  condition:
+    - "{{ now().month > 11 and now().day > 0 or now().month < 2 and now().day < 14 }}"
+    - condition: state
+      entity_id: binary_sensor.clt_l29_is_charging
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.h8324_is_charging
+      state: 'off'
+  variables:
+    colors:
+      - yellow
+      - blue
+      - green
+      - purple
+      - red
+      - pink
+      - orange
+      - cyan
+      - indigo
+      - darkblue
+      - tomato
+      - darkgreen
+      - white
+    effects:
+      - Wipe
+      - Wipe Random
+      - Two Dots
+      - Two Areas
+      - Twinklefox
+      - Twinklecat
+      - Twinkle
+      - Tri Wipe
+      - Tri Fade
+      - Tri Chase
+      - Traffic Light
+      - Theater
+      - Sweep Random
+      - Sweep
+      - Stream 2
+      - Stream
+      - Scanner Dual
+      - Sparkle
+      - Scan
+      - Saw
+      - Running 2
+      - Running
+      - Red & Blue
+      - Random Colors
+      - Rainbow Runner
+      - Rainbow
+      - Rain
+      - Police All
+      - Police
+      - Ripple
+      - Merry Christmas
+      - Lightning
+      - Halloween Eyes
+      - Fireworks
+      - Fire 2012
+      - Dissolve Rnd
+      - Colorwaves
+      - Colortwinkles
+      - Glitter
+      - Colorloop
+      - Circus
+      - Chase Random
+      - Chase Rainbow
+      - Chase Flash Rnd
+      - Candle
+      - Blink Rainbow
+      - Android
+    speeds:
+      - 8
+      - 16
+      - 32
+      - 64
+      - 128
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.jul_vardagsrum
+        brightness: 254
+        color_name: "{{ colors | random }}"
+    - service: wled.effect
+      entity_id: light.jul_vardagsrum
+      data:
+        effect: "{{ effects | random }}"
+        speed: "{{ speeds | random }}"
+    - service: light.turn_on
+      data:
+        entity_id: light.wled_matsal
+        brightness: 254
+        color_name: "{{ colors | random }}"
+    - service: wled.effect
+      entity_id: light.wled_matsal
+      data:
+        effect: "{{ effects | random }}"
+        speed: "{{ speeds | random }}"
+#
+- id: 'xmas_lights_off_inside'
+  alias: Julbelysning Av inne
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.clt_l29_is_charging
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.h8324_is_charging
+      to: 'on'
+  condition:
+    - "{{ now().month > 11 and now().day > 0 or now().month < 2 and now().day < 15 }}"
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.jul_vardagsrum
+    - service: light.turn_off
+      data:
+        entity_id: light.wled_matsal
+
+
+
+############################################
+##                                        ##
+## Outside                                ##
+##                                        ##
+############################################
+
+- id: 'xmas_lights_on_outside'
+  alias: Julbelysning På ute
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      below: 0.5
+  condition:
+    - "{{ now().month > 11 and now().day > 0 or now().month < 2 and now().day < 14 }}"
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.blomladan
+#
+- id: 'xmas_lights_off_outside'
+  alias: Julbelysning Av ute
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      above: 0.5
+  condition:
+    - "{{ now().month > 11 and now().day > 0 or now().month < 2 and now().day < 15 }}"
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.blomladan
+#

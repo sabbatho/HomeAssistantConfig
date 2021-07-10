@@ -1,0 +1,37 @@
+#
+#- alias: "cam_motion"
+#  id: "Kamera notifiering vid rörelse"
+#  initial_state: true
+#  mode: single
+#  trigger:
+#  - platform: state
+#    entity_id: binary_sensor.cam1_motion
+#    to: "on"
+#  condition:
+#    condition: or
+#    conditions:
+#    - condition: state
+#      entity_id: person.jimmy
+#      state: 'not_home'
+#    - condition: state
+#      entity_id: person.hanna
+#      state: 'not_home'
+#    - condition: and
+#      conditions:
+#      - condition: state
+#         entity_id: sensor.hannasphonecharge
+#         state: 'charging'
+#      - condition: state
+#         entity_id: sensor.privatephonecharge
+#         state: 'charging'
+#  action:
+#  - service: notify.mobile_app_clt_l29
+#    data: 
+#      message: Någon är framför kameran
+#      data:
+#        attachment:
+#          content-type: jpeg
+#        push:
+#          category: camera
+#        entity_id: camera.asgari1
+#

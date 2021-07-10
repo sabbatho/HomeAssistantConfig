@@ -1,0 +1,57 @@
+##
+#
+##
+
+- id: "matsal_remote_ensis_down_ON"
+  alias: "Matsal fjärr Ensis ner PÅ"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: deconz_event
+      event_data:
+        id: matsal_ensis_ljud
+        event: 1002
+  action:
+    - service: light.toggle
+      entity_id: light.ensis_down
+      data:
+        color_temp: 153
+        brightness: 150
+#
+- id: "matsal_remote_ljud_ON"
+  alias: "Matsal fjärr ljud PÅ"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: deconz_event
+      event_data:
+        id: matsal_ensis_ljud
+        event: 2002
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.sub_mixer_matsal
+    - service: switch.turn_on
+      data:
+        entity_id: switch.toppar_matsal
+#
+- id: "matsal_remote_ljud_OFF"
+  alias: "Matsal fjärr ljud AV"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: deconz_event
+      event_data:
+        id: matsal_ensis_ljud
+        event: 2003
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.sub_mixer_matsal
+    - service: switch.turn_off
+      data:
+        entity_id: switch.toppar_matsal
+#

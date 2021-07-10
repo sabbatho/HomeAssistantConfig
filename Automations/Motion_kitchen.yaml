@@ -1,0 +1,106 @@
+
+
+
+
+- alias: "kitchen_cabinet_on_motion"
+  id: "Kök Vitrin På Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_kok
+      to: 'on'
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: 'home'
+        - condition: state
+          entity_id: person.hanna
+          state: 'home'
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.kok_vitrin
+#
+- alias: "kitchen_roof_on_motion"
+  id: "Kökstak På Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_kok
+      to: 'on'
+  condition:
+    - "{{ state_attr('sun.sun', 'elevation') < 7 }}"
+    - "{{ is_state('input_boolean.kitchen_roof_override', 'off') }}"
+#  - condition: template
+#    value_template: '{{ state_attr("sun.sun", "elevation") < 7 }}'
+    - condition: state
+      entity_id: binary_sensor.clt_l29_is_charging
+      state: 'off'
+    - condition: state
+      entity_id: binary_sensor.h8324_is_charging
+      state: 'off'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: 'home'
+        - condition: state
+          entity_id: person.hanna
+          state: 'home'
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.kokstak
+        brightness: >-
+          {% if state_attr("sun.sun", "elevation") | float <= -5 %}
+            2
+          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
+            35
+          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 1 %}
+            70
+          {% elif state_attr("sun.sun", "elevation") | float > 1 and state_attr("sun.sun", "elevation") | float <= 5 %}
+            100
+          {% elif state_attr("sun.sun", "elevation") | float > 5 and state_attr("sun.sun", "elevation") | float < 7 %}
+            130
+          {% elif state_attr("sun.sun", "elevation") | float >= 7 %}
+            0
+          {% else %}
+            0
+          {% endif %}
+        color_temp: 153
+#
+- alias: "kitchen_off_motion"
+  id: "Kök Av Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_kok
+      to: 'off'
+      for: '00:05:00'
+  condition:
+    - "{{ is_state('input_boolean.kitchen_roof_override', 'off') }}"
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.kok_vitrin
+    - service: light.turn_off
+      data:
+        entity_id: light.kokstak
+#
+- alias: "kitchen_roof_Reset_manual_override"
+  id: "Kökstak override reset"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "04:00:00"
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.kitchen_roof_override
+#

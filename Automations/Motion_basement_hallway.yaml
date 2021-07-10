@@ -1,0 +1,125 @@
+#
+- alias: "basement_stairs_on_motion"
+  id: "Källartrapp På Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_kallartrapp
+      to: "on"
+    - platform: state
+      entity_id: binary_sensor.motion_hallway_downstairs_presence
+      to: "on"
+  condition:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
+  action:
+    - service: light.turn_on
+      entity_id: light.kallartrapp
+      data:
+        brightness: 180
+        color_temp: 153
+    - service: light.turn_on
+      entity_id: light.kallarhall
+      data:
+        brightness: 200
+        color_temp: 153
+#
+- alias: "basement_stairs_off_motion"
+  id: "Källartrapp Av Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_kallartrapp
+      to: "off"
+      for: "00:10:01"
+    - platform: state
+      entity_id: binary_sensor.motion_hallway_downstairs_presence
+      to: "off"
+      for: "00:10:01"
+  condition:
+    - condition: state
+      entity_id:
+        - binary_sensor.motion_kallartrapp
+        - binary_sensor.motion_hallway_downstairs_presence
+      state: "off"
+      for:
+        minutes: 5
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.kallartrapp
+    - service: light.turn_off
+      data:
+        entity_id: light.kallarhall
+#
+- alias: "basement_hallway_on_motion_office"
+  id: "Källarhall På Rörelse hobbyrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_hallway_downstairs_presence
+      to: "on"
+  condition:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.trust_e27_color_1
+        brightness: 254
+        color_temp: 153
+#
+- alias: "basement_foodstorage_on"
+  id: "Matkällare På"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.kallare_matkallare
+      to: "on"
+  condition:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
+  action:
+    - service: light.turn_on
+      entity_id: light.kallare_matkallare
+      data:
+        brightness: 254
+        color_temp: 153
+#
+- alias: "basement_foodstorage_off"
+  id: "Matkällare Av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.kallare_matkallare
+      to: "off"
+#      for: "00:00:05"
+#  condition:
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.kallare_matkallare
+#

@@ -1,0 +1,67 @@
+############################################
+##
+## Theme automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+- id: "tv_pc_on"
+  alias: "Tvdator På"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: remote.vardagsrum
+      to: 'on'
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.tvdator
+#
+- id: "tv_pc_off"
+  alias: "Tvdator Av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: remote.vardagsrum
+      to: 'off'
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.tvdator
+#
+- id: "avr_on"
+  alias: "AVR På"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.marantz_sr8012
+      to: 'on'
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.bassteg
+#
+- id: "avr_off"
+  alias: "AVR Av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.marantz_sr8012
+      to: 'off'
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.bassteg
+#

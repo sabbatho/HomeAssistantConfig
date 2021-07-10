@@ -1,0 +1,66 @@
+#
+#
+#
+
+
+- alias: "livingroom_on_motion"
+  id: "Vardagsrum På Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_vardagsrum
+      to: "on"
+  condition:
+    - "{{ state_attr('sun.sun', 'elevation') < 1 }}"
+    - "{{ states('media_player.tvdatorn') != 'playing' }}"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.vardagsrum_spis
+    - service: light.turn_on
+      data:
+        entity_id: light.osram_smart_e27_color_1
+        brightness: 254
+        color_name: >
+          {% if states('sensor.ute') | float <= -8 %}
+            indigo
+          {% elif states('sensor.ute') | float > -8 and states('sensor.ute') | float <= 1 %}
+            blue
+          {% elif states('sensor.ute') | float > 1 and states('sensor.ute') | float <= 10 %}
+            green
+          {% elif states('sensor.ute') | float > 10 and states('sensor.ute') | float <= 18 %}
+            yellow
+          {% elif states('sensor.ute') | float > 18 and states('sensor.ute') | float < 25 %}
+            darkorange
+          {% elif states('sensor.ute') | float >= 25 %}
+            red
+          {% else %}
+            white
+          {% endif %}
+#
+- alias: "livingroom_off_motion"
+  id: "Vardagsrum Av Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_vardagsrum
+      to: "off"
+      for: "00:10:00"
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.osram_smart_e27_color_1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.vardagsrum_spis
+#

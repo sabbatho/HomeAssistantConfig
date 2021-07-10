@@ -1,0 +1,106 @@
+############################################
+##
+## Theme automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+- alias: "chromecast_bedroom_on"
+  id: "Sovrumstv På"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: media_player.sovrum
+    from: 'off'
+    to: 'idle'
+  - platform: state
+    entity_id: media_player.sovrum
+    from: 'off'
+    to: 'playing'
+  action:
+  - service: switch.turn_on
+    data:
+      entity_id: switch.sovrumstv
+#
+- alias: "chromecast_bedroom_idle"
+  id: "Tittar inte längre på chromecast idle"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: media_player.sovrum
+    from: 'playing'
+    to: 'idle'
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.sovrum22
+#
+- alias: "chromecast_bedroom_off"
+  id: "Tittar inte längre på chromecast off"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: media_player.sovrum
+    from: 'playing'
+    to: 'off'
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.sovrum22
+#
+- alias: "chromecast_bedroom_paused"
+  id: "Chromecast pausad"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: media_player.sovrum
+    from: 'playing'
+    to: 'paused'
+  action:
+  - service: switch.turn_on
+    data:
+      entity_id: switch.sovrum22
+#
+- alias: "chromecast_hobbyrum_off"
+  id: "Tittar inte längre på chromecast hobbyrum"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: media_player.hobbyrum
+    to: 'off'
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.hobbyrumstv
+#
+- alias: "chromecast_hobbyrum_on"
+  id: "Hobbyrumstv På"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: media_player.hobbyrum
+    from: 'off'
+    to: 'idle'
+  - platform: state
+    entity_id: media_player.hobbyrum
+    from: 'off'
+    to: 'playing'
+  action:
+  - service: switch.turn_on
+    data:
+      entity_id: switch.hobbyrumstv
+#

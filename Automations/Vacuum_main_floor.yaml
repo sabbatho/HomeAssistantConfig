@@ -1,0 +1,182 @@
+#
+#
+#
+
+
+#
+- alias: "Robot cleanup if nobody is home"
+  id: "Robot städa om ingen är hemma"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: group.hanna_jimmy
+      from: home
+      to: not_home
+  condition:
+    - "{{ not is_state('person.jimmy', 'home') }}"
+    - "{{ not is_state('person.hanna', 'home') }}"
+      #    - condition: template
+      #      value_template: "{{ not is_state('person.jimmy', 'home') }}"
+      #    - condition: template
+      #      value_template: "{{ not is_state('person.hanna', 'home') }}"
+    - condition: time
+      after: "10:00:00"
+      before: "21:00:00"
+    - "{{ not is_state('input_boolean.cleaned_today', 'on') }}"
+  #    - condition: template
+  #      value_template: "{{ not is_state('input_boolean.cleaned_today', 'on') }}"
+  action:
+    - service: vacuum.start
+      entity_id: vacuum.roborock_s5
+#
+- alias: "Robot cleanup if not cleaned for X days"
+  id: "Robot städa om inte städat på X antal dagar"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "17:40:00"
+  condition:
+    - condition: time
+      weekday:
+      - wed
+      - sun
+    - condition: state
+      entity_id: input_boolean.cleaned_today
+      state: "off"
+      for: "72:00:00"
+#    - "{{ not is_state('person.jimmy', 'home') }}"
+#    - "{{ not is_state('person.hanna', 'home') }}"
+      #    - condition: template
+      #      value_template: "{{ not is_state('person.jimmy', 'home') }}"
+      #    - condition: template
+      #      value_template: "{{ not is_state('person.hanna', 'home') }}"
+#    - condition: time
+#      after: "10:00:00"
+#      before: "22:00:00"
+    - "{{ not is_state('input_boolean.cleaned_today', 'on') }}"
+  #    - condition: template
+  #      value_template: "{{ not is_state('input_boolean.cleaned_today', 'on') }}"
+  action:
+    - service: vacuum.start
+      entity_id: vacuum.roborock_s5
+#
+- alias: "Robot_cleaned_empty_bin"
+  id: "Robot städat dags att tömma"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: person.jimmy
+      to: "home"
+    - platform: state
+      entity_id: person.hanna
+      to: "home"
+    - platform: numeric_state
+      entity_id: counter.robot_counter_empty_bin
+      above: 3
+  condition:
+    - condition: numeric_state
+      entity_id: counter.robot_counter_empty_bin
+      above: 3
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+  action:
+    - service: vacuum.send_command
+      data:
+        entity_id: 'vacuum.roborock_s5'
+        command: app_goto_target
+        params: [31000, 28500]
+    - delay:
+        seconds: 10
+    - service: counter.reset
+      data:
+        entity_id: counter.robot_counter_empty_bin
+#
+- alias: "Robot: Reset cleaned today counter"
+  id: "Robot resetta städat räknaren"
+  initial_state: true
+  mode: single
+  trigger:
+    platform: time
+    at: "01:00:00"
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.cleaned_today
+#
+- alias: "roborock_started_cleaning"
+  id: "Robot: Robot started cleaning"
+  initial_state: true
+  mode: single
+  trigger:
+    platform: state
+    entity_id: vacuum.roborock_s5
+    from: "docked"
+    to: "cleaning"
+  action:
+  - service: notify.hanna_jimmy
+    data:
+      title: "Robot börjar"
+      message: "Robot börjar städa!"
+  - service: notify.lametric
+    data:
+      message: "Robot börjar städa!"
+      data:
+        icon: 'a13030'
+        icon_type: 'none'
+        sound: 'notification'
+        priority: 'warning'
+        cycles: 2
+#
+- alias: "roborock_finished_cleaning"
+  id: "Robot: Robot finished cleaning"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: vacuum.roborock_s5
+      from: "returning"
+      to: "docked"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Robot klar"
+        message: "Städat klart! Tog {{ state_attr('vacuum.roborock_s5', 'cleaning_time') }} min, på {{ state_attr('vacuum.roborock_s5', 'cleaned_area') }} kvadrat."
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.cleaned_today
+    - service: notify.lametric
+      data:
+        message: "Städat klart! Tog {{ state_attr('vacuum.roborock_s5', 'cleaning_time') }} min, på {{ state_attr('vacuum.roborock_s5', 'cleaned_area') }} kvadrat."
+        data:
+          icon: 'a13030'
+          icon_type: 'none'
+          sound: 'notification'
+          priority: 'warning'
+          cycles: 2
+    - service: counter.increment
+      data:
+        entity_id: counter.robot_counter_empty_bin
+#
+- alias: "roborock_error"
+  id: "Robot: Error"
+  initial_state: true
+  mode: single
+  trigger:
+    platform: state
+    entity_id: vacuum.roborock_s5
+    to: "error"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Robot har stött på problem"
+        message: "Error: {{ state_attr('vacuum.roborock_s5', 'error') }}."
+#

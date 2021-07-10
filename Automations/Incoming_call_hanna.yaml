@@ -1,0 +1,125 @@
+############################################
+##
+## Color lights automations
+##
+############################################
+
+############################################
+##
+## All
+##
+############################################
+
+- alias: "incoming_call_hanna"
+  id: "Inkommande samtal ljusvarning hanna"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.h8324_telefonstatus
+      to: "ringing"
+  condition:
+    - condition: state
+      entity_id: person.hanna
+      state: "home"
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.trust_e27_color_1
+        brightness: 254
+        effect: colorloop
+        transition: 1
+    - service: light.turn_on
+      data:
+        entity_id: light.osram_smart_e27_color_1
+        brightness: 254
+        effect: colorloop
+        transition: 1
+    - service: light.turn_on
+      data:
+        entity_id: light.ensis_up
+        brightness: 254
+        effect: colorloop
+        transition: 1
+    - service: light.turn_on
+      data:
+        entity_id: light.sovrum_jimmy
+        brightness: 254
+        flash: short
+        #      effect: colorloop
+        transition: 1
+    - service: light.turn_on
+      data:
+        entity_id: light.kontor_color_1
+        brightness: 254
+        flash: short
+        #      effect: colorloop
+#        transition: 1
+    - service: light.turn_on
+      data:
+        entity_id: light.kontor_color_2
+        brightness: 254
+        flash: short
+        #      effect: colorloop
+#        transition: 1
+    - service: light.turn_on
+      data:
+        entity_id: light.kontor_color_3
+        brightness: 254
+        flash: short
+        #      effect: colorloop
+#        transition: 1
+    - service: switch.turn_on
+      data:
+        entity_id: switch.vardags_eld
+#    - service: shell_command.lmvardagsrum_call_hanna
+#    - service: shell_command.lmsovrum_call_hanna
+#    - service: shell_command.lmmatsal_call_hanna
+    - service: notify.lametric
+      data:
+        message: "Hanna, mobilen ringer!"
+        data:
+          icon: "a35"
+          icon_type: "none"
+          sound: "cat"
+          priority: "warning"
+          cycles: 3
+#
+- alias: "no_incoming_call_hanna"
+  id: "Inkommande samtal ljusvarning AV hanna"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.h8324_telefonstatus
+      from: "ringing"
+  condition:
+    - condition: state
+      entity_id: person.hanna
+      state: "home"
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.osram_smart_e27_color_1
+    - service: light.turn_off
+      data:
+        entity_id: light.trust_e27_color_1
+    - service: light.turn_off
+      data:
+        entity_id: light.ensis_up
+    - service: light.turn_off
+      data:
+        entity_id: light.sovrum_jimmy
+    - service: light.turn_off
+      data:
+        entity_id: light.kontor_color_1
+    - service: light.turn_off
+      data:
+        entity_id: light.kontor_color_2
+    - service: light.turn_off
+      data:
+        entity_id: light.kontor_color_3
+    - service: switch.turn_off
+      data:
+        entity_id: switch.vardags_eld
+#

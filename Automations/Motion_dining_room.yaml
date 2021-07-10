@@ -1,0 +1,168 @@
+############################################
+##
+## Motion triggered lights automations
+##
+############################################
+
+############################################
+##
+## All
+##
+############################################
+
+
+- alias: "matsal_on_motion"
+  id: "Matsal På Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_matsal
+      to: "on"
+  condition:
+    - "{{ state_attr('sun.sun', 'elevation') < 1 }}"
+    #  - condition: template
+    #    value_template: '{{ state_attr("sun.sun", "elevation") < 1 }}'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.matsal_finn
+    - service: switch.turn_on
+      data:
+        entity_id: switch.matsal_spel_slinga
+#
+- alias: "matsal_off_motion"
+  id: "Matsal Av Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_matsal
+      to: "off"
+      for: "00:20:00"
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.matsal_finn
+    - service: switch.turn_off
+      data:
+        entity_id: switch.matsal_spel_slinga
+#
+- alias: "matsal_on_motion_ensis"
+  id: "Matsal På Rörelse Ensis"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_matsal
+      to: "on"
+  condition:
+    - "{{ state_attr('sun.sun', 'elevation') < 1 }}"
+    #  - condition: template
+    #    value_template: '{{ state_attr("sun.sun", "elevation") < 1 }}'
+    - "{{ is_state('input_boolean.ensis_man_override', 'off') }}"
+    #  - condition: template
+    #    value_template: "{{ not is_state('input_boolean.ensis_man_override', 'on') }}"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.ensis_up
+        brightness: 254
+        color_name: >
+          {% if states('sensor.ute') | float <= -8 %}
+            indigo
+          {% elif states('sensor.ute') | float > -8 and states('sensor.ute') | float <= 1 %}
+            blue
+          {% elif states('sensor.ute') | float > 1 and states('sensor.ute') | float <= 10 %}
+            green
+          {% elif states('sensor.ute') | float > 10 and states('sensor.ute') | float <= 18 %}
+            yellow
+          {% elif states('sensor.ute') | float > 18 and states('sensor.ute') | float < 25 %}
+            darkorange
+          {% elif states('sensor.ute') | float >= 25 %}
+            red
+          {% else %}
+            white
+          {% endif %}
+#
+- alias: "matsal_off_motion_ensis_up"
+  id: "Matsal Av Rörelse Ensis Upp"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_matsal
+      to: "off"
+      for: "00:20:00"
+  condition:
+    - "{{ is_state('input_boolean.ensis_man_override', 'off') }}"
+  #  - condition: template
+  #    value_template: "{{ not is_state('input_boolean.ensis_man_override', 'on') }}"
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.ensis_up
+#
+- alias: "matsal_off_motion_ensis_down"
+  id: "Matsal Av Rörelse Ensis Ner"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_matsal
+      to: "off"
+      for: "01:00:00"
+  condition:
+    - "{{ is_state('input_boolean.ensis_man_override', 'off') }}"
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.ensis_down
+#
+- alias: "matsal_off_motion_sound"
+  id: "Matsal Av Rörelse Ljud"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_matsal
+      to: "off"
+      for: "03:00:00"
+#  condition:
+#    - "{{ is_state('input_boolean.ensis_man_override', 'off') }}"
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.toppar_matsal
+    - service: switch.turn_off
+      data:
+        entity_id: switch.sub_mixer_matsal
+#
+- alias: "Ensis_Reset_manual_override"
+  id: "Ensis override reset"
+  initial_state: true
+  mode: single
+  trigger:
+    platform: time
+    at: "04:00:00"
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.ensis_man_override
+#

@@ -1,0 +1,145 @@
+
+
+
+
+
+
+- alias: "sileno_Reset_manual_override"
+  id: "Sileno reset manuell override"
+  initial_state: true
+  mode: single
+  trigger:
+    platform: time
+    at: "04:00:00"
+  condition:
+    - "{{ is_state('input_boolean.sileno_winter_sleep', 'off') }}"
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.sileno_override
+#
+- alias: "Sileno_start"
+  id: "Sileno starta"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "10:00:02"
+    - platform: state
+      entity_id: input_boolean.bad_weather
+      to: "off"
+    - platform: numeric_state
+      entity_id: sensor.sileno_battery_level
+      above: 99
+    - platform: state
+      entity_id: person.jimmy
+      to: "home"
+    - platform: state
+      entity_id: person.hanna
+      to: "home"
+  condition:
+    - condition: time
+      after: "10:00:00"
+      before: "19:30:00"
+    - "{{ is_state('input_boolean.bad_weather', 'off') }}"
+    - condition: numeric_state
+      entity_id: sensor.sileno_battery_level
+      above: 99
+    - "{{ is_state('input_boolean.sileno_override', 'off') }}"
+    - "{{ states('sensor.ute') | float > 8 }}"
+    - "{{ states('sensor.ute_temp_min_24h') | float > 1 }}"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+  action:
+    - service: vacuum.start
+      entity_id: vacuum.sileno
+#
+- alias: "Sileno_parked_bad_weather"
+  id: "Sileno parkerad dåligt väder"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      from: "Ingen nederbörd"
+  condition:
+    - "{{ is_state('input_boolean.sileno_winter_sleep', 'off') }}"
+  action:
+    - service: vacuum.stop
+      entity_id: vacuum.sileno
+#
+- alias: "Sileno_parked_evening_schedule"
+  id: "Sileno parkerad kvällsschema"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "19:30:00"
+  condition:
+    - "{{ is_state('input_boolean.sileno_winter_sleep', 'off') }}"
+  action:
+    - service: vacuum.stop
+      entity_id: vacuum.sileno
+#
+- alias: "Sileno_parked_no_one_home"
+  id: "Sileno parkerad ingen hemma"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: person.jimmy
+      to: "not_home"
+    - platform: state
+      entity_id: person.hanna
+      to: "not_home"
+  condition:
+    - condition: state
+      entity_id: person.hanna
+      state: "not_home"
+    - condition: state
+      entity_id: person.jimmy
+      state: "not_home"
+    - "{{ is_state('input_boolean.sileno_winter_sleep', 'off') }}"
+  action:
+    - service: vacuum.stop
+      entity_id: vacuum.sileno
+#
+- alias: "Sileno_stop"
+  id: "Sileno stoppad"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: vacuum.sileno
+      from: "docked"
+    - platform: state
+      entity_id: input_boolean.sileno_override
+      from: "off"
+  condition:
+    - "{{ is_state('input_boolean.sileno_winter_sleep', 'off') }}"
+    - condition: or
+      conditions:
+        - condition: time
+          after: "19:30:00"
+          before: "10:00:00"
+        - "{{ not is_state('sensor.trafikverket_karlsvik_precipitation_type', 'Ingen nederbörd') }}"
+        - "{{ states('sensor.ute') | float < 8 }}"
+        - "{{ states('sensor.ute_temp_min_24h') | float < 1 }}"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.hanna
+              state: "not_home"
+            - condition: state
+              entity_id: person.jimmy
+              state: "not_home"
+  action:
+    - service: vacuum.stop
+      entity_id: vacuum.sileno
+#

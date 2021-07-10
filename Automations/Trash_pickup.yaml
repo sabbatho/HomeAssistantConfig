@@ -1,0 +1,54 @@
+
+
+
+#
+- alias: "trash_pickup_Android_discord"
+  id: "Sophämtning Android och Discord"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: '16:00:00'
+  condition:
+    - condition: time
+      weekday:
+      - mon
+    - "{{ now().isocalendar()[1] % 2 == 1 }}"
+#  - condition: template
+#    value_template: "{{ now().isocalendar()[1] % 2 == 1 }}"
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        message: "Sophämtning imorgon, dags att köra fram tunnorna"
+    - service: notify.discord
+      data: 
+        message: "Sophämtning imorgon, dags att köra fram tunnorna"
+        target: !secret discord_message
+#
+- alias: "trash_pickup_lametric"
+  id: "Sophämtning LaMetric"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: '19:00:00'
+    - platform: time
+      at: '20:00:00'
+  condition:
+    - condition: time
+      weekday:
+      - mon
+    - "{{ now().isocalendar()[1] % 2 == 1 }}"
+#  - condition: template
+#    value_template: "{{ now().isocalendar()[1] % 2 == 1 }}"
+  action:
+    - service: notify.lametric
+      data:
+        message: "Sophämtning imorgon, är tunnorna framme?"
+        data:
+          icon: "i16307"
+          icon_type: "none"
+          sound: "open_door"
+          priority: "warning"
+          cycles: 2
+#

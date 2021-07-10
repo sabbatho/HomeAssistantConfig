@@ -1,0 +1,171 @@
+############################################
+##
+## Fan automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+- alias: "bedroom_fan_condtion_temp_on"
+  id: "Sovrumsfläkt beroende på temp På"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: time_pattern
+    minutes: 0
+  - platform: time_pattern
+    minutes: 15
+  - platform: time_pattern
+    minutes: 30
+  - platform: time_pattern
+    minutes: 45
+  condition:
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: person.jimmy
+        state: 'home'
+      - condition: state
+        entity_id: binary_sensor.clt_l29_is_charging
+        state: 'on'
+      - "{{ states('sensor.sovrum') > '23' }}"
+#       value_template: '{{ states.sensor.terrass_temp.state < states.sensor.sovrum.state and states.sensor.sovrum.state > "24" }}'
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: person.hanna
+        state: 'home'
+      - condition: state
+        entity_id: binary_sensor.h8324_is_charging
+        state: 'on'
+      - "{{ states('sensor.sovrum') > '23' }}"
+#       value_template: '{{ states.sensor.terrass_temp.state < states.sensor.sovrum.state and states.sensor.sovrum.state > "24" }}'
+  action:
+  - service: switch.turn_on
+    data:
+      entity_id: switch.flakt_sovrum
+#
+- alias: "bedroom_fan_condtion_temp off"
+  id: "Sovrumsfläkt beroende på temp Av"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: time_pattern
+    minutes: 0
+  - platform: time_pattern
+    minutes: 15
+  - platform: time_pattern
+    minutes: 30
+  - platform: time_pattern
+    minutes: 45
+  condition:
+  - condition: or
+    conditions:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: person.jimmy
+        state: 'home'
+      - condition: state
+        entity_id: binary_sensor.clt_l29_is_charging
+        state: 'on'
+      - "{{ states('sensor.sovrum') < '23' }}"
+#      - condition: template
+#        value_template: '{{ not states.sensor.sovrum.state > "22" }}'
+#      value_template: '{{ not states.sensor.terrass_temp.state < states.sensor.sovrum.state }}'
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: person.hanna
+        state: 'home'
+      - condition: state
+        entity_id: binary_sensor.h8324_is_charging
+        state: 'on'
+      - "{{ states('sensor.sovrum') < '23' }}"
+#      - condition: template
+#        value_template: '{{ not states.sensor.sovrum.state > "22" }}'
+#      value_template: '{{ not states.sensor.sovrum.state > "24" }}'
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: binary_sensor.h8324_is_charging
+        state: 'off'
+      - condition: state
+        entity_id: binary_sensor.clt_l29_is_charging
+        state: 'off'
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.flakt_sovrum
+#
+#- id: 'office_pc_on_motion_fan'
+#  alias: Kontor Dator På Rörelse Fläkt
+#  initial_state: true
+#  trigger:
+#  - platform: state
+#    entity_id: binary_sensor.motion_office
+#    to: 'on'
+#  condition:
+#    condition: and
+#    conditions:
+#    - condition: time
+#      after: '10:00:00'
+#      before: '16:00:00'
+#    - condition: state
+#      entity_id: sensor.privatephonecharge
+#      state: 'not_charging'
+#    - condition: state
+#      entity_id: binary_sensor.workday_sensor
+#      state: 'on'
+#    - condition: or
+#      conditions:
+#      - condition: state
+#        entity_id: person.jimmy
+#        state: 'home'
+#      - condition: state
+#        entity_id: person.hanna
+#        state: 'home'
+#  action:
+#  - service: switch.turn_on
+#    data:
+#      entity_id: switch.flakt_vardags
+#
+#- id: 'office_pc_off_motion_fan'
+#  alias: Kontor Dator På Rörelse Fläkt
+#  initial_state: true
+#  trigger:
+#  - platform: state
+#    entity_id: binary_sensor.motion_office
+#    to: 'off'
+#    for: '00:05:00'
+#  condition:
+#    condition: and
+#    conditions:
+#    - condition: state
+#      entity_id: sensor.privatephonecharge
+#      state: 'not_charging'
+#    - condition: state
+#      entity_id: binary_sensor.workday_sensor
+#      state: 'on'
+#    - condition: or
+#      conditions:
+#      - condition: state
+#        entity_id: person.jimmy
+#        state: 'home'
+#      - condition: state
+#        entity_id: person.hanna
+#        state: 'home'
+#  action:
+#  - service: switch.turn_off
+#    data:
+#      entity_id: switch.flakt_vardags
+#

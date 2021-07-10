@@ -1,0 +1,166 @@
+############################################
+##
+## Notifications Android app automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+#- id: 'Update available notification android'
+#  alias: Notifiering mobil ny uppdatering
+#  initial_state: true
+#  trigger:
+#  - platform: time
+#    at: '19:00:00'
+#  condition:
+#  - condition: template
+#    value_template: '{{ states.sensor.hass_installed_version.state != states.sensor.hass_current_version.state }}'
+#  action:
+#  - service: notify.mobile_app_clt_l29
+#    data_template: 
+#      title: "Ny Home Assistant version"
+#      message: "Home Assistant {{ states.sensor.hass_current_version.state }} finns nu att installeras"
+#
+#- id: 'Roborock_proof_android'
+#  alias: Roborock säkra lyan Android
+#  initial_state: true
+#  trigger:
+#  - platform: time
+#    at: '21:00:00'
+#  - condition: time
+#    weekday:
+#    - thu
+#    - sun
+#   data: 
+#      message: "Säkra lyan för Roborock och töm smutsbehållaren"
+#
+- alias: "door_to_outside_open"
+  id: "Ytterdörren glömt stänga"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.hall_door_magnet
+    to: 'on'
+    for: '00:05:00'
+  - platform: state
+    entity_id: binary_sensor.hall_door_magnet
+    to: 'on'
+    for: '00:10:00'
+  - platform: state
+    entity_id: binary_sensor.hall_door_magnet
+    to: 'on'
+    for: '00:15:00'
+  - platform: state
+    entity_id: binary_sensor.hall_door_magnet
+    to: 'on'
+    for: '00:20:00'
+  - platform: state
+    entity_id: binary_sensor.hall_door_magnet
+    to: 'on'
+    for: '00:25:00'
+  - platform: state
+    entity_id: binary_sensor.hall_door_magnet
+    to: 'on'
+    for: '00:30:00'
+  - platform: state
+    entity_id: binary_sensor.hall_door_magnet
+    to: 'on'
+    for: '00:40:00'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.hall_door_magnet
+    state: 'on'
+  - "{{ is_state('input_boolean.entrance_door_override', 'off') }}"
+#  - condition: template
+#    value_template: "{{ is_state('input_boolean.entrance_door_override', 'off') }}"
+  action:
+  - service: notify.hanna_jimmy
+    data: 
+      message: "Någon har glömt stänga ytterdörren"
+#
+- alias: "entrance_door_Reset_manual_override"
+  id: "entredörr override reset"
+  initial_state: true
+  mode: single
+  trigger:
+    platform: time
+    at: "00:00:00"
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.entrance_door_override
+#
+- alias: "sleep_hanna_garagelas"
+  id: "Hanna Sover garagelåset"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.h8324_is_charging
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: person.hanna
+    state: 'home'
+  - "{{ is_state('binary_sensor.garagelas', 'on') }}"
+  action:
+  - service: notify.hanna_jimmy
+    data:
+      title: "Garagelåset"
+      message: "Garaget är inte låst"
+#
+- alias: "sleep_jimmy_garagelas"
+  id: "Jimmy Sover Garagelåset"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.clt_l29_is_charging
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: person.jimmy
+    state: 'home'
+  - "{{ is_state('binary_sensor.garagelas', 'on') }}"
+#  - condition: template
+#    value_template: "{{ not is_state('binary_sensor.garagelas', 'off') }}"
+  action:
+  - service: notify.hanna_jimmy
+    data: 
+      title: "Garagelåset"
+      message: "Garaget är inte låst"
+#
+- alias: "leaving_home_garagelas"
+  id: "Inte hemma - Garaget ej låst"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: person.jimmy
+    from: 'home'
+  - platform: state
+    entity_id: person.hanna
+    from: 'home'
+  condition:
+  - "{{ not is_state('person.jimmy', 'home') }}"
+  - "{{ not is_state('person.hanna', 'home') }}"
+  - "{{ is_state('binary_sensor.garagelas', 'on') }}"
+#  - condition: template
+#    value_template: "{{ not is_state('person.jimmy', 'home') }}"
+#  - condition: template
+#    value_template: "{{ not is_state('person.hanna', 'home') }}"
+#  - condition: template
+#    value_template: "{{ not is_state('binary_sensor.garagelas', 'off') }}"
+  action:
+  - service: notify.hanna_jimmy
+    data: 
+      message: "Garaget är inte låst"
+#

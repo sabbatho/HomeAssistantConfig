@@ -1,0 +1,46 @@
+############################################
+##
+## Theme automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+#
+- id: 'plants_on'
+  alias: Växtbelysning På
+  initial_state: true
+  mode: single
+  trigger: 
+  - platform: time
+    at: '08:00:00'
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.vaxt_vardagsrum
+  - service: switch.turn_off
+    data:
+      entity_id: switch.vaxt_vardags2
+#
+- id: 'plants_off'
+  alias: Växtbelysning Av
+  initial_state: true
+  mode: single
+  trigger: 
+  - platform: time
+    at: '22:00:00'
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.vaxt_vardagsrum
+  - service: switch.turn_off
+    data:
+      entity_id: switch.vaxt_vardags2
+#

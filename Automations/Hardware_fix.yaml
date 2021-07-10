@@ -1,0 +1,103 @@
+############################################
+##
+## Theme automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+- alias: "Accesspoint fuckin up"
+  id: "Accesspoint fuckin up"
+  initial_state: false
+  mode: single
+  trigger:
+  - platform: time_pattern
+    minutes: 0
+  - platform: time_pattern
+    minutes: 30
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: device_tracker.00_04_20_e8_a4_c3
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.88_83_5d_df_75_0d
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.00_04_20_fd_0d_3d
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.dc_4f_22_fa_79_da
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.80_7d_3a_33_12_eb
+      state: 'not_home'
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.accesspoint
+  - delay: '00:00:30'
+  - service: switch.turn_on
+    data:
+      entity_id: switch.accesspoint
+  - service: notify.pushbullet
+    data: 
+      title: "Accesspunkt omstartad"
+      message: "Accesspunkten har startats om"
+      target: device/privata
+#
+- alias: "charge_station_off_manual"
+  id: "Laddhörnan av efter manuell start"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: switch.garage_laddstationen
+    to: 'on'
+    for:
+      hours: 3
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.garage_laddstationen
+#
+- alias: "charge_station_off_weekly"
+  id: "Laddhörnan av veckostart"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: time
+    at: '10:00:00'
+  condition:
+  - condition: time
+    weekday:
+    - sat
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.garage_laddstationen
+#
+- alias: "charge_station_on_weekly"
+  id: "Laddhörnan på veckostart"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: time
+    at: '09:00:00'
+  condition:
+  - condition: time
+    weekday:
+    - sat
+  action:
+  - service: switch.turn_on
+    data:
+      entity_id: switch.garage_laddstationen
+#

@@ -1,0 +1,85 @@
+############################################
+##
+## Software automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+#
+- id: Deconz_crash
+  alias: "Deconz has crashed"
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: light.kokstak
+    to: 'unavailable'
+    for: '00:05:00'
+  - platform: state
+    entity_id: light.ensis_down
+    to: 'unavailable'
+    for: '00:05:00'
+  - platform: state
+    entity_id: light.ensis_up
+    to: 'unavailable'
+    for: '00:05:00'
+  - platform: state
+    entity_id: light.garderob
+    to: 'unavailable'
+    for: '00:05:00'
+  - platform: state
+    entity_id: light.hall_entre
+    to: 'unavailable'
+    for: '00:05:00'
+  - platform: state
+    entity_id: light.hall_lilla
+    to: 'unavailable'
+    for: '00:05:00'
+  - platform: state
+    entity_id: light.hall_stora
+    to: 'unavailable'
+    for: '00:05:00'
+  - platform: state
+    entity_id: light.kontor_color_1
+    to: 'unavailable'
+    for: '00:05:00'
+  condition:
+  - condition: state
+    entity_id: light.kokstak
+    state: 'unavailable'
+  - condition: state
+    entity_id: light.ensis_down
+    state: 'unavailable'
+  - condition: state
+    entity_id: light.ensis_up
+    state: 'unavailable'
+  - condition: state
+    entity_id: light.garderob
+    state: 'unavailable'
+  - condition: state
+    entity_id: light.hall_entre
+    state: 'unavailable'
+  - condition: state
+    entity_id: light.hall_lilla
+    state: 'unavailable'
+  - condition: state
+    entity_id: light.hall_stora
+    state: 'unavailable'
+  - condition: state
+    entity_id: light.kontor_color_1
+    state: 'unavailable'
+  action:
+  - service: hassio.addon_start
+    data:
+      addon: core_deconz
+  - service: counter.increment
+    data:
+      entity_id: counter.deconz_restart_counter
+#

@@ -1,0 +1,158 @@
+############################################
+##
+## Theme automations
+##
+############################################
+
+############################################
+##
+## All
+##
+############################################
+
+- alias: "windows_on"
+  id: "Fönster På"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      below: 0.5
+    - platform: numeric_state
+      entity_id: sensor.ljus_ute
+      below: 35
+  condition:
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      below: 0.5
+    - condition: numeric_state
+      entity_id: sensor.ljus_ute
+      below: 35
+  action:
+    - service: light.turn_on
+      entity_id: light.vardagsfonster
+      data:
+        brightness: 40
+        color_temp: 153
+    - service: light.turn_on
+      entity_id: light.vardagsfonster_mot_balkong
+      data:
+        brightness: 40
+        color_temp: 153
+    - service: light.turn_on
+      entity_id: light.matsalsfonster1
+      data:
+        brightness: 80
+        color_temp: 153
+    - service: light.turn_on
+      entity_id: light.matsalsfonster2
+      data:
+        brightness: 80
+        color_temp: 153
+    - service: light.turn_on
+      entity_id: light.matsalsfonster4
+      data:
+        brightness: 40
+        color_temp: 300
+    - service: light.turn_on
+      entity_id: light.kontorsfonster
+      data:
+        brightness: 40
+        color_temp: 153
+    - service: light.turn_on
+      data:
+        entity_id: light.parkering_trapp_1
+        brightness: 2
+        color_temp: 153
+    - service: light.turn_on
+      data:
+        entity_id: light.parkering_trapp_2
+        brightness: 2
+        color_temp: 153
+    - service: light.turn_on
+      data:
+        entity_id: light.garage_ute
+        brightness: 2
+        color_temp: 153
+#
+- alias: "windows_off"
+  id: "Fönster Av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      above: -1.5
+    - platform: numeric_state
+      entity_id: sensor.ljus_ute
+      above: 35
+  condition:
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      above: -1.5
+    - condition: numeric_state
+      entity_id: sensor.ljus_ute
+      above: 35
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.vardagsfonster
+    - service: light.turn_off
+      data:
+        entity_id: light.matsalsfonster1
+    - service: light.turn_off
+      data:
+        entity_id: light.matsalsfonster2
+    - service: switch.turn_off
+      entity_id: switch.vardagsrum_spis
+    - service: light.turn_off
+      data:
+        entity_id: light.matsalsfonster4
+    - service: light.turn_off
+      data:
+        entity_id: light.vardagsfonster_mot_balkong
+    - service: light.turn_off
+      data:
+        entity_id: light.kontorsfonster
+    - service: light.turn_off
+      data:
+        entity_id: light.parkering_trapp_1
+    - service: light.turn_off
+      data:
+        entity_id: light.parkering_trapp_2
+    - service: light.turn_off
+      data:
+        entity_id: light.garage_ute
+#
+- alias: "bad weather on"
+  id: "Dåligt väder på"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      from: "Ingen nederbörd"
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.bad_weather
+#
+- alias: "bad weather off"
+  id: "Dåligt väder av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      to: "Ingen nederbörd"
+      for:
+        hours: 5
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.bad_weather
+#

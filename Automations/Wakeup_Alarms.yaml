@@ -1,0 +1,168 @@
+############################################
+##
+## Theme automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+#- id: 'bedroom_wakeup_tv'
+#  alias: Sovrum vakna TV
+#  initial_state: true
+#  trigger:
+#  - platform: time
+#    at: '07:10:00'
+#  condition:
+#  - condition: and
+#    conditions:
+#    - condition: time
+#      weekday:
+#      - mon
+#      - tue
+#      - wed
+#      - thu
+#      - fri
+#    - condition: state
+#      entity_id: person.jimmy
+#      state: 'home'
+#    - condition: state
+#      entity_id: binary_sensor.workday_sensor
+#      state: 'on'
+#  action:
+#  - service: cast.show_lovelace_view
+#    data:
+#      entity_id: media_player.hobbyrum
+#      view_path: CCTV
+##
+#- id: 'bedroom_wakeup_tv_YT'
+#  alias: Sovrum vakna TV YT
+#  initial_state: true
+#  trigger:
+#  - platform: time
+#    at: '07:01:00'
+#  condition:
+#  - condition: and
+#    conditions:
+#    - condition: time
+#      weekday:
+#      - mon
+#      - tue
+#      - wed
+#      - thu
+#      - fri
+#    - condition: state
+#      entity_id: person.jimmy
+#      state: 'home'
+#    - condition: state
+#      entity_id: binary_sensor.workday_sensor
+#      state: 'on'
+#  action:
+#  - service: media_extractor.play_media
+#    data:
+#      entity_id: media_player.sovrum
+#      media_content_type: video/youtube
+#    data_template:
+#        "https://www.youtube.com/watch?v=1ZYbU82GVz4", 
+#        "https://www.youtube.com/watch?v=MvtWljsraTs", 
+#        "https://www.youtube.com/watch?v=Ll8LQoStiDw", 
+#        "https://www.youtube.com/watch?v=o8GrqUSdzi0", 
+#        "https://www.youtube.com/watch?v=5gBJrZmbGLo", 
+#        "https://www.youtube.com/watch?v=4oY3v0jAWr4",
+#        "https://www.youtube.com/watch?v=mFlrc16xjik",
+#        "https://www.youtube.com/watch?v=tGQAqHkyKGw",
+#        "https://www.youtube.com/watch?v=DWkDBlEyz7U",
+#        "https://www.youtube.com/watch?v=4zqKJBxRyuo",
+#        "https://www.youtube.com/watch?v=hlWiI4xVXKY"
+#        ] | random}}
+#  - delay:
+#      seconds: 10
+#  - service: media_player.volume_set
+#    entity_id: media_player.sovrum
+#    data:
+#      volume_level: 0.4
+#
+- id: 'bedroom_wakeup_jimmy'
+  alias: Sovrum vakna Jimmy
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: time
+    at: input_datetime.jimmy_wakeup
+#    platform: template
+#    value_template: "{{ states('sensor.time') == (state_attr('input_datetime.jimmy_wakeup', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"
+  condition:
+    - condition: state
+      entity_id: person.jimmy
+      state: 'home'
+    - condition: state
+      entity_id: binary_sensor.workday_sensor
+      state: 'on'
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.sovrum_jimmy
+      brightness: 10
+      rgb_color: [255,0,0]
+  - delay: '00:03:00'
+  - service: light.turn_on
+    data:
+      entity_id: light.sovrum_jimmy
+      brightness: 254
+      rgb_color: [255,255,255]
+  - delay: '00:03:00'
+  - service: media_extractor.play_media
+    data:
+      entity_id: media_player.sovrum
+      media_content_type: video/youtube
+      media_content_id: >
+        {{ [
+        "https://www.youtube.com/watch?v=1ZYbU82GVz4", 
+        "https://www.youtube.com/watch?v=MvtWljsraTs", 
+        "https://www.youtube.com/watch?v=Ll8LQoStiDw", 
+        "https://www.youtube.com/watch?v=o8GrqUSdzi0", 
+        "https://www.youtube.com/watch?v=5gBJrZmbGLo", 
+        "https://www.youtube.com/watch?v=4oY3v0jAWr4",
+        "https://www.youtube.com/watch?v=mFlrc16xjik",
+        "https://www.youtube.com/watch?v=tGQAqHkyKGw",
+        "https://www.youtube.com/watch?v=DWkDBlEyz7U",
+        "https://www.youtube.com/watch?v=4zqKJBxRyuo",
+        "https://www.youtube.com/watch?v=hlWiI4xVXKY",
+        "https://www.youtube.com/watch?v=ZHgXfhiDIIM"
+        ] | random }}
+  - service: shell_command.lmsovrum_ssaver_off
+  - delay: '00:30:00'
+  - service: cover.set_cover_position
+    data:
+      entity_id: cover.blind_bedroom
+      position: 100
+#
+- id: 'bedroom_wakeup_hanna'
+  alias: Sovrum vakna Hanna
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: time
+    at: input_datetime.hanna_wakeup
+#    platform: template
+#    value_template: "{{ states('sensor.time') == (state_attr('input_datetime.hanna_wakeup', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"
+  condition:
+    - condition: state
+      entity_id: person.hanna
+      state: 'home'
+    - condition: state
+      entity_id: binary_sensor.workday_sensor
+      state: 'on'
+  action:
+  - service: light.turn_on
+    data:
+      entity_id: light.sovrum_hanna
+      brightness: 60
+      rgb_color: [255,0,0]
+#

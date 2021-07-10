@@ -1,0 +1,103 @@
+############################################
+##
+## Wake up day off automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+- id: 'wakeup_hanna'
+  alias: Hanna vaknat
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.h8324_is_charging
+    from: 'on'
+  condition:
+  - condition: state
+    entity_id: person.hanna
+    state: 'home'
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.kamera1
+  - service: switch.turn_off
+    data:
+      entity_id: switch.kamera2
+#
+- id: 'wakeup_jimmy'
+  alias: Jimmy vaknat
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.clt_l29_is_charging
+    from: 'on'
+  condition:
+  - condition: state
+    entity_id: person.jimmy
+    state: 'home'
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.kamera1
+  - service: switch.turn_off
+    data:
+      entity_id: switch.kamera2
+#
+- id: 'Both_awake_jimmy'
+  alias: Båda vaknat Jimmy
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.clt_l29_is_charging
+    to: 'off'
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: person.jimmy
+      state: 'home'
+    - condition: state
+      entity_id: binary_sensor.h8324_is_charging
+      state: 'off'
+  action:
+  - service: cover.set_cover_position
+    data:
+      entity_id: cover.blind_bedroom
+      position: 100
+  - service: shell_command.lmsovrum_ssaver_off
+#
+- id: 'Both_awake_hanna'
+  alias: Båda vaknat Hanna
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.h8324_is_charging
+    to: 'off'
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.clt_l29_is_charging
+      state: 'off'
+    - condition: state
+      entity_id: person.hanna
+      state: 'home'
+  action:
+  - service: cover.set_cover_position
+    data:
+      entity_id: cover.blind_bedroom
+      position: 100
+  - service: shell_command.lmsovrum_ssaver_off
+#

@@ -1,0 +1,162 @@
+############################################
+##
+## Theme automations
+##
+############################################
+
+############################################
+##
+## All
+##
+############################################
+
+- alias: "play_lights_tvdatorn"
+  id: "Tittar på tv vardagsrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.tvdatorn
+      to: "playing"
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.vardagsrum_spis
+    - service: light.turn_on
+      data:
+        entity_id: light.osram_smart_e27_color_1
+        brightness: 32
+        color_name: >
+          {% if states('sensor.ute') | float <= -8 %}
+            indigo
+          {% elif states('sensor.ute') | float > -8 and states('sensor.ute') | float <= 1 %}
+            blue
+          {% elif states('sensor.ute') | float > 1 and states('sensor.ute') | float <= 10 %}
+            green
+          {% elif states('sensor.ute') | float > 10 and states('sensor.ute') | float <= 18 %}
+            yellow
+          {% elif states('sensor.ute') | float > 18 and states('sensor.ute') | float < 25 %}
+            darkorange
+          {% elif states('sensor.ute') | float >= 25 %}
+            red
+          {% else %}
+            white
+          {% endif %}
+    - service: notify.lametric
+      data:
+        target: "LMVardagsrum"
+        message: >-
+          {% if is_state_attr('media_player.tvdatorn', 'media_content_type', 'tvshow') %}
+            S{{ state_attr('media_player.tvdatorn', 'media_season') }}-{{ state_attr('media_player.tvdatorn', 'media_series_title') }} - E{{ state_attr('media_player.tvdatorn', 'media_episode') }}-{{ state_attr('media_player.tvdatorn', 'media_title') }}
+          {% else %}
+            {{ state_attr('media_player.sovrum', 'media_title') }}
+          {% endif %}
+        data:
+          icon: "i10125"
+          icon_type: "none"
+          priority: "warning"
+          cycles: 3
+#
+- alias: "idle_lights_tvdatorn"
+  id: "Tittar inte längre på tv vardagsrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.tvdatorn
+      from: "playing"
+      to: "idle"
+  condition:
+    - "{{ state_attr('sun.sun', 'elevation') < 1.5 }}"
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.vardagsrum_spis
+    - service: light.turn_on
+      data:
+        entity_id: light.osram_smart_e27_color_1
+        brightness: 255
+        color_name: >
+          {% if states('sensor.ute') | float <= -8 %}
+            indigo
+          {% elif states('sensor.ute') | float > -8 and states('sensor.ute') | float <= 1 %}
+            blue
+          {% elif states('sensor.ute') | float > 1 and states('sensor.ute') | float <= 10 %}
+            green
+          {% elif states('sensor.ute') | float > 10 and states('sensor.ute') | float <= 18 %}
+            yellow
+          {% elif states('sensor.ute') | float > 18 and states('sensor.ute') | float < 25 %}
+            darkorange
+          {% elif states('sensor.ute') | float >= 25 %}
+            red
+          {% else %}
+            white
+          {% endif %}
+#
+- alias: "paused_tvdatorn"
+  id: "Tv pausad vardagsrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.tvdatorn
+      from: "playing"
+      to: "paused"
+  condition:
+    - "{{ state_attr('sun.sun', 'elevation') < 1.5 }}"
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.vardagsrum_spis
+    - service: light.turn_on
+      data:
+        entity_id: light.osram_smart_e27_color_1
+        brightness: 255
+        color_name: >
+          {% if states('sensor.ute') | float <= -8 %}
+            indigo
+          {% elif states('sensor.ute') | float > -8 and states('sensor.ute') | float <= 1 %}
+            blue
+          {% elif states('sensor.ute') | float > 1 and states('sensor.ute') | float <= 10 %}
+            green
+          {% elif states('sensor.ute') | float > 10 and states('sensor.ute') | float <= 18 %}
+            yellow
+          {% elif states('sensor.ute') | float > 18 and states('sensor.ute') | float < 25 %}
+            darkorange
+          {% elif states('sensor.ute') | float >= 25 %}
+            red
+          {% else %}
+            white
+          {% endif %}
+#
+- alias: "play_cover_tvdatorn"
+  id: "Tittar på tv cover vardagsrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.tvdatorn
+      to: "playing"
+  condition:
+    - "{{ state_attr('sun.sun', 'elevation') > -5 }}"
+  action:
+    - service: cover.set_cover_position
+      data:
+        entity_id: cover.gardin_1
+        position: 11
+#
+- alias: "idle_cover_tvdatorn"
+  id: "Tittar inte längre på tv cover vardagsrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.tvdatorn
+      from: "playing"
+      to: "idle"
+  action:
+    - service: cover.set_cover_position
+      data:
+        entity_id: cover.gardin_1
+        position: 100
+#

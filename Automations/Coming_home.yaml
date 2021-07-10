@@ -1,0 +1,35 @@
+############################################
+##
+## Coming home automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+- alias: "coming_home_always"
+  id: "Kommer hem always"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: person.jimmy
+    to: 'home'
+  - platform: state
+    entity_id: person.hanna
+    to: 'home'
+  action:
+  - service: switch.turn_off
+    data:
+      entity_id: switch.kamera1
+  - service: switch.turn_off
+    data:
+      entity_id: switch.kamera2
+#  - service: shell_command.lametric_bright
+#
