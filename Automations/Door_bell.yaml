@@ -43,7 +43,7 @@
         title: "Det ringde på dörren!"
         message: "Tryck här för att se vem det var"
         data:
-          clickAction: "https://sabbbbath.duckdns.org:8123/local/tmp/snapshot1.jpg"
+          clickAction: !secret url_camera_entre
     - delay:
         seconds: 10
 #
