@@ -10,19 +10,18 @@
   initial_state: true
   mode: single
   trigger:
-    - platform: event
-      event_type: deconz_event
-      event_data:
-        id: hall_fjarr
-        event: 1002
+    - platform: state
+      entity_id: sensor.hall_fjarr_action
+      to: "toggle"
   action:
     - service: light.toggle
-      entity_id: light.alla_taklampor
+      target:
+        entity_id: light.alla_taklampor
       data:
         brightness: 254
         color_temp: 153
     - service: input_boolean.turn_on
-      data:
+      target:
         entity_id: input_boolean.hallway_man_override
 #
 - id: 'hallway_remote_override_OFF'
@@ -30,40 +29,38 @@
   initial_state: true
   mode: single
   trigger:
-    - platform: event
-      event_type: deconz_event
-      event_data:
-        id: hall_fjarr
-        event: 1001
+    - platform: state
+      entity_id: sensor.hall_fjarr_action
+      to: "toggle_hold"
   action:
     - service: input_boolean.turn_off
-      data:
+      target:
         entity_id: input_boolean.hallway_man_override
     - service: light.turn_on
-      entity_id: light.alla_taklampor
+      target:
+        entity_id: light.alla_taklampor
       data:
         brightness: 2
         color_temp: 153
-#        flash: short
+        effect: blink
 #
 - id: 'hallway_remote_light_dim_up'
   alias: 'Hall fjärr dimma upp'
   initial_state: true
   mode: parallel
   trigger:
-    - platform: event
-      event_type: deconz_event
-      event_data:
-        id: hall_fjarr
-        event: 2002
+    - platform: state
+      entity_id: sensor.hall_fjarr_action
+      to: "brightness_up_click"
   action:
     - service: light.turn_on
-      entity_id: light.alla_taklampor
+      target:
+        entity_id: light.alla_taklampor
       data:
         brightness_step: 10
         transition: 1
     - service: input_boolean.turn_on
-      data:
+      target:
         entity_id: input_boolean.hallway_man_override
 #
 - id: 'hallway_remote_light_dim_up_faster'
@@ -71,19 +68,18 @@
   initial_state: true
   mode: parallel
   trigger:
-    - platform: event
-      event_type: deconz_event
-      event_data:
-        id: hall_fjarr
-        event: 2001
+    - platform: state
+      entity_id: sensor.hall_fjarr_action
+      to: "brightness_up_hold"
   action:
     - service: light.turn_on
-      entity_id: light.alla_taklampor
+      target:
+        entity_id: light.alla_taklampor
       data:
         brightness_step: 50
         transition: 1
     - service: input_boolean.turn_on
-      data:
+      target:
         entity_id: input_boolean.hallway_man_override
 #
 - id: 'hallway_remote_light_dim_down'
@@ -91,19 +87,18 @@
   initial_state: true
   mode: parallel
   trigger:
-    - platform: event
-      event_type: deconz_event
-      event_data:
-        id: hall_fjarr
-        event: 3002
+    - platform: state
+      entity_id: sensor.hall_fjarr_action
+      to: "brightness_downa_click"
   action:
     - service: light.turn_on
-      entity_id: light.alla_taklampor
+      target:
+        entity_id: light.alla_taklampor
       data:
         brightness_step: -10
         transition: 1
     - service: input_boolean.turn_on
-      data:
+      target:
         entity_id: input_boolean.hallway_man_override
 #
 - id: 'hallway_remote_light_dim_down_faster'
@@ -111,19 +106,18 @@
   initial_state: true
   mode: parallel
   trigger:
-    - platform: event
-      event_type: deconz_event
-      event_data:
-        id: hall_fjarr
-        event: 3001
+    - platform: state
+      entity_id: sensor.hall_fjarr_action
+      to: "brightness_up_hold"
   action:
     - service: light.turn_on
-      entity_id: light.alla_taklampor
+      target:
+        entity_id: light.alla_taklampor
       data:
         brightness_step: -50
         transition: 1
     - service: input_boolean.turn_on
-      data:
+      target:
         entity_id: input_boolean.hallway_man_override
 #
 - id: 'hallway_remote_light_cold'
@@ -131,18 +125,17 @@
   initial_state: true
   mode: single
   trigger:
-    - platform: event
-      event_type: deconz_event
-      event_data:
-        id: hall_fjarr
-        event: 4002
+    - platform: state
+      entity_id: sensor.hall_fjarr_action
+      to: "arrow_left_click"
   action:
     - service: light.turn_on
-      entity_id: light.alla_taklampor
+      target:
+        entity_id: light.alla_taklampor
       data:
         color_temp: 153
     - service: input_boolean.turn_on
-      data:
+      target:
         entity_id: input_boolean.hallway_man_override
 #
 - id: 'hallway_remote_light_warm'
@@ -150,17 +143,16 @@
   initial_state: true
   mode: single
   trigger:
-    - platform: event
-      event_type: deconz_event
-      event_data:
-        id: hall_fjarr
-        event: 5002
+    - platform: state
+      entity_id: sensor.hall_fjarr_action
+      to: "arrow_right_click"
   action:
     - service: light.turn_on
-      entity_id: light.alla_taklampor
+      target:
+        entity_id: light.alla_taklampor
       data:
         color_temp: 400
     - service: input_boolean.turn_on
-      data:
+      target:
         entity_id: input_boolean.hallway_man_override
 #

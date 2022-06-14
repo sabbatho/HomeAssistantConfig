@@ -1,3 +1,9 @@
+#
+#
+#
+#
+
+
 - alias: "closet_on_motion"
   id: "Garderob På Rörelse"
   initial_state: true
@@ -10,11 +16,14 @@
     - condition: or
       conditions:
         - condition: state
-          entity_id: binary_sensor.clt_l29_is_charging
-          state: "off"
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
         - condition: state
-          entity_id: binary_sensor.h8324_is_charging
-          state: "off"
+          entity_id: sensor.h8324_charger_type
+          state: "none"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
     - condition: or
       conditions:
         - condition: state
@@ -23,14 +32,16 @@
         - condition: state
           entity_id: person.jimmy
           state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
   action:
     - service: light.turn_on
+      target:
+        entity_id:
+          - light.garderob
+          - light.hall_stora
       data:
-        entity_id: light.garderob
-        brightness: 254
-    - service: light.turn_on
-      data:
-        entity_id: light.hall_stora
         brightness: 254
 #
 - alias: "closet_off_motion"
@@ -43,11 +54,15 @@
       to: "off"
   action:
     - service: light.turn_off
-      data:
+      target:
         entity_id: light.garderob
+      data:
+        transition: 20
     - delay:
         seconds: 10
     - service: light.turn_off
-      data:
+      target:
         entity_id: light.hall_stora
+      data:
+        transition: 20
 #

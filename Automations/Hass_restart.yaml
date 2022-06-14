@@ -13,8 +13,8 @@
 ############################################
 
 
-- id: 'Startup auto'
-  alias: 'Startup Set'
+- id: "Startup auto"
+  alias: "Startup Set"
   initial_state: true
   mode: single
   trigger:
@@ -23,34 +23,16 @@
   action:
   - service: homeassistant.update_entity
     entity_id: cover.blind_bedroom
-#  - service: deconz.configure
-#    entity_id: binary_sensor.motion_bedroom_jimmy
-#    data:
-#      config:
-#        duration: 60
-#  - service: deconz.configure
-#    entity_id: binary_sensor.motion_bedroom_hanna
-#    data:
-#      config:
-#        duration: 60
-#
-#  - service: deconz.configure
-#    entity_id: binary_sensor.motion_outside_garage_presence
-#    field: /config
-#    data:
-#      sensitivity: 3
 #
 - alias: "Hass restart notify Android"
   id: "Notifiering att HASS har startat om Android"
   initial_state: true
   mode: single
   trigger:
-  - platform: numeric_state
-    entity_id: sensor.uptime
-    value_template: "{{ states('sensor.uptime') | round(1) }}"
-    below: 0.2
+    - platform: template
+      value_template: "{% if (as_timestamp(now()) +120) == as_timestamp(states('sensor.uptime')) %}true{% endif %}"
   action:
-  - service: notify.mobile_app_clt_l29
-    data: 
-      message: "Home Assistant har av någon anledning startat om"
+    - service: notify.mobile_app_clt_l29
+      data: 
+        message: "Home Assistant har av någon anledning startat om"
 #

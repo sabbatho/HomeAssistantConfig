@@ -4,8 +4,8 @@
 #
 ##
 
-- alias: "office_pc_on_motion"
-  id: "Kontor Dator På Rörelse"
+- alias: "office_pc_on_motion_on_lights"
+  id: "Kontor Dator på Rörelse PÅ ljus"
   initial_state: true
   mode: single
   trigger:
@@ -16,9 +16,6 @@
       entity_id: binary_sensor.motion_hobbyrum_speldator
       to: "on"
   condition:
-    - condition: state
-      entity_id: binary_sensor.clt_l29_is_charging
-      state: "off"
     - condition: or
       conditions:
         - condition: state
@@ -27,36 +24,33 @@
         - condition: state
           entity_id: person.hanna
           state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: switch.speldator1
+          state: "on"
+        - condition: state
+          entity_id: switch.speldator2
+          state: "on"
+    - "{{ ( as_timestamp(now()) - as_timestamp(state_attr('automation.office_pc_on_motion_on_lights', 'last_triggered')) |int(0) ) > 1 }}"
+    - condition: or
+      conditions:
+        - condition: numeric_state
+          entity_id: sun.sun
+          attribute: elevation
+          below: 3
+        - condition: numeric_state
+          entity_id: sensor.ljus_ute
+          below: 750
   action:
-    - service: switch.turn_on
-      data:
-        entity_id: switch.office
-    - service: switch.turn_on
-      data:
-        entity_id: switch.ljud_dator
     - service: light.turn_on
+      target:
+        entity_id: light.kontor_color_mitten_fram
       data:
-        entity_id: light.trust_e27_color_1
-        brightness: 254
-        color_name: >
-          {% if states('sensor.ute') | float <= -8 %}
-            indigo
-          {% elif states('sensor.ute') | float > -8 and states('sensor.ute') | float <= 1 %}
-            blue
-          {% elif states('sensor.ute') | float > 1 and states('sensor.ute') | float <= 10 %}
-            green
-          {% elif states('sensor.ute') | float > 10 and states('sensor.ute') | float <= 18 %}
-            yellow
-          {% elif states('sensor.ute') | float > 18 and states('sensor.ute') | float < 25 %}
-            darkorange
-          {% elif states('sensor.ute') | float >= 25 %}
-            red
-          {% else %}
-            white
-          {% endif %}
-    - service: light.turn_on
-      data:
-        entity_id: light.kontor_color_1
+        effect: finish_effect
         brightness: 254
         color_name: >
           {% if states('sensor.clt_l29_battery_level') | float >= 80 %}
@@ -73,28 +67,17 @@
             white
           {% endif %}
     - service: light.turn_on
+      target:
+        entity_id: 
+          - light.kontor_color_hoger_fram
+          - light.kontor_color_hoger_bak
+          - light.kontor_color_roof
+          - light.kontor_color_vanster_fram
+          - light.kontor_color_vanster_bak_ovre
+          - light.kontor_color_vanster_bak_mitten
+          - light.kontor_color_vanster_bak_nedre
       data:
-        entity_id: light.kontor_color_2
-        brightness: 254
-        color_name: >
-          {% if states('sensor.ute') | float <= -8 %}
-            indigo
-          {% elif states('sensor.ute') | float > -8 and states('sensor.ute') | float <= 1 %}
-            blue
-          {% elif states('sensor.ute') | float > 1 and states('sensor.ute') | float <= 10 %}
-            green
-          {% elif states('sensor.ute') | float > 10 and states('sensor.ute') | float <= 18 %}
-            yellow
-          {% elif states('sensor.ute') | float > 18 and states('sensor.ute') | float < 25 %}
-            darkorange
-          {% elif states('sensor.ute') | float >= 25 %}
-            red
-          {% else %}
-            white
-          {% endif %}
-    - service: light.turn_on
-      data:
-        entity_id: light.kontor_color_3
+        effect: finish_effect
         brightness: 254
         color_name: >
           {% if states('sensor.ute') | float <= -8 %}
@@ -113,7 +96,246 @@
             white
           {% endif %}
 #
-- alias: "office_pc_off_motion"
+- alias: "office_pc_on_motion_on_switch"
+  id: "Kontor Dator på Rörelse PÅ brytaren"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_office
+      to: "on"
+    - platform: state
+      entity_id: binary_sensor.motion_hobbyrum_speldator
+      to: "on"
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: switch.speldator1
+          state: "on"
+        - condition: state
+          entity_id: switch.speldator2
+          state: "on"
+    - "{{ ( as_timestamp(now()) - as_timestamp(state_attr('automation.office_pc_on_motion_on_switch', 'last_triggered')) |int(0) ) > 1 }}"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.office
+#
+- alias: "office_pc_off_motion_on_lights"
+  id: "Kontor Dator av Rörelse PÅ ljus"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_office
+      to: "on"
+    - platform: state
+      entity_id: binary_sensor.motion_hobbyrum_speldator
+      to: "on"
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
+    - condition: state
+      entity_id: switch.speldator1
+      state: "off"
+    - condition: state
+      entity_id: switch.speldator2
+      state: "off"
+    - "{{ ( as_timestamp(now()) - as_timestamp(state_attr('automation.office_pc_off_motion_on_lights', 'last_triggered')) |int(0) ) > 1 }}"
+    - condition: or
+      conditions:
+        - condition: numeric_state
+          entity_id: sun.sun
+          attribute: elevation
+          below: 3
+        - condition: numeric_state
+          entity_id: sensor.ljus_ute
+          below: 750
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.kontor_color_mitten_fram
+      data:
+        brightness: 254
+        color_name: white
+    - service: light.turn_on
+      target:
+        entity_id: 
+          - light.kontor_color_hoger_fram
+          - light.kontor_color_hoger_bak
+          - light.kontor_color_roof
+          - light.kontor_color_vanster_fram
+          - light.kontor_color_vanster_bak_ovre
+          - light.kontor_color_vanster_bak_mitten
+          - light.kontor_color_vanster_bak_nedre
+      data:
+        brightness: 254
+        color_name: white
+#
+- alias: "office_pc_off_motion_on_sound"
+  id: "Kontor Dator av Rörelse PÅ ljud"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_office
+      to: "on"
+    - platform: state
+      entity_id: binary_sensor.motion_hobbyrum_speldator
+      to: "on"
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
+    - condition: state
+      entity_id: switch.speldator1
+      state: "off"
+    - condition: state
+      entity_id: switch.speldator2
+      state: "off"
+    - "{{ ( as_timestamp(now()) - as_timestamp(state_attr('automation.office_pc_off_motion_on_sound', 'last_triggered')) |int(0) ) > 1 }}"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.office
+#
+- alias: "office_game_pc_on_motion_light"
+  id: "Kontor Speldator På Rörelse ljus"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_office
+      to: "on"
+    - platform: state
+      entity_id: binary_sensor.motion_hobbyrum_speldator
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: input_boolean.speldator1_override
+      state: "off"
+    - condition: state
+      entity_id: switch.speldator1
+      state: "on"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
+    - "{{ ( as_timestamp(now()) - as_timestamp(state_attr('automation.office_game_pc_on_motion_light', 'last_triggered')) |int(0) ) > 1 }}"
+    - condition: or
+      conditions:
+        - condition: numeric_state
+          entity_id: sun.sun
+          attribute: elevation
+          below: 3
+        - condition: numeric_state
+          entity_id: sensor.ljus_ute
+          below: 750
+  variables:
+    colors:
+      - yellow
+      - blue
+      - green
+      - purple
+      - red
+      - pink
+      - orange
+      - cyan
+      - indigo
+      - darkblue
+      - tomato
+      - darkgreen
+    speeds:
+      - 8
+      - 16
+      - 32
+      - 64
+      - 128
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.wled_speldator
+      data:
+        brightness: 254
+        color_name: "{{ colors | random }}"
+        effect: "{{ state_attr('light.wled_speldator', 'effect_list') | random }}"
+    - service: number.set_value
+      data:
+        entity_id: number.wled_speldator_speed
+        value: "{{ speeds | random }}"
+#
+- alias: "office_game_pc_on_motion_sound"
+  id: "Kontor Speldator På Rörelse ljud"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_office
+      to: "on"
+    - platform: state
+      entity_id: binary_sensor.motion_hobbyrum_speldator
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: input_boolean.speldator1_override
+      state: "off"
+    - condition: state
+      entity_id: switch.speldator1
+      state: "on"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
+    - "{{ ( as_timestamp(now()) - as_timestamp(state_attr('automation.office_game_pc_on_motion_sound', 'last_triggered')) |int(0) ) > 1 }}"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.ljud_dator
+#
+- alias: "office_motion_off"
   id: "Kontor Dator Av Rörelse"
   initial_state: true
   mode: single
@@ -121,37 +343,41 @@
     - platform: state
       entity_id: binary_sensor.motion_office
       to: "off"
-      for: "01:00:00"
+      for: "00:20:00"
     - platform: state
       entity_id: binary_sensor.motion_hobbyrum_speldator
       to: "off"
-      for: "01:00:00"
+      for: "00:20:00"
   condition:
     - condition: state
       entity_id: binary_sensor.motion_office
       state: "off"
-      for: "00:59:59"
+      for: "00:19:59"
     - condition: state
       entity_id: binary_sensor.motion_hobbyrum_speldator
       state: "off"
-      for: "00:59:59"
+      for: "00:19:59"
   action:
     - service: switch.turn_off
-      data:
-        entity_id: switch.office
-    - service: switch.turn_off
-      data:
-        entity_id: switch.ljud_dator
+      target:
+        entity_id:
+          - switch.office
+          - switch.ljud_dator
     - service: light.turn_off
+      target:
+        entity_id: 
+          - light.kontor_color_mitten_fram
+          - light.kontor_color_hoger_fram
+          - light.kontor_color_hoger_bak
+          - light.kontor_color_roof
+          - light.kontor_color_vanster_fram
+          - light.kontor_color_vanster_bak_ovre
+          - light.kontor_color_vanster_bak_mitten
+          - light.kontor_color_vanster_bak_nedre
+          - light.wled_speldator
       data:
-        entity_id: light.trust_e27_color_1
-    - service: light.turn_off
-      data:
-        entity_id: light.kontor_color_1
-    - service: light.turn_off
-      data:
-        entity_id: light.kontor_color_2
-    - service: light.turn_off
-      data:
-        entity_id: light.kontor_color_3
+        transition: 20
+    - service: media_player.turn_off
+      target:
+        entity_id: media_player.hobbyrum
 #

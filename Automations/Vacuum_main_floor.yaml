@@ -2,33 +2,37 @@
 #
 #
 
-
 #
-- alias: "Robot cleanup if nobody is home"
-  id: "Robot städa om ingen är hemma"
-  initial_state: true
-  mode: single
-  trigger:
-    - platform: state
-      entity_id: group.hanna_jimmy
-      from: home
-      to: not_home
-  condition:
-    - "{{ not is_state('person.jimmy', 'home') }}"
-    - "{{ not is_state('person.hanna', 'home') }}"
-      #    - condition: template
-      #      value_template: "{{ not is_state('person.jimmy', 'home') }}"
-      #    - condition: template
-      #      value_template: "{{ not is_state('person.hanna', 'home') }}"
-    - condition: time
-      after: "10:00:00"
-      before: "21:00:00"
-    - "{{ not is_state('input_boolean.cleaned_today', 'on') }}"
-  #    - condition: template
-  #      value_template: "{{ not is_state('input_boolean.cleaned_today', 'on') }}"
-  action:
-    - service: vacuum.start
-      entity_id: vacuum.roborock_s5
+# - alias: "Robot cleanup if nobody is home"
+#   id: "Robot städa om ingen är hemma"
+#   initial_state: true
+#   mode: single
+#   trigger:
+#     - platform: state
+#       entity_id: group.hanna_jimmy
+#       from: home
+#       to: not_home
+#   condition:
+#     - condition: not
+#       conditions:
+#         - condition: state
+#           entity_id: person.jimmy
+#           state: "home"
+#         - condition: state
+#           entity_id: person.hanna
+#           state: "home"
+#         - condition: state
+#           entity_id: input_boolean.cleaned_today
+#           state: "on"
+#     - condition: time
+#       after: "10:00:00"
+#       before: "21:00:00"
+#     - condition: state
+#       entity_id: input_boolean.visitors
+#       state: "off"
+#   action:
+#     - service: vacuum.start
+#       entity_id: vacuum.roborock_s5_max
 #
 - alias: "Robot cleanup if not cleaned for X days"
   id: "Robot städa om inte städat på X antal dagar"
@@ -36,31 +40,34 @@
   mode: single
   trigger:
     - platform: time
-      at: "17:40:00"
+      at: input_datetime.vacuum_main_floor_start
   condition:
     - condition: time
       weekday:
-      - wed
-      - sun
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+        - sat
+        - sun
     - condition: state
       entity_id: input_boolean.cleaned_today
       state: "off"
-      for: "72:00:00"
-#    - "{{ not is_state('person.jimmy', 'home') }}"
-#    - "{{ not is_state('person.hanna', 'home') }}"
-      #    - condition: template
-      #      value_template: "{{ not is_state('person.jimmy', 'home') }}"
-      #    - condition: template
-      #      value_template: "{{ not is_state('person.hanna', 'home') }}"
-#    - condition: time
-#      after: "10:00:00"
-#      before: "22:00:00"
-    - "{{ not is_state('input_boolean.cleaned_today', 'on') }}"
-  #    - condition: template
-  #      value_template: "{{ not is_state('input_boolean.cleaned_today', 'on') }}"
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
   action:
     - service: vacuum.start
-      entity_id: vacuum.roborock_s5
+      entity_id: vacuum.roborock_s5_max
 #
 - alias: "Robot_cleaned_empty_bin"
   id: "Robot städat dags att tömma"
@@ -75,11 +82,14 @@
       to: "home"
     - platform: numeric_state
       entity_id: counter.robot_counter_empty_bin
-      above: 3
+      above: 2
   condition:
     - condition: numeric_state
       entity_id: counter.robot_counter_empty_bin
-      above: 3
+      above: 2
+    - condition: state
+      entity_id: vacuum.roborock_s5_max
+      state: "docked"
     - condition: or
       conditions:
         - condition: state
@@ -89,15 +99,18 @@
           entity_id: person.hanna
           state: "home"
   action:
+    - delay:
+        seconds: 10
     - service: vacuum.send_command
+      target:
+        entity_id: "vacuum.roborock_s5_max"
       data:
-        entity_id: 'vacuum.roborock_s5'
         command: app_goto_target
-        params: [31000, 28500]
+        params: [22800, 30800]
     - delay:
         seconds: 10
     - service: counter.reset
-      data:
+      target:
         entity_id: counter.robot_counter_empty_bin
 #
 - alias: "Robot: Reset cleaned today counter"
@@ -105,11 +118,11 @@
   initial_state: true
   mode: single
   trigger:
-    platform: time
-    at: "01:00:00"
+    - platform: time
+      at: "01:00:00"
   action:
     - service: input_boolean.turn_off
-      data:
+      target:
         entity_id: input_boolean.cleaned_today
 #
 - alias: "roborock_started_cleaning"
@@ -117,24 +130,24 @@
   initial_state: true
   mode: single
   trigger:
-    platform: state
-    entity_id: vacuum.roborock_s5
-    from: "docked"
-    to: "cleaning"
+    - platform: state
+      entity_id: vacuum.roborock_s5_max
+      from: "docked"
+      to: "cleaning"
   action:
-  - service: notify.hanna_jimmy
-    data:
-      title: "Robot börjar"
-      message: "Robot börjar städa!"
-  - service: notify.lametric
-    data:
-      message: "Robot börjar städa!"
+    - service: notify.hanna_jimmy
       data:
-        icon: 'a13030'
-        icon_type: 'none'
-        sound: 'notification'
-        priority: 'warning'
-        cycles: 2
+        title: "Robot börjar"
+        message: "Robot börjar städa!"
+    - service: notify.lametric
+      data:
+        message: "Robot börjar städa!"
+        data:
+          icon: "a13030"
+          icon_type: "none"
+          sound: "bicycle"
+          priority: "warning"
+          cycles: 2
 #
 - alias: "roborock_finished_cleaning"
   id: "Robot: Robot finished cleaning"
@@ -142,41 +155,46 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: vacuum.roborock_s5
+      entity_id: vacuum.roborock_s5_max
       from: "returning"
       to: "docked"
   action:
     - service: notify.hanna_jimmy
       data:
         title: "Robot klar"
-        message: "Städat klart! Tog {{ state_attr('vacuum.roborock_s5', 'cleaning_time') }} min, på {{ state_attr('vacuum.roborock_s5', 'cleaned_area') }} kvadrat."
+        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
     - service: input_boolean.turn_on
-      data:
+      target:
         entity_id: input_boolean.cleaned_today
     - service: notify.lametric
       data:
-        message: "Städat klart! Tog {{ state_attr('vacuum.roborock_s5', 'cleaning_time') }} min, på {{ state_attr('vacuum.roborock_s5', 'cleaned_area') }} kvadrat."
+        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
         data:
-          icon: 'a13030'
-          icon_type: 'none'
-          sound: 'notification'
-          priority: 'warning'
+          icon: "a13030"
+          icon_type: "none"
+          sound: "notification2"
+          priority: "warning"
           cycles: 2
     - service: counter.increment
-      data:
+      target:
         entity_id: counter.robot_counter_empty_bin
+    - service: input_datetime.set_datetime
+      target:
+        entity_id: input_datetime.vacuum_main_floor_last_run
+      data:
+        timestamp: "{{ (now().timestamp() +25*60*60) }}"
 #
 - alias: "roborock_error"
   id: "Robot: Error"
   initial_state: true
   mode: single
   trigger:
-    platform: state
-    entity_id: vacuum.roborock_s5
-    to: "error"
+    - platform: state
+      entity_id: vacuum.roborock_s5_max
+      to: "error"
   action:
     - service: notify.hanna_jimmy
       data:
         title: "Robot har stött på problem"
-        message: "Error: {{ state_attr('vacuum.roborock_s5', 'error') }}."
+        message: "Error: {{ state_attr('vacuum.roborock_s5_max', 'error') }}."
 #

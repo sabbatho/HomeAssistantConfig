@@ -1,5 +1,8 @@
-
-
+#
+#
+#
+#
+#
 
 
 - alias: "bedroom_on_motion_jimmy_charging"
@@ -7,194 +10,215 @@
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_bedroom_jimmy
-    to: 'on'
+    - platform: state
+      entity_id: binary_sensor.motion_bedroom_jimmy
+      to: "on"
   condition:
-  - condition: state
-    entity_id: person.jimmy
-    state: 'home'
-  - condition: or
-    conditions:
     - condition: state
-      entity_id: binary_sensor.clt_l29_is_charging
-      state: 'on'
-    - condition: state
-      entity_id: binary_sensor.h8324_is_charging
-      state: 'on'
+      entity_id: person.jimmy
+      state: "home"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: sensor.h8324_charger_type
+          state: "ac"
   action:
-  - service: light.turn_on
-    data:
-      entity_id: light.sovrum_jimmy
-      brightness: 40
-      color_name: red
+    - service: light.turn_on
+      target:
+        entity_id: light.sovrum_jimmy
+      data:
+        brightness: 40
+        color_name: red
+        transition: 10
 #
 - alias: "bedroom_on_motion_jimmy_not_charging"
   id: "Sovrum På Rörelse Jimmy Laddar EJ"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_bedroom_jimmy
-    to: 'on'
+    - platform: state
+      entity_id: binary_sensor.motion_bedroom_jimmy
+      to: "on"
   condition:
-  - condition: state
-    entity_id: person.jimmy
-    state: 'home'
-  - condition: state
-    entity_id: binary_sensor.clt_l29_is_charging
-    state: 'off'
-  - condition: state
-    entity_id: binary_sensor.h8324_is_charging
-    state: 'off'
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
+    - condition: state
+      entity_id: sensor.clt_l29_charger_type
+      state: "none"
+    - condition: state
+      entity_id: sensor.h8324_charger_type
+      state: "none"
   action:
-  - service: light.turn_on
-    data:
-      entity_id: light.sovrum_jimmy
-      brightness: 254
-      color_name: >
-        {{ ['white', 'yellow', 'blue', 'green', 'purple', 'pink', 'orange', 'cyan'] |random }}
+    - service: light.turn_on
+      target:
+        entity_id: light.sovrum_jimmy
+      data:
+        brightness: 254
+        color_name: >
+          {{ ['white', 'yellow', 'blue', 'green', 'purple', 'pink', 'orange', 'cyan'] |random }}
 #
 - alias: "bedroom_off_motion_jimmy_charging"
   id: "Sovrum Av Rörelse Jimmy Laddar"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_bedroom_jimmy
-    to: 'off'
-    for: '00:00:01'
+    - platform: state
+      entity_id: binary_sensor.motion_bedroom_jimmy
+      to: "off"
+      for: "00:00:10"
   condition:
     condition: or
     conditions:
-    - condition: state
-      entity_id: binary_sensor.clt_l29_is_charging
-      state: 'on'
-    - condition: state
-      entity_id: binary_sensor.h8324_is_charging
-      state: 'on'
+      - condition: state
+        entity_id: sensor.clt_l29_charger_type
+        state: "ac"
+      - condition: state
+        entity_id: sensor.h8324_charger_type
+        state: "ac"
   action:
-  - service: light.turn_off
-    data:
-      entity_id: light.sovrum_jimmy
+    - service: light.turn_off
+      target:
+        entity_id: light.sovrum_jimmy
+      data:
+        transition: 10
 #
 - alias: "bedroom_off_motion_jimmy_not_charging"
   id: "Sovrum Av Rörelse Jimmy Laddar EJ"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_bedroom_jimmy
-    to: 'off'
-    for: '00:15:00'
-#  condition:
+    - platform: state
+      entity_id: binary_sensor.motion_bedroom_jimmy
+      to: "off"
+      for: "00:05:00"
   action:
-  - service: light.turn_off
-    data:
-      entity_id: light.sovrum_jimmy
+    - service: light.turn_off
+      target:
+        entity_id: light.sovrum_jimmy
+      data:
+        transition: 20
 #
 - alias: "bedroom_on_motion_hanna_charging"
   id: "Sovrum På Rörelse Hanna Laddar"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_bedroom_hanna
-    to: 'on'
+    - platform: state
+      entity_id: binary_sensor.motion_bedroom_hanna
+      to: "on"
   condition:
-  - "{{ not is_state('input_boolean.hanna_svorum_man_override', 'on') }}"
-#  - condition: template
-#    value_template: "{{ not is_state('input_boolean.hanna_svorum_man_override', 'on') }}"
-  - condition: state
-    entity_id: person.hanna
-    state: 'home'
-  - condition: or
-    conditions:
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: input_boolean.hanna_sovrum_man_override
+          state: "on"
     - condition: state
-      entity_id: binary_sensor.clt_l29_is_charging
-      state: 'on'
-    - condition: state
-      entity_id: binary_sensor.h8324_is_charging
-      state: 'on'
+      entity_id: person.hanna
+      state: "home"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: sensor.h8324_charger_type
+          state: "ac"
   action:
-  - service: light.turn_on
-    data:
-      entity_id: light.sovrum_hanna
-      brightness: 40
-      color_name: red
+    - service: light.turn_on
+      target:
+        entity_id: light.sovrum_hanna
+      data:
+        brightness: 40
+        color_name: red
+        transition: 10
 #
 - alias: "bedroom_on_motion_hanna_not_charging"
   id: "Sovrum På Rörelse Hanna Laddar EJ"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_bedroom_hanna
-    to: 'on'
+    - platform: state
+      entity_id: binary_sensor.motion_bedroom_hanna
+      to: "on"
   condition:
-  - "{{ not is_state('input_boolean.hanna_svorum_man_override', 'on') }}"
-#  - condition: template
-#    value_template: "{{ not is_state('input_boolean.hanna_svorum_man_override', 'on') }}"
-  - condition: state
-    entity_id: person.hanna
-    state: 'home'
-  - condition: state
-    entity_id: binary_sensor.clt_l29_is_charging
-    state: 'off'
-  - condition: state
-    entity_id: binary_sensor.h8324_is_charging
-    state: 'off'
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: input_boolean.hanna_sovrum_man_override
+          state: "on"
+    - condition: state
+      entity_id: person.hanna
+      state: "home"
+    - condition: state
+      entity_id: sensor.clt_l29_charger_type
+      state: "none"
+    - condition: state
+      entity_id: sensor.h8324_charger_type
+      state: "none"
   action:
-  - service: light.turn_on
-    data:
-      entity_id: light.sovrum_hanna
-      brightness: 254
-      color_name: >
-        {{ ['white', 'yellow', 'blue', 'green', 'purple', 'pink', 'orange', 'cyan'] |random }}
+    - service: light.turn_on
+      target:
+        entity_id: light.sovrum_hanna
+      data:
+        brightness: 254
+        color_name: >
+          {{ ['white', 'yellow', 'blue', 'green', 'purple', 'pink', 'orange', 'cyan'] | random }}
 #
 - alias: "bedroom_off_motion_hanna_charging"
   id: "Sovrum Av Rörelse Hanna Laddar"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_bedroom_hanna
-    to: 'off'
-    for: '00:00:01'
+    - platform: state
+      entity_id: binary_sensor.motion_bedroom_hanna
+      to: "off"
+      for: "00:00:10"
   condition:
-  - "{{ not is_state('input_boolean.hanna_svorum_man_override', 'on') }}"
-#  - condition: template
-#    value_template: "{{ not is_state('input_boolean.hanna_svorum_man_override', 'on') }}"
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: binary_sensor.clt_l29_is_charging
-      state: 'on'
-    - condition: state
-      entity_id: binary_sensor.h8324_is_charging
-      state: 'on'
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: input_boolean.hanna_sovrum_man_override
+          state: "on"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: sensor.h8324_charger_type
+          state: "ac"
   action:
-  - service: light.turn_off
-    data:
-      entity_id: light.sovrum_hanna
+    - service: light.turn_off
+      target:
+        entity_id: light.sovrum_hanna
+      data:
+        transition: 10
 #
 - alias: "bedroom_off_motion_hanna_not_charging"
   id: "Sovrum Av Rörelse Hanna Laddar EJ"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_bedroom_hanna
-    to: 'off'
-    for: '00:15:00'
+    - platform: state
+      entity_id: binary_sensor.motion_bedroom_hanna
+      to: "off"
+      for: "00:05:00"
   condition:
-  - "{{ not is_state('input_boolean.hanna_svorum_man_override', 'on') }}"
-#  - condition: template
-#    value_template: "{{ not is_state('input_boolean.hanna_svorum_man_override', 'on') }}"
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: input_boolean.hanna_sovrum_man_override
+          state: "on"
   action:
-  - service: light.turn_off
-    data:
-      entity_id: light.sovrum_hanna
+    - service: light.turn_off
+      target:
+        entity_id: light.sovrum_hanna
+      data:
+        transition: 20
 #
 - alias: "Hanna_sovrum_Reset_manual_override"
   id: "Hanna manuell override reset"
@@ -205,6 +229,42 @@
     at: "00:00:01"
   action:
     - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.hanna_sovrum_man_override
+#
+- alias: "Hanna_sovrum_manual_override_light_on"
+  id: "Hanna manuell override lampa på"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: input_boolean.hanna_sovrum_man_override
+      to: "on"
+  condition:
+    - condition: state
+      entity_id:
+        - person.hanna
+      state: "home"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.sovrum_hanna
       data:
-        entity_id: input_boolean.hanna_svorum_man_override
+        brightness: 255
+        color_name: white
+#
+- alias: "Hanna_sovrum_manual_override_light_off"
+  id: "Hanna manuell override lampa av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: input_boolean.hanna_sovrum_man_override
+      to: "off"
+  action:
+    - service: light.turn_off
+      target:
+        entity_id:
+          - light.sovrum_hanna
 #

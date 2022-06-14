@@ -13,89 +13,48 @@
 ############################################
 
 
-#- id: 'Update available notification android'
-#  alias: Notifiering mobil ny uppdatering
-#  initial_state: true
-#  trigger:
-#  - platform: time
-#    at: '19:00:00'
-#  condition:
-#  - condition: template
-#    value_template: '{{ states.sensor.hass_installed_version.state != states.sensor.hass_current_version.state }}'
-#  action:
-#  - service: notify.mobile_app_clt_l29
-#    data_template: 
-#      title: "Ny Home Assistant version"
-#      message: "Home Assistant {{ states.sensor.hass_current_version.state }} finns nu att installeras"
-#
-#- id: 'Roborock_proof_android'
-#  alias: Roborock säkra lyan Android
-#  initial_state: true
-#  trigger:
-#  - platform: time
-#    at: '21:00:00'
-#  - condition: time
-#    weekday:
-#    - thu
-#    - sun
-#   data: 
-#      message: "Säkra lyan för Roborock och töm smutsbehållaren"
 #
 - alias: "door_to_outside_open"
   id: "Ytterdörren glömt stänga"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.hall_door_magnet
-    to: 'on'
-    for: '00:05:00'
-  - platform: state
-    entity_id: binary_sensor.hall_door_magnet
-    to: 'on'
-    for: '00:10:00'
-  - platform: state
-    entity_id: binary_sensor.hall_door_magnet
-    to: 'on'
-    for: '00:15:00'
-  - platform: state
-    entity_id: binary_sensor.hall_door_magnet
-    to: 'on'
-    for: '00:20:00'
-  - platform: state
-    entity_id: binary_sensor.hall_door_magnet
-    to: 'on'
-    for: '00:25:00'
-  - platform: state
-    entity_id: binary_sensor.hall_door_magnet
-    to: 'on'
-    for: '00:30:00'
-  - platform: state
-    entity_id: binary_sensor.hall_door_magnet
-    to: 'on'
-    for: '00:40:00'
+    - platform: time_pattern
+      minutes: "/10"
   condition:
-  - condition: state
-    entity_id: binary_sensor.hall_door_magnet
-    state: 'on'
-  - "{{ is_state('input_boolean.entrance_door_override', 'off') }}"
-#  - condition: template
-#    value_template: "{{ is_state('input_boolean.entrance_door_override', 'off') }}"
+    - condition: state
+      entity_id: binary_sensor.hall_door_magnet
+      state: "on"
+      for: "00:05:00"
+    - condition: state
+      entity_id: input_boolean.entrance_door_override
+      state: "off"
   action:
-  - service: notify.hanna_jimmy
-    data: 
-      message: "Någon har glömt stänga ytterdörren"
+    - service: notify.hanna_jimmy
+      data: 
+        message: "Någon har glömt stänga ytterdörren"
+    - service: notify.lametric
+      data:
+        message: "Ytterdörren är öppen"
+        data:
+          icon: "a15588"
+          icon_type: "none"
+          sound: "positive3"
+          priority: "warning"
+          cycles: 1
 #
 - alias: "entrance_door_Reset_manual_override"
   id: "entredörr override reset"
   initial_state: true
   mode: single
   trigger:
-    platform: time
-    at: "00:00:00"
+    - platform: state
+      entity_id: binary_sensor.hall_door_magnet
+      to: "off"
+      for: "01:00:00"
   action:
     - service: input_boolean.turn_off
-      data:
+      target:
         entity_id: input_boolean.entrance_door_override
 #
 - alias: "sleep_hanna_garagelas"
@@ -103,64 +62,254 @@
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.h8324_is_charging
-    to: 'on'
+    - platform: state
+      entity_id: sensor.h8324_charger_type
+      to: "ac"
   condition:
-  - condition: state
-    entity_id: person.hanna
-    state: 'home'
-  - "{{ is_state('binary_sensor.garagelas', 'on') }}"
+    - condition: state
+      entity_id: person.hanna
+      state: "home"
+    - condition: state
+      entity_id: binary_sensor.garagelas
+      state: "on"
   action:
-  - service: notify.hanna_jimmy
-    data:
-      title: "Garagelåset"
-      message: "Garaget är inte låst"
+    - service: notify.hanna_jimmy
+      data:
+        title: "Garagelåset"
+        message: "Garaget är inte låst"
 #
 - alias: "sleep_jimmy_garagelas"
   id: "Jimmy Sover Garagelåset"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.clt_l29_is_charging
-    to: 'on'
+    - platform: state
+      entity_id: sensor.clt_l29_charger_type
+      to: "ac"
   condition:
-  - condition: state
-    entity_id: person.jimmy
-    state: 'home'
-  - "{{ is_state('binary_sensor.garagelas', 'on') }}"
-#  - condition: template
-#    value_template: "{{ not is_state('binary_sensor.garagelas', 'off') }}"
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
+    - condition: state
+      entity_id: binary_sensor.garagelas
+      state: "on"
   action:
-  - service: notify.hanna_jimmy
-    data: 
-      title: "Garagelåset"
-      message: "Garaget är inte låst"
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Garagelåset"
+        message: "Garaget är inte låst"
 #
 - alias: "leaving_home_garagelas"
   id: "Inte hemma - Garaget ej låst"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: person.jimmy
-    from: 'home'
-  - platform: state
-    entity_id: person.hanna
-    from: 'home'
+    - platform: state
+      entity_id: person.jimmy
+      from: "home"
+    - platform: state
+      entity_id: person.hanna
+      from: "home"
   condition:
-  - "{{ not is_state('person.jimmy', 'home') }}"
-  - "{{ not is_state('person.hanna', 'home') }}"
-  - "{{ is_state('binary_sensor.garagelas', 'on') }}"
-#  - condition: template
-#    value_template: "{{ not is_state('person.jimmy', 'home') }}"
-#  - condition: template
-#    value_template: "{{ not is_state('person.hanna', 'home') }}"
-#  - condition: template
-#    value_template: "{{ not is_state('binary_sensor.garagelas', 'off') }}"
+    - not:
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: person.hanna
+        state: home"
+    - condition: state
+      entity_id: binary_sensor.garagelas
+      state: "on"
   action:
-  - service: notify.hanna_jimmy
-    data: 
-      message: "Garaget är inte låst"
+    - service: notify.hanna_jimmy
+      data: 
+        message: "Garaget är inte låst"
+#
+- alias: "Svullo dead notify Android"
+  id: "Notifiering att Svullo har dött"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.svullo
+      to: "down"
+  action:
+    - service: notify.mobile_app_clt_l29
+      data: 
+        message: "Svullo har dött"
+#
+- alias: "Qtorr dead notify Android"
+  id: "Notifiering att Qtorr har dött"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.qtorrent
+      to: "down"
+  action:
+    - service: notify.mobile_app_clt_l29
+      data: 
+        message: "Qtorr har dött"
+#
+- alias: "fas1_dead"
+  id: "Fas1 har dött"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.home_energy_meter_gen5_electric_consumption_v_1
+      below: 100
+      for: "00:00:10"
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        message: "Ström har gått på fas 1"
+        data:
+          ttl: 0
+          priority: high
+          channel: alarm_stream
+#
+- alias: "fas2_dead"
+  id: "Fas2 har dött"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.home_energy_meter_gen5_electric_consumption_v_2
+      below: 100
+      for: "00:00:10"
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        message: "Ström har gått på fas 2"
+        data:
+          ttl: 0
+          priority: high
+          channel: alarm_stream
+#
+- alias: "fas3_dead"
+  id: "Fas3 har dött"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.home_energy_meter_gen5_electric_consumption_v_3
+      below: 100
+      for: "00:00:10"
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        message: "Ström har gått på fas 3"
+        data:
+          ttl: 0
+          priority: high
+          channel: alarm_stream
+#
+- alias: "fas1_overcharge"
+  id: "Fas1 är överbelastad"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.home_energy_meter_gen5_electric_consumption_w_1
+      above: 3600
+      for: "00:05:00"
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        message: "Fas 1 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_1') }}"
+    - service: notify.lametric
+      data:
+        message: "Fas 1 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_1') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+#
+- alias: "fas2_overcharge"
+  id: "Fas2 är överbelastad"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.home_energy_meter_gen5_electric_consumption_w_2
+      above: 3600
+      for: "00:05:00"
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        message: "Fas 2 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_2') }}"
+    - service: notify.lametric
+      data:
+        message: "Fas 2 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_2') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+#
+- alias: "fas3_overcharge"
+  id: "Fas3 är överbelastad"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.home_energy_meter_gen5_electric_consumption_w_3
+      above: 3600
+      for: "00:05:00"
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        message: "Fas 3 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_3') }}"
+    - service: notify.lametric
+      data:
+        message: "Fas 3 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_3') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+#
+- alias: "soppan okq8 maxi notify Android"
+  id: "Notifiering att soppan är billig OKQ8 Maxi"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: template
+      value_template: "{{ states('sensor.billig_soppa_maxi_borlange_14d') > states('sensor.95_okq8_borlange_vid_maxi') }}"
+  condition:
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: sensor.95_okq8_borlange_vid_maxi
+          state: "unavailable"
+        - condition: state
+          entity_id: sensor.billig_soppa_maxi_borlange_14d
+          state: "unavailable"
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Soppan är billig: OKQ8 blge maxi"
+        message: "Passa på att tanka: {{ states('sensor.95_okq8_borlange_vid_maxi') }}"
+#
+- alias: "adguard_filter_off"
+  id: "adguard filter avstängt"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/30"
+  condition:
+    - condition: state
+      entity_id: switch.adguard_filtering
+      state: "off"
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        message: "AdGuard filter avstängt"
 #

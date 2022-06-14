@@ -21,24 +21,25 @@
       minutes: 56
   condition:
     - condition: state
-      entity_id: switch.diskmaskin_power
-      state: "on"
-    - "{{ states('sensor.diskmaskin_program_progress') > '100' }}"
-#    - "{{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int > 1 }}"
-    - condition: or
-      conditions:
-        - condition: state
-          entity_id: person.jimmy
-          state: "home"
-        - condition: state
-          entity_id: person.hanna
-          state: "home"
+      entity_id: sensor.diskmaskin_operation_state
+      state: "Run"
+    - condition: numeric_state
+      entity_id: sensor.diskmaskin_program_progress
+      below: "100"
+    - or:
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
   action:
     - service: notify.lametric
       data:
-#        message: "{{ states('sensor.diskmaskin_program_progress') }}% klart, och kommer vara klar{{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom(' %H:%M ') }}"
-#        message: "{{ states('sensor.diskmaskin_program_progress') }}% klart, och kommer vara klar om {{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int }} minuter, kl{{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom(' %H:%M ') }}"
-        message: "{{ states('sensor.diskmaskin_program_progress') }}% klart, {{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int }} minuter kvar, klar {{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom('%H:%M') }}"
+        message: >
+          {{ states('sensor.diskmaskin_program_progress') }}% klart, 
+          {{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int }} 
+          minuter kvar, klar {{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom('%H:%M') }}
         data:
           icon: "a17590"
           icon_type: "none"
@@ -54,36 +55,68 @@
       entity_id: switch.diskmaskin_power
       from: "on"
       to: "off"
-      for: "00:03:00"
+      for: "00:00:05"
   condition:
-    - "{{ is_state('sensor.diskmaskin_program_progress', '100') }}"
-#    - "{{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int > 1 }}"
+    - condition: numeric_state
+      entity_id: sensor.diskmaskin_program_progress
+      above: "99"
     - condition: state
-      entity_id: binary_sensor.clt_l29_is_charging
-      state: 'off'
+      entity_id: sensor.clt_l29_charger_type
+      state: "none"
     - condition: state
-      entity_id: binary_sensor.h8324_is_charging
-      state: 'off'
-    - condition: or
-      conditions:
-        - condition: state
-          entity_id: person.jimmy
-          state: "home"
-        - condition: state
-          entity_id: person.hanna
-          state: "home"
+      entity_id: sensor.h8324_charger_type
+      state: "none"
+    - or:
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
+      - condition: state
+        entity_id: input_boolean.visitors
+        state: "on"
   action:
     - service: notify.lametric
       data:
         message: "Diskmaskinen är klar!"
         data:
-          icon: 'a17590'
-          icon_type: 'none'
-          sound: 'notification'
-          priority: 'warning'
+          icon: "a17590"
+          icon_type: "none"
+          sound: "water2"
+          priority: "warning"
           cycles: 2
     - service: notify.hanna_jimmy
       data:
         title: "Diskmaskin klar"
         message: "Öppna luckan så det torkar"
+#
+- alias: "dishes_done_remove_tablet"
+  id: "Diskmaskinen är klar, ta bort en tablett"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.diskmaskin_operation_state
+      from: "Run"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.diskmaskin_program_progress
+      above: "98"
+  action:
+    - service: input_number.decrement
+      entity_id: input_number.disktabletter
+#
+- alias: "dishwasher_tablets_almost_out"
+  id: "Disktabletter snart slut"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: input_number.disktabletter
+      below: 10
+  action:
+    - service: shopping_list.add_item
+      data:
+        name: "Disktabletter"
 #

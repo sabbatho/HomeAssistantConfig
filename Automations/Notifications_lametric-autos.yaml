@@ -10,11 +10,9 @@
 ##
 ############################################
 
-
-
 #
-- id: "Lametric_whats_on"
-  alias: "LaMetric_-_Whats_on_chromecast"
+- id: "Lametric_whats_on_chromecast_bedroom"
+  alias: "LaMetric_-_Whats_on_chromecast_bedroom"
   initial_state: true
   mode: single
   trigger:
@@ -99,10 +97,93 @@
           icon_type: "none"
           priority: "warning"
           cycles: 5
-#    - service: media_player.volume_set
-#      entity_id: media_player.sovrum
-#      data:
-#        volume_level: 0.6
+#
+- id: "Lametric_whats_on_chromecast_hobbyrum"
+  alias: "LaMetric_-_Whats_on_chromecast_hobbyrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: playing
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: playing
+      for: "00:05:00"
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: playing
+      for: "00:10:00"
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: playing
+      for: "00:15:00"
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: playing
+      for: "00:20:00"
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: playing
+      for: "00:30:00"
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: playing
+      for: "00:40:00"
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: playing
+      for: "00:50:00"
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: playing
+      for: "01:00:00"
+  action:
+    - delay:
+        seconds: 3
+    - service: notify.lametric
+      data:
+        target: "LMHobbyrum"
+        message: >
+          {% if is_state_attr('media_player.hobbyrum', 'app_name', 'YouTube') %}
+            {{ state_attr('media_player.hobbyrum', 'media_title') }}
+          {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'Twitch Chromecast Player') %}
+            {{ state_attr('media_player.hobbyrum', 'media_title') }}
+          {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'TV4Play') %}
+            {{ state_attr('media_player.hobbyrum', 'media_title') }}
+          {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'Plex') and is_state_attr('media_player.hobbyrum', 'media_content_type', 'tvshow') %}
+            {{ state_attr('media_player.hobbyrum', 'media_series_title') }} - {{ state_attr('media_player.hobbyrum', 'media_season') }} - {{ state_attr('media_player.hobbyrum', 'media_episode') }}
+          {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'Plex') and is_state_attr('media_player.hobbyrum', 'media_content_type', 'movie') %}
+            {{ state_attr('media_player.hobbyrum', 'media_title') }}
+          {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'Spotify') %}
+            {{ state_attr('media_player.hobbyrum', 'media_artist') }} - {{ state_attr('media_player.hobbyrum', 'media_title') }}
+          {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'Netflix') %} 
+            {{ state_attr('media_player.hobbyrum', 'media_title') }}
+          {% else %}
+            {{ state_attr('media_player.hobbyrum', 'media_title') }}
+          {% endif %}
+        data:
+          icon: >-
+            {% if is_state_attr('media_player.hobbyrum', 'app_name', 'YouTube') %}
+              a7320
+            {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'Twitch Chromecast Player') %}
+              a4741
+            {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'TV4Play') %}
+              a22705
+            {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'Plex') and is_state_attr('media_player.hobbyrum', 'media_content_type', 'tvshow') %}
+              i15185
+            {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'Plex') and is_state_attr('media_player.hobbyrum', 'media_content_type', 'movie') %}
+              i15185
+            {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'Spotify') %}
+              a12676
+            {% elif is_state_attr('media_player.hobbyrum', 'app_name', 'Netflix') %} 
+              a1442
+            {% else %}
+              a15626
+            {% endif %}
+          icon_type: "none"
+          priority: "warning"
+          cycles: 5
 #
 - id: "lametric_mobile_batt"
   alias: "LaMetric_-_battery_status_mobiles"
@@ -116,9 +197,14 @@
     - platform: time_pattern
       minutes: 50
   condition:
-    - condition: state
-      entity_id: person.jimmy
-      state: "home"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
   action:
     - service: notify.lametric
       data:
@@ -155,11 +241,13 @@
         - condition: state
           entity_id: person.hanna
           state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
   action:
     - service: notify.lametric
       data:
-#        message: "{{ state('sensor.ute') }} °C ute, {{ state_attr('weather.smhi_home', 'temperature') }} °C SMHI, {{ state('sensor.trafikverket_karlsvik_air_temperature') }}°C med {{ state('sensor.trafikverket_karlsvik_precipitation_type') }} i Karlsvik"
-        message: "{{ states('sensor.ute') }} °C ute med {{ states('sensor.trafikverket_karlsvik_precipitation_type') }} "
+        message: "{{ states('sensor.ute') }} °C ute med {{ states('sensor.trafikverket_karlsvik_precipitation_type') }} och {{ states('sensor.smhi_thunder_probability') }}% chans till åska."
         data:
           icon: >-
             {% if is_state('sensor.trafikverket_karlsvik_precipitation_type', 'Snö') %}
@@ -177,6 +265,37 @@
           priority: "info"
           cycles: 2
 #
+- id: "lametric_guest_mode"
+  alias: "LaMetric_-_gästläge"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: 3
+    - platform: time_pattern
+      minutes: 13
+    - platform: time_pattern
+      minutes: 23
+    - platform: time_pattern
+      minutes: 33
+    - platform: time_pattern
+      minutes: 43
+    - platform: time_pattern
+      minutes: 53
+  condition:
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "on"
+  action:
+    - service: notify.lametric
+      data:
+        message: "Guest mode is ON"
+        data:
+          icon: "a12050"
+          icon_type: "none"
+          priority: "info"
+          cycles: 2
+#
 - id: "lametric_wind"
   alias: "LaMetric_-_wind"
   initial_state: true
@@ -189,14 +308,17 @@
     - platform: time_pattern
       minutes: 45
   condition:
-    condition: or
-    conditions:
-      - condition: state
-        entity_id: person.jimmy
-        state: "home"
-      - condition: state
-        entity_id: person.hanna
-        state: "home"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
   action:
     - service: notify.lametric
       data:
@@ -243,7 +365,7 @@
   mode: single
   trigger:
     - platform: time_pattern
-      minutes: "/30"
+      hours: "/1"
   condition:
     - condition: state
       entity_id: binary_sensor.garagelas
@@ -258,6 +380,9 @@
         - condition: state
           entity_id: person.hanna
           state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
   action:
     - service: notify.lametric
       data:
@@ -268,4 +393,7 @@
           sound: "statistic"
           priority: "warning"
           cycles: 1
+    - service: notify.hanna_jimmy
+      data:
+        message: "Garaget är inte låst, just a reminder"
 #

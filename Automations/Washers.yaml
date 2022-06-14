@@ -2,7 +2,6 @@
 #
 #
 
-
 - alias: "notification_washer_done"
   id: "Notifiering när tävttmaskinerna är klara"
   initial_state: true
@@ -13,49 +12,52 @@
       from: "on"
       to: "off"
   condition:
-  - condition: or
-    conditions:
-      - condition: state
-        entity_id: person.jimmy
-        state: "home"
-      - condition: state
-        entity_id: person.hanna
-        state: "home"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
   action:
     - service: shell_command.lmvardagsrum_washers_ready
     - service: shell_command.lmsovrum_washers_ready
     - service: shell_command.lmmatsal_washers_ready
-#  - service: notify.lametric
-#    data:
-#      message: "Tvättmaskiner är klara!"
-#      data:
-#        icon: 'a9482'
-#        icon_type: 'none'
-#        sound: 'notification'
-#        priority: 'warning'
-#        cycles: 2
+    #  - service: notify.lametric
+    #    data:
+    #      message: "Tvättmaskiner är klara!"
+    #      data:
+    #        icon: 'a9482'
+    #        icon_type: 'none'
+    #        sound: 'notification'
+    #        priority: 'warning'
+    #        cycles: 2
     - service: notify.hanna_jimmy
       data:
         title: "Tvättmaskiner klara"
         message: "Häng tvätten!"
     - delay: "00:01:00"
-#  - service: notify.lametric
-#    data:
-#      message: "Tvättmaskiner är klara!"
-#      data:
-#        icon: 'a9482'
-#        icon_type: 'none'
-#        sound: 'notification2'
-#        priority: 'warning'
-#        cycles: 2
+    #  - service: notify.lametric
+    #    data:
+    #      message: "Tvättmaskiner är klara!"
+    #      data:
+    #        icon: 'a9482'
+    #        icon_type: 'none'
+    #        sound: 'notification2'
+    #        priority: 'warning'
+    #        cycles: 2
     - service: shell_command.lmvardagsrum_washers_ready
     - service: shell_command.lmsovrum_washers_ready
     - service: shell_command.lmmatsal_washers_ready
     - service: switch.turn_off
-      data:
+      target:
         entity_id: switch.washers
     - service: climate.turn_on
-      data:
+      target:
         entity_id: climate.jimmy_s_smart_ac
 #
 - alias: "washer_done_boolean"
@@ -70,7 +72,7 @@
         minutes: 5
   action:
     - service: input_boolean.turn_off
-      data:
+      target:
         entity_id: input_boolean.washers_onoff
 #
 - alias: "washer_started_boolean"
@@ -85,9 +87,9 @@
         seconds: 30
   action:
     - service: input_boolean.turn_on
-      data:
+      target:
         entity_id: input_boolean.washers_onoff
     - service: climate.turn_off
-      data:
+      target:
         entity_id: climate.jimmy_s_smart_ac
 #

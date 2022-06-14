@@ -4,80 +4,45 @@
 ##
 ############################################
 
-
-
 ############################################
 ##
 ## All
 ##
 ############################################
 
-
-- alias: 'incoming_call_jimmy'
+- alias: "incoming_call_jimmy"
   id: "Inkommande samtal ljusvarning jimmy"
   initial_state: true
   mode: single
   trigger:
     - platform: state
       entity_id: sensor.clt_l29_telefonstatus
-      to: 'ringing'
+      to: "ringing"
   condition:
     - condition: state
       entity_id: person.jimmy
-      state: 'home'
+      state: "home"
   action:
     - service: light.turn_on
+      target:
+        entity_id:
+          - light.osram_smart_e27_color_1
+          - light.ensis_up
+          - light.sovrum_hanna
+          - light.kontor_color_mitten_fram
+          - light.kontor_color_hoger_fram
+          - light.kontor_color_hoger_bak
+          - light.kontor_color_roof
+          - light.kontor_color_vanster_fram
+          - light.kontor_color_vanster_bak_ovre
+          - light.kontor_color_vanster_bak_mitten
+          - light.kontor_color_vanster_bak_nedre
       data:
-        entity_id: light.trust_e27_color_1
         brightness: 254
-        effect: colorloop
-        transition: 1
-    - service: light.turn_on
-      data:
-        entity_id: light.osram_smart_e27_color_1
-        brightness: 254
-        effect: colorloop
-        transition: 1
-    - service: light.turn_on
-      data:
-        entity_id: light.ensis_up
-        brightness: 254
-        effect: colorloop
-        transition: 1
-    - service: light.turn_on
-      data:
-        entity_id: light.sovrum_jimmy
-        brightness: 254
-        flash: short
-#        effect: colorloop
-        transition: 1
-    - service: light.turn_on
-      data:
-        entity_id: light.kontor_color_1
-        brightness: 254
-#        flash: short
-#        effect: colorloop
-        transition: 1
-    - service: light.turn_on
-      data:
-        entity_id: light.kontor_color_2
-        brightness: 254
-        flash: short
-#        effect: colorloop
-#        transition: 1
-    - service: light.turn_on
-      data:
-        entity_id: light.kontor_color_3
-        brightness: 254
-        flash: short
-#        effect: colorloop
-#        transition: 1
+        effect: blink
     - service: switch.turn_on
-      data:
+      target:
         entity_id: switch.vardags_eld
-#    - service: shell_command.lmvardagsrum_call_jimmy
-#    - service: shell_command.lmsovrum_call_jimmy
-#    - service: shell_command.lmmatsal_call_jimmy
     - service: notify.lametric
       data:
         message: "Jimmy, mobilen ringer!"
@@ -88,41 +53,34 @@
           priority: "warning"
           cycles: 3
 #
-- alias: 'no_incoming_call_jimmy'
+- alias: "no_incoming_call_jimmy"
   id: "Inkommande samtal ljusvarning AV jimmy"
   initial_state: true
   mode: single
   trigger:
     - platform: state
       entity_id: sensor.clt_l29_telefonstatus
-      from: 'ringing'
+      from: "ringing"
   condition:
     - condition: state
       entity_id: person.jimmy
-      state: 'home'
+      state: "home"
   action:
     - service: light.turn_off
-      data:
-        entity_id: light.osram_smart_e27_color_1
-    - service: light.turn_off
-      data:
-        entity_id: light.trust_e27_color_1
-    - service: light.turn_off
-      data:
-        entity_id: light.ensis_up
-    - service: light.turn_off
-      data:
-        entity_id: light.sovrum_jimmy
-    - service: light.turn_off
-      data:
-        entity_id: light.kontor_color_1
-    - service: light.turn_off
-      data:
-        entity_id: light.kontor_color_2
-    - service: light.turn_off
-      data:
-        entity_id: light.kontor_color_3
+      target:
+        entity_id:
+          - light.ensis_up
+          - light.osram_smart_e27_color_1
+          - light.sovrum_hanna
+          - light.kontor_color_mitten_fram
+          - light.kontor_color_hoger_fram
+          - light.kontor_color_hoger_bak
+          - light.kontor_color_roof
+          - light.kontor_color_vanster_fram
+          - light.kontor_color_vanster_bak_ovre
+          - light.kontor_color_vanster_bak_mitten
+          - light.kontor_color_vanster_bak_nedre
     - service: switch.turn_off
-      data:
+      target:
         entity_id: switch.vardags_eld
 #

@@ -4,301 +4,133 @@
 ##
 ############################################
 
-
-
 ############################################
 ##
 ## All
 ##
 ############################################
 
-
 - alias: "going_to_sleep_hanna"
   id: "Släck allt när båda sover Hanna"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.h8324_is_charging
-    to: 'on'
+    - platform: state
+      entity_id: sensor.h8324_charger_type
+      to: "ac"
   condition:
-  - condition: state
-    entity_id: binary_sensor.clt_l29_is_charging
-    state: 'on'
-  - condition: state
-    entity_id: person.hanna
-    state: 'home'
+    - condition: state
+      entity_id: person.hanna
+      state: "home"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "not_home"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "ac"
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
   action:
-  - service: media_player.turn_off
-    data:
-      entity_id: media_player.sovrum
-  - service: switch.turn_off
-    data:
-      entity_id: switch.sovrum
-  - service: switch.turn_off
-    data:
-      entity_id: switch.vardags_tavla
-  - service: switch.turn_off
-    data:
-      entity_id: switch.vardags_eld
-  - service: switch.turn_off
-    data:
-      entity_id: switch.terrasstak
-  - delay:
-      seconds: 1
-  - service: switch.turn_off
-    data:
-      entity_id: switch.vaxt_1
-#  - service: switch.turn_off
-#    data:
-#      entity_id: switch.vaxt3
-  - delay:
-      seconds: 1
-#  - service: shell_command.shutdown_speldator1
-#  - service: shell_command.shutdown_speldator2
-  - delay:
-      seconds: 1
-  - service: light.turn_off
-    data:
-      entity_id: light.osram_smart_e27_color_1
-  - service: light.turn_off
-    data:
-      entity_id: light.trust_e27_color_1
-  - service: light.turn_off
-    data:
-      entity_id: light.ensis_down
-  - service: light.turn_off
-    data:
-      entity_id: light.ensis_up
-  - service: remote.turn_off
-    data:
-      entity_id: remote.sovrum
-  - service: switch.turn_off
-    data:
-      entity_id: switch.ljud_dator
-  - service: remote.turn_off
-    data:
-      entity_id: remote.vardagsrum
-  - delay:
-      seconds: 1
-#   - service: shell_command.lametric_dark
-  - service: switch.turn_off
-    data:
-      entity_id: switch.sovrum2
-  - service: switch.turn_off
-    data:
-      entity_id: switch.vardags_lavalampa
-  - service: switch.turn_off
-    data:
-      entity_id: switch.office
-  - service: light.turn_off
-    data:
-      entity_id: light.sovrum_jimmy
-  - service: switch.turn_on
-    data:
-      entity_id: switch.kamera1
-  - service: switch.turn_on
-    data:
-      entity_id: switch.kamera2
-  - service: light.turn_off
-    data:
-      entity_id: light.hall_entre
-  - delay:
-      seconds: 1
-  - service: light.turn_off
-    data:
-      entity_id: light.hall_stora
-  - service: light.turn_off
-    data:
-      entity_id: light.hall_lilla
-  - service: switch.turn_off
-    data:
-      entity_id: switch.flakt_vardags
-  - service: light.turn_off
-    data:
-      entity_id: light.kokstak
-  - service: light.turn_off
-    data:
-      entity_id: light.wled_verandan_soffa
-  - service: light.turn_off
-    data:
-      entity_id: light.verandan_matbord
-  - service: shell_command.lmsovrum_ssaver_on
-  - service: light.turn_off
-    data:
-      entity_id: light.kallarhall
-  - service: light.turn_off
-    data:
-      entity_id: light.kallartrapp
-  - service: switch.turn_off
-    data:
-      entity_id: switch.toppar_matsal
-  - service: switch.turn_off
-    data:
-      entity_id: switch.sub_mixer_matsal
+    - service: script.turn_on
+      target:
+        entity_id: script.sleep_or_not_home
+    - delay:
+        seconds: 1
+    - service: shell_command.shutdown_speldator1
+    - delay:
+        seconds: 1
+    - service: shell_command.shutdown_speldator2
+    - delay:
+        seconds: 1
 #
 - alias: "going_to_sleep_jimmy"
   id: "Släck allt när båda sover Jimmy"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.clt_l29_is_charging
-    to: 'on'
+    - platform: state
+      entity_id: sensor.clt_l29_charger_type
+      to: "ac"
   condition:
-  - condition: state
-    entity_id: person.jimmy
-    state: 'home'
-  - condition: state
-    entity_id: binary_sensor.h8324_is_charging
-    state: 'on'
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.hanna
+          state: "not_home"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: sensor.h8324_charger_type
+              state: "ac"
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
   action:
-  - service: media_player.turn_off
-    data:
-      entity_id: media_player.sovrum
-  - service: switch.turn_off
-    data:
-      entity_id: switch.sovrum
-  - service: switch.turn_off
-    data:
-      entity_id: switch.vardags_tavla
-  - service: switch.turn_off
-    data:
-      entity_id: switch.vardags_eld
-  - service: switch.turn_off
-    data:
-      entity_id: switch.terrasstak
-  - delay:
-      seconds: 1
-  - service: switch.turn_off
-    data:
-      entity_id: switch.vaxt_1
-#  - service: switch.turn_off
-#    data:
-#      entity_id: switch.vaxt3
-  - delay:
-      seconds: 1
-#  - service: shell_command.shutdown_speldator1
-#  - service: shell_command.shutdown_speldator2
-  - delay:
-      seconds: 1
-  - service: light.turn_off
-    data:
-      entity_id: light.osram_smart_e27_color_1
-  - service: light.turn_off
-    data:
-      entity_id: light.trust_e27_color_1
-  - service: light.turn_off
-    data:
-      entity_id: light.ensis_down
-  - service: light.turn_off
-    data:
-      entity_id: light.ensis_up
-  - service: remote.turn_off
-    data:
-      entity_id: remote.sovrum
-  - service: switch.turn_off
-    data:
-      entity_id: switch.ljud_dator
-  - service: remote.turn_off
-    data:
-      entity_id: remote.vardagsrum
-  - delay:
-      seconds: 1
-#  - service: shell_command.lametric_dark
-  - service: switch.turn_off
-    data:
-      entity_id: switch.sovrum2
-  - service: switch.turn_off
-    data:
-      entity_id: switch.vardags_lavalampa
-  - service: switch.turn_off
-    data:
-      entity_id: switch.office
-  - service: light.turn_off
-    data:
-      entity_id: light.sovrum_jimmy
-  - delay:
-      seconds: 1
-  - service: switch.turn_on
-    data:
-      entity_id: switch.kamera1
-  - service: switch.turn_on
-    data:
-      entity_id: switch.kamera2
-  - service: light.turn_off
-    data:
-      entity_id: light.hall_entre
-  - service: light.turn_off
-    data:
-      entity_id: light.hall_stora
-  - service: light.turn_off
-    data:
-      entity_id: light.hall_lilla
-  - delay:
-      seconds: 1
-  - service: switch.turn_off
-    data:
-      entity_id: switch.flakt_vardags
-  - service: light.turn_off
-    data:
-      entity_id: light.kokstak
-  - service: light.turn_off
-    data:
-      entity_id: light.wled_verandan_soffa
-  - service: light.turn_off
-    data:
-      entity_id: light.verandan_matbord
-  - service: shell_command.lmsovrum_ssaver_on
-  - service: light.turn_off
-    data:
-      entity_id: light.kallarhall
-  - service: light.turn_off
-    data:
-      entity_id: light.kallartrapp
-  - service: switch.turn_off
-    data:
-      entity_id: switch.toppar_matsal
-  - service: switch.turn_off
-    data:
-      entity_id: switch.sub_mixer_matsal
+    - service: script.turn_on
+      target:
+        entity_id: script.sleep_or_not_home
+    - delay:
+        seconds: 1
+    - service: shell_command.lmsovrum_ssaver_on
+    - delay:
+        seconds: 1
+    - service: media_player.turn_off
+      target:
+        entity_id: media_player.sovrum
+    - delay:
+        seconds: 1
+    - service: shell_command.shutdown_speldator1
+    - delay:
+        seconds: 1
+    - service: shell_command.shutdown_speldator2
+    - delay:
+        seconds: 1
 #
 - alias: "sleep_hanna"
   id: "Hanna Sover"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.h8324_is_charging
-    to: 'on'
+    - platform: state
+      entity_id: sensor.h8324_charger_type
+      to: "ac"
   condition:
-  - condition: state
-    entity_id: person.hanna
-    state: 'home'
+    - condition: state
+      entity_id: person.hanna
+      state: "home"
   action:
-  - service: cover.set_cover_position
-    data:
-      entity_id: cover.blind_bedroom
-      position: 0
-  - delay:
-      minutes: 2
-  - service: shell_command.lmsovrum_ssaver_on
+    - service: cover.set_cover_position
+      data:
+        entity_id: cover.blind_bedroom
+        position: 2
+    - delay:
+        minutes: 2
+    - service: shell_command.lmsovrum_ssaver_on
 #
 - alias: "sleep_jimmy"
   id: "Jimmy Sover"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.clt_l29_is_charging
-    to: 'on'
+    - platform: state
+      entity_id: sensor.clt_l29_charger_type
+      to: "ac"
   condition:
-  - condition: state
-    entity_id: person.jimmy
-    state: 'home'
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
   action:
-  - service: cover.set_cover_position
-    data:
-      entity_id: cover.blind_bedroom
-      position: 0
+    - service: cover.set_cover_position
+      target:
+        entity_id: cover.blind_bedroom
+      data:
+        position: 2
 #

@@ -1,0 +1,225 @@
+#
+#
+#
+
+- alias: "battery_warning_fyrtur_bedroom"
+  id: "Batterivarning Fyrtur sovrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.fyrtur_block_out_roller_blind_battery_level
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Batteri slut"
+        message: "Rullgardinen i sovrummet {{ states('sensor.fyrtur_block_out_roller_blind_battery_level') }}% kvar"
+#
+- alias: "battery_warning_motion_kitchen_roof"
+  id: "Batterivarning Rörelse kökstak"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.motion_kok_battery_level
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Rörelsesensorn i kökstaket {{ states('sensor.motion_kok_battery_level') }}% kvar, vill ha 2st AAA"
+#
+- alias: "battery_warning_magnet_cold_storage"
+  id: "Batterivarning magnet matkällare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.kallare_matkallare_battery_level
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Magnetsensor till matkällardörr {{ states('sensor.kallare_matkallare_battery_level') }}% kvar"
+#
+- alias: "battery_warning_motion_dining_room"
+  id: "Batterivarning rörelse matsal"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.motion_matsal_battery_level
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Rörelsesensor i matsalstaket {{ states('sensor.motion_matsal_battery_level') }}% kvar"
+#
+- alias: "battery_warning_kallare"
+  id: "Batterivarning kallare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.kallare_battery
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Temp och fuktmätaren i källarhallen {{ states('sensor.kallare_battery') }}% kvar, CR2032"
+#
+- alias: "battery_warning_matsal_ensis_ljud"
+  id: "Batterivarning Matsal Ensis Ljud"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.matsal_ensis_ljud_battery_level
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Fjärrkontrollen i matsalen för ljud och Ensis {{ states('sensor.matsal_ensis_ljud_battery_level') }}% kvar"
+#
+- alias: "battery_warning_verandan"
+  id: "Batterivarning Verandan"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.verandan_battery
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Temp och fuktmätaren på verandan {{ states('sensor.verandan_battery') }}% kvar, CR2032"
+#
+- alias: "battery_warning_motion_hall"
+  id: "Batterivarning Rörelse Hall"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.motion_hall_battery_level
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Rörelsesensor i halltaket {{ states('sensor.motion_hall_battery_level') }}% kvar"
+#
+- alias: "battery_warning_water_dishwasher"
+  id: "Batterivarning Vattenvarning under diskhon"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.water_dish_battery_level
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Vattensensor under diskho {{ states('sensor.water_dish_battery_level') }}% kvar"
+#
+- alias: "battery_warning_sovrum_temp_and_moist"
+  id: "Batterivarning sovrum temp och fukt"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.sovrum_battery_level
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Temp och fuktmätaren Sovrum {{ states('sensor.sovrum_battery_level') }}% kvar, CR2032"
+#
+- alias: "battery_warning_livingroom_smoke"
+  id: "Batterivarning vardagsrum rökvarnare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.smoke_alarm_living_room_battery
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Brandvarnare vardagsrum {{ states('sensor.smoke_alarm_living_room_battery') }}% kvar"
+#
+- alias: "battery_warning_hall_fjarr"
+  id: "Batterivarning hall fjärr"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.hall_fjarr_battery
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "fjärrkontroll i hallen {{ states('sensor.hall_fjarr_battery') }}% kvar"
+#
+- alias: "battery_warning_temp_vinden"
+  id: "Batterivarning temp vinden"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.vinden_battery_level
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Tempmätare vinden {{ states('sensor.vinden_battery_level') }}% kvar"
+#

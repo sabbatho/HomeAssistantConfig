@@ -13,91 +13,53 @@
 ############################################
 
 
-- id: 'wakeup_hanna'
-  alias: Hanna vaknat
-  initial_state: true
-  mode: single
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.h8324_is_charging
-    from: 'on'
-  condition:
-  - condition: state
-    entity_id: person.hanna
-    state: 'home'
-  action:
-  - service: switch.turn_off
-    data:
-      entity_id: switch.kamera1
-  - service: switch.turn_off
-    data:
-      entity_id: switch.kamera2
 #
-- id: 'wakeup_jimmy'
-  alias: Jimmy vaknat
+- id: "Both_awake_jimmy"
+  alias: "Båda vaknat Jimmy"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.clt_l29_is_charging
-    from: 'on'
+    - platform: state
+      entity_id: sensor.clt_l29_charger_type
+      to: "none"
   condition:
-  - condition: state
-    entity_id: person.jimmy
-    state: 'home'
-  action:
-  - service: switch.turn_off
-    data:
-      entity_id: switch.kamera1
-  - service: switch.turn_off
-    data:
-      entity_id: switch.kamera2
-#
-- id: 'Both_awake_jimmy'
-  alias: Båda vaknat Jimmy
-  initial_state: true
-  mode: single
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.clt_l29_is_charging
-    to: 'off'
-  condition:
-  - condition: and
-    conditions:
     - condition: state
       entity_id: person.jimmy
-      state: 'home'
+      state: "home"
     - condition: state
-      entity_id: binary_sensor.h8324_is_charging
-      state: 'off'
+      entity_id: sensor.h8324_charger_type
+      state: "none"
   action:
-  - service: cover.set_cover_position
-    data:
-      entity_id: cover.blind_bedroom
-      position: 100
-  - service: shell_command.lmsovrum_ssaver_off
+    - service: cover.set_cover_position
+      target:
+        entity_id: cover.blind_bedroom
+      data:
+        position: 100
+    - service: shell_command.lmsovrum_ssaver_off
+    - service: media_player.turn_off
+      target:
+        entity_id: media_player.sovrum
 #
-- id: 'Both_awake_hanna'
+- id: "Both_awake_hanna"
   alias: Båda vaknat Hanna
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: binary_sensor.h8324_is_charging
-    to: 'off'
+    - platform: state
+      entity_id: sensor.h8324_charger_type
+      to: "none"
   condition:
-  - condition: and
-    conditions:
     - condition: state
-      entity_id: binary_sensor.clt_l29_is_charging
-      state: 'off'
+      entity_id: sensor.clt_l29_charger_type
+      state: "none"
     - condition: state
       entity_id: person.hanna
-      state: 'home'
+      state: "home"
   action:
-  - service: cover.set_cover_position
-    data:
-      entity_id: cover.blind_bedroom
-      position: 100
-  - service: shell_command.lmsovrum_ssaver_off
+    - service: cover.set_cover_position
+      target:
+        entity_id: cover.blind_bedroom
+      data:
+        position: 100
+    - service: shell_command.lmsovrum_ssaver_off
 #

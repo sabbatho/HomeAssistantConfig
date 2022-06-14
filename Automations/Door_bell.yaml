@@ -1,0 +1,206 @@
+#
+#
+#
+- alias: "hall_entre_door_bell"
+  id: "Hall dörr Entre ringklocka"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_bell_button
+      to: "on"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.door_bell_bell
+    - service: notify.lametric
+      data:
+        message: "Det ringer på dörren!"
+        data:
+          icon: "a42480"
+          icon_type: "none"
+          sound: "knock-knock"
+          priority: "warning"
+          cycles: 1
+    - service: camera.snapshot
+      target:
+        entity_id: camera.kamera_entre
+      data:
+        filename: /config/www/tmp/snapshot1.jpg
+    - delay:
+        seconds: 10
+    - service: notify.lametric
+      data:
+        message: "Det ringer på dörren!"
+        data:
+          icon: "a42480"
+          icon_type: "none"
+          sound: "knock-knock"
+          priority: "warning"
+          cycles: 1
+    - service: notify.hanna_jimmy
+      data:
+        title: "Det ringde på dörren!"
+        message: "Tryck här för att se vem det var"
+        data:
+          clickAction: "https://sabbbbath.duckdns.org:8123/local/tmp/snapshot1.jpg"
+    - delay:
+        seconds: 10
+#
+- alias: "hall_entre_door_bell_jimmy"
+  id: "Hall dörr Entre ringklocka Jimmy hemma"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_bell_button
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
+  action:
+    - delay:
+        seconds: 02
+    - service: notify.mobile_app_clt_l29
+      data:
+        title: "Det ringer på dörren!"
+        message: TTS
+        data:
+          image: "/api/camera_proxy/camera.kamera_entre"
+          ttl: 0
+          priority: high
+          channel: alarm_stream_max
+    - service: notify.mobile_app_clt_l29
+      data:
+        title: "Det ringer på dörren!"
+        data:
+          image: "/api/camera_proxy/camera.kamera_entre"
+    - delay:
+        seconds: 20
+#
+- alias: "hall_entre_door_bell_hanna"
+  id: "Hall dörr Entre ringklocka Hanna hemma"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_bell_button
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: person.hanna
+      state: "home"
+  action:
+    - delay:
+        seconds: 02
+    - service: notify.mobile_app_h8324
+      data:
+        title: "Det ringer på dörren!"
+        message: TTS
+        data:
+          image: "/api/camera_proxy/camera.kamera_entre"
+          ttl: 0
+          priority: high
+          channel: alarm_stream_max
+    - service: notify.mobile_app_h8324
+      data:
+        title: "Det ringer på dörren!"
+        data:
+          image: "/api/camera_proxy/camera.kamera_entre"
+    - delay: 
+        seconds: 20
+#
+- alias: "hall_entre_door_bell_counter"
+  id: "Hall dörr Entre ringklocka räknare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_bell_button
+      to: "on"
+  action:
+    - service: counter.increment
+      target:
+        entity_id: counter.doorbell_pushes
+#
+- alias: "hall_entre_door_bell_counter_reset"
+  id: "Hall dörr Entre ringklocka räknare resett"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_bell_button
+      to: "off"
+      for:
+        minutes: 01
+  action:
+    - service: counter.reset
+      target:
+        entity_id: counter.doorbell_pushes
+#
+- alias: "hall_entre_door_bell_hammer"
+  id: "Hall dörr Entre ringklocka hamrar"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: counter.doorbell_pushes
+      above: 9
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.door_bell_retard_alarm
+    - service: light.turn_on
+      data:
+        flash: short
+        color_name: white
+      target:
+        entity_id: light.verandan_matbord
+    - delay: "00:00:05"
+    - service: light.turn_on
+      data:
+        effect: breathe
+        color_name: blue
+      target:
+        entity_id: light.verandan_matbord
+    - delay: "00:00:05"
+    - service: light.turn_on
+      data:
+        effect: blink
+        color_name: red
+      target:
+        entity_id: light.verandan_matbord
+    - delay: "00:00:05"
+    - service: light.turn_on
+      data:
+        effect: okay
+        color_name: white
+      target:
+        entity_id: light.verandan_matbord
+    - delay: "00:00:05"
+    - service: light.turn_on
+      data:
+        effect: stop_effect
+        color_name: blue
+      target:
+        entity_id: light.verandan_matbord
+    - delay: "00:00:05"
+    - service: light.turn_on
+      data:
+        effect: channel_change
+        color_name: red
+      target:
+        entity_id: light.verandan_matbord
+    - delay: "00:00:05"
+    - service: light.turn_on
+      data:
+        effect: start_effect
+        color_name: white
+      target:
+        entity_id: light.verandan_matbord
+    - delay: "00:00:05"
+    - service: light.turn_off
+      target:
+        entity_id: light.verandan_matbord
+#

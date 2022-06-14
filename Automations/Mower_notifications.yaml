@@ -9,18 +9,25 @@
   initial_state: true
   mode: single
   trigger:
-    platform: state
-    entity_id: vacuum.sileno
-    to: "error"
+    - platform: state
+      entity_id: vacuum.sileno
+      to: "error"
+      for: "00:00:03"
   condition:
-    - "{{ is_state('input_boolean.sileno_winter_sleep', 'off') }}"
-    - "{{ not is_state('sensor.sileno_error', 'OFF_HATCH_OPEN') }}"
-#    - "{{ state_attr('vacuum.sileno', 'last_error') != 'OFF_HATCH_OPEN' }}"
+    - condition: state
+      entity_id: input_boolean.sileno_winter_sleep
+      state: "off"
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: vacuum.sileno
+          attribute: error
+          state: "OFF_HATCH_OPEN"
   action:
     - service: notify.hanna_jimmy
       data:
         title: "Olle behöver hjälp!!"
-        message: "Error: {{ states('sensor.sileno_error') }}"
+        message: "Error: {{ state_attr('vacuum.sileno', 'error') }}"
 #
 - alias: "Sileno_should_charge"
   id: "Sileno borde ladda"
@@ -30,45 +37,17 @@
     platform: time
     at: "20:00:00"
   condition:
-    - "{{ states('vacuum.sileno') != 'docked' }}"
-    - "{{ is_state('input_boolean.sileno_winter_sleep', 'off') }}"
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: vacuum.sileno
+          state: "docked"
+    - condition: state
+      entity_id: input_boolean.sileno_winter_sleep
+      state: "off"
   action:
     - service: notify.hanna_jimmy
       data:
         title: "Olle behöver hjälp!!"
         message: "Jag borde ladda vid denna tiden, kom och hjälp mig."
-#
-#- alias: "Sileno_error_trapped"
-#  id: "Sileno är instängd"
-#  initial_state: true
-#  mode: single
-#  trigger:
-#    platform: state
-#    entity_id: vacuum.sileno
-#    to: "error"
-#  condition:
-#    - "{{ state_attr('vacuum.sileno', 'last_error') == 'trapped' }}"
-#    - "{{ is_state('input_boolean.sileno_winter_sleep', 'off') }}"
-#  action:
-#    - service: notify.hanna_jimmy
-#      data:
-#        title: "Olle behöver hjälp!!"
-#        message: "Instängd, kom och hjälp mig."
-#
-#- alias: "Sileno_error_lifted"
-#  id: "Sileno hjul i luften"
-#  initial_state: true
-#  mode: single
-#  trigger:
-#    platform: state
-#    entity_id: vacuum.sileno
-#    to: "error"
-#  condition:
-#    - "{{ state_attr('vacuum.sileno', 'last_error') == 'lifted' }}"
-#    - "{{ is_state('input_boolean.sileno_winter_sleep', 'off') }}"
-#  action:
-#    - service: notify.hanna_jimmy
-#      data:
-#        title: "Olle behöver hjälp!!"
-#        message: "Hjulet är i luften, kom och hjälp mig."
 #

@@ -21,59 +21,37 @@
       below: 0.5
     - platform: numeric_state
       entity_id: sensor.ljus_ute
-      below: 35
+      below: 50
   condition:
     - condition: numeric_state
       entity_id: sun.sun
       attribute: elevation
-      below: 0.5
+      below: 1.5
     - condition: numeric_state
       entity_id: sensor.ljus_ute
-      below: 35
+      below: 100
   action:
     - service: light.turn_on
-      entity_id: light.vardagsfonster
+      target:
+        entity_id:
+          - light.vardagsfonster
+          - light.vardagsrum_fonster_balkong
+          - light.matsal_bursprak_v
+          - light.matsal_fonster_inglasning
+          - light.matsal_bursprak_h
+          - light.kontorsfonster
       data:
-        brightness: 40
+        brightness: 25
         color_temp: 153
+    - delay:
+        seconds: 1
     - service: light.turn_on
-      entity_id: light.vardagsfonster_mot_balkong
+      target:
+        entity_id:
+          - light.parkering_trapp_1
+          - light.parkering_trapp_2
+          - light.garage_ute
       data:
-        brightness: 40
-        color_temp: 153
-    - service: light.turn_on
-      entity_id: light.matsalsfonster1
-      data:
-        brightness: 80
-        color_temp: 153
-    - service: light.turn_on
-      entity_id: light.matsalsfonster2
-      data:
-        brightness: 80
-        color_temp: 153
-    - service: light.turn_on
-      entity_id: light.matsalsfonster4
-      data:
-        brightness: 40
-        color_temp: 300
-    - service: light.turn_on
-      entity_id: light.kontorsfonster
-      data:
-        brightness: 40
-        color_temp: 153
-    - service: light.turn_on
-      data:
-        entity_id: light.parkering_trapp_1
-        brightness: 2
-        color_temp: 153
-    - service: light.turn_on
-      data:
-        entity_id: light.parkering_trapp_2
-        brightness: 2
-        color_temp: 153
-    - service: light.turn_on
-      data:
-        entity_id: light.garage_ute
         brightness: 2
         color_temp: 153
 #
@@ -85,48 +63,36 @@
     - platform: numeric_state
       entity_id: sun.sun
       attribute: elevation
-      above: -1.5
+      above: 1.5
     - platform: numeric_state
       entity_id: sensor.ljus_ute
-      above: 35
+      above: 100
   condition:
     - condition: numeric_state
       entity_id: sun.sun
       attribute: elevation
-      above: -1.5
+      above: 0.5
     - condition: numeric_state
       entity_id: sensor.ljus_ute
-      above: 35
+      above: 70
   action:
     - service: light.turn_off
-      data:
-        entity_id: light.vardagsfonster
-    - service: light.turn_off
-      data:
-        entity_id: light.matsalsfonster1
-    - service: light.turn_off
-      data:
-        entity_id: light.matsalsfonster2
+      target:
+        entity_id:
+          - light.vardagsfonster
+          - light.matsal_bursprak_v
+          - light.matsal_fonster_inglasning
+          - light.matsal_bursprak_h
+          - light.vardagsrum_fonster_balkong
+          - light.kontorsfonster
+          - light.parkering_trapp_1
+          - light.parkering_trapp_2
+          - light.garage_ute
+    - delay:
+        seconds: 1
     - service: switch.turn_off
-      entity_id: switch.vardagsrum_spis
-    - service: light.turn_off
-      data:
-        entity_id: light.matsalsfonster4
-    - service: light.turn_off
-      data:
-        entity_id: light.vardagsfonster_mot_balkong
-    - service: light.turn_off
-      data:
-        entity_id: light.kontorsfonster
-    - service: light.turn_off
-      data:
-        entity_id: light.parkering_trapp_1
-    - service: light.turn_off
-      data:
-        entity_id: light.parkering_trapp_2
-    - service: light.turn_off
-      data:
-        entity_id: light.garage_ute
+      target:
+        entity_id: switch.vardagsrum_spis
 #
 - alias: "bad weather on"
   id: "Dåligt väder på"
@@ -136,9 +102,32 @@
     - platform: state
       entity_id: sensor.trafikverket_karlsvik_precipitation_type
       from: "Ingen nederbörd"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      from: "Ingen nederbörd"
+  condition:
+    - or:
+      - and:
+        - not:
+          - condition: state
+            entity_id: sensor.trafikverket_karlsvik_precipitation_type
+            state: "unavailable"
+        - not:
+          - condition: state
+            entity_id: sensor.trafikverket_karlsvik_precipitation_type
+            state: "Ingen nederbörd"
+      - and:
+        - not:
+          - condition: state
+            entity_id: sensor.gagnbro_precipitation_type
+            state: "unavailable"
+        - not:
+          - condition: state
+            entity_id: sensor.gagnbro_precipitation_type
+            state: "Ingen nederbörd"
   action:
     - service: input_boolean.turn_on
-      data:
+      target:
         entity_id: input_boolean.bad_weather
 #
 - alias: "bad weather off"
@@ -151,8 +140,26 @@
       to: "Ingen nederbörd"
       for:
         hours: 5
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      to: "Ingen nederbörd"
+      for:
+        hours: 5
+  condition:
+    - or:
+      - condition: state
+        entity_id: sensor.trafikverket_karlsvik_precipitation_type
+        state: "Ingen nederbörd"
+        for: "04:59:50"
+      - "{{ as_timestamp(now()) - as_timestamp(states.sensor.trafikverket_karlsvik_precipitation_type.last_updated) > 14400 }}"
+    - or:
+      - condition: state
+        entity_id: sensor.gagnbro_precipitation_type
+        state: "Ingen nederbörd"
+        for: "04:59:50"
+      - "{{ as_timestamp(now()) - as_timestamp(states.sensor.gagnbro_precipitation_type.last_updated) > 14400 }}"
   action:
     - service: input_boolean.turn_off
-      data:
+      target:
         entity_id: input_boolean.bad_weather
 #

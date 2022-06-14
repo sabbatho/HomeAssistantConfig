@@ -17,21 +17,21 @@
       entity_id: binary_sensor.garagelas
       to: "on"
   condition:
-    - "{{ state_attr('sun.sun', 'elevation') < -0.5 }}"
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      below: 1.5
+    - condition: numeric_state
+      entity_id: sensor.ljus_ute
+      below: 100
   action:
     - service: light.turn_on
+      target:
+        entity_id: 
+          - light.garage_ute
+          - light.parkering_trapp_1
+          - light.parkering_trapp_2
       data:
-        entity_id: light.garage_ute
-        brightness: 254
-        color_temp: 153
-    - service: light.turn_on
-      data:
-        entity_id: light.parkering_trapp_1
-        brightness: 254
-        color_temp: 153
-    - service: light.turn_on
-      data:
-        entity_id: light.parkering_trapp_2
         brightness: 254
         color_temp: 153
 #
@@ -53,7 +53,13 @@
       to: "off"
       for: "00:10:00"
   condition:
-    - "{{ state_attr('sun.sun', 'elevation') < -0.5 }}"
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      below: 1.5
+    - condition: numeric_state
+      entity_id: sensor.ljus_ute
+      below: 100
     - condition: state
       entity_id: binary_sensor.garagelas
       state: "off"
@@ -67,18 +73,12 @@
       for: "00:09:00"
   action:
     - service: light.turn_on
+      target:
+        entity_id:
+          - light.garage_ute
+          - light.parkering_trapp_1
+          - light.parkering_trapp_2
       data:
-        entity_id: light.garage_ute
-        brightness: 2
-        color_temp: 153
-    - service: light.turn_on
-      data:
-        entity_id: light.parkering_trapp_1
-        brightness: 2
-        color_temp: 153
-    - service: light.turn_on
-      data:
-        entity_id: light.parkering_trapp_2
         brightness: 2
         color_temp: 153
 #
@@ -91,11 +91,18 @@
       entity_id: binary_sensor.garagelas
       to: "on"
   condition:
-    - "{{ state_attr('sun.sun', 'elevation') < -0.5 }}"
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      below: 1.5
+    - condition: numeric_state
+      entity_id: sensor.ljus_ute
+      below: 100
   action:
     - service: light.turn_on
-      data:
+      target:
         entity_id: light.garage_ute
+      data:
         brightness: 254
         color_temp: 153
 #
@@ -109,14 +116,21 @@
       to: "off"
       for: "00:10:00"
   condition:
-    - "{{ state_attr('sun.sun', 'elevation') < -0.5 }}"
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      below: 1.5
+    - condition: numeric_state
+      entity_id: sensor.ljus_ute
+      below: 100
     - condition: state
       entity_id: binary_sensor.garagelas
       state: "off"
   action:
     - service: light.turn_on
-      data:
+      target:
         entity_id: light.garage_ute
+      data:
         brightness: 2
         color_temp: 153
 #
@@ -129,12 +143,21 @@
       entity_id: binary_sensor.motion_outside_entrance_presence
       to: "on"
   condition:
-    - "{{ state_attr('sun.sun', 'elevation') < -0.5 }}"
-    - "{{ is_state('input_boolean.verandan_override', 'off') }}"
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      below: 1.5
+    - condition: numeric_state
+      entity_id: sensor.ljus_ute
+      below: 100
+    - condition: state
+      entity_id: input_boolean.verandan_override
+      state: "off"
   action:
     - service: light.turn_on
-      data:
+      target:
         entity_id: light.verandan_matbord
+      data:
         brightness: 254
         color_name: >
           {% if states('sensor.ute') | float <= -8 %}
@@ -162,44 +185,13 @@
       to: "off"
       for: "00:05:00"
   condition:
-    - "{{ is_state('input_boolean.verandan_override', 'off') }}"
-  #    - "{{ state_attr('sun.sun', 'elevation') < -0.5 }}"
+    - condition: state
+      entity_id: input_boolean.verandan_override
+      state: "off"
   action:
     - service: light.turn_off
-      data:
+      target:
         entity_id: light.verandan_matbord
-#
-#- alias: "outside_entrance_on_motion_surv"
-#  id: "Entre ute På Rörelse övervakning"
-#  initial_state: true
-#  mode: single
-#  trigger:
-#    - platform: state
-#      entity_id: binary_sensor.motion_outside_entrance_presence
-#      to: "on"
-#    - platform: state
-#      entity_id: binary_sensor.motion_outside_garage_presence
-#      to: "on"
-#    - platform: state
-#      entity_id: binary_sensor.motion_outside_ssw_presence
-#      to: "on"
-#  condition:
-#    - condition: or
-#      conditions:
-#        - condition: state
-#          entity_id: person.jimmy
-#        - condition: state
-#          entity_id: person.hanna
-#          state: "home"
-#  action:
-#    - service: cast.show_lovelace_view
-#      data:
-#        dashboard_path: lovelace
-#        entity_id: media_player.hobbyrum
-#        view_path: cams
-#    - delay:
-#        minutes: 1
-#    - service: switch.turn_off
-#      data:
-#        entity_id: switch.hobbyrumstv
+      data:
+        transition: 20
 #

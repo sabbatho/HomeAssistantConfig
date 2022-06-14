@@ -4,150 +4,1031 @@
 ##                                        ##
 ############################################
 
-
-- alias: "aquarium_light_off_weekday"
-  id: "Akvarium lyse Av vardag"
-  initial_state: true
+#
+# OFF WEEKDAY
+#
+- alias: "aquarium_light_off_weekday_720_matsal"
+  id: "Akvarium lyse Av Vardag 720 Matsal"
   mode: single
+  initial_state: true
   trigger:
     - platform: time
-      at: '22:00:00'
+      at: input_datetime.akvarium_off
   condition:
     - condition: state
       entity_id: binary_sensor.workday_tomorrow
-      state: 'on'
+      state: "on"
+    - condition: state
+      entity_id: input_boolean.720_matsal_cyano
+      state: "off"
   action:
     - service: switch.turn_off
-      data:
-        entity_id: switch.akvarium_mini
-    - service: switch.turn_off
-      data:
-        entity_id: switch.akvarium_720_matsal
-    - delay:
-        seconds: 1
-    - service: switch.turn_off
-      data:
-        entity_id: switch.akvarium_400
-    - service: switch.turn_off
-      data:
-        entity_id: switch.akvarium_hobbyrum_720_v
-    - delay:
-        seconds: 1
-    - service: switch.turn_off
-      data:
-        entity_id: switch.akvarium_1200
+      target:
+        entity_id:
+          - switch.akvarium_720_matsal
 #
-- alias: "aquarium_light_off_weekend"
-  id: "Akvarium lyse Av helg"
-  initial_state: true
+- alias: "aquarium_light_off_weekday_mini"
+  id: "Akvarium lyse Av Vardag Mini"
   mode: single
+  initial_state: true
   trigger:
     - platform: time
-      at: '23:59:00'
+      at: input_datetime.akvarium_off
   condition:
     - condition: state
       entity_id: binary_sensor.workday_tomorrow
-      state: 'off'
+      state: "on"
+    - condition: state
+      entity_id: input_boolean.mini_cyano
+      state: "off"
   action:
     - service: switch.turn_off
-      data:
-        entity_id: switch.akvarium_mini
-    - service: switch.turn_off
-      data:
-        entity_id: switch.akvarium_720_matsal
-    - delay:
-        seconds: 1
-    - service: switch.turn_off
-      data:
-        entity_id: switch.akvarium_400
-    - service: switch.turn_off
-      data:
-        entity_id: switch.akvarium_hobbyrum_720_v
-    - delay:
-        seconds: 1
-    - service: switch.turn_off
-      data:
-        entity_id: switch.akvarium_1200
+      target:
+        entity_id:
+          - switch.akvarium_mini
 #
-- alias: "aquarium_light_on_weekday"
-  id: "Akvarium lyse På vardag"
+- alias: "aquarium_light_off_weekday_400"
+  id: "Akvarium lyse Av Vardag 400"
   mode: single
   initial_state: true
-  trigger: 
+  trigger:
     - platform: time
-      at: '13:00:00'
+      at: input_datetime.akvarium_off
   condition:
     - condition: state
-      entity_id: binary_sensor.workday_sensor
-      state: 'on'
+      entity_id: binary_sensor.workday_tomorrow
+      state: "on"
+    - condition: state
+      entity_id: input_boolean.400_cyano
+      state: "off"
   action:
-    - service: switch.turn_on
-      data:
-        entity_id: switch.akvarium_mini
-    - service: switch.turn_on
-      data:
-        entity_id: switch.akvarium_720_matsal
-    - delay:
-        seconds: 1
-    - service: switch.turn_on
-      data:
-        entity_id: switch.akvarium_400
-    - service: switch.turn_on
-      data:
-        entity_id: switch.akvarium_hobbyrum_720_v
-    - delay:
-        seconds: 1
-    - service: switch.turn_on
-      data:
-        entity_id: switch.akvarium_1200
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_400
 #
-- alias: "aquarium_light_on_weekend"
-  id: "Akvarium lyse På helg"
-  initial_state: true
+- alias: "aquarium_light_off_weekday_720_hobbyrum_v"
+  id: "Akvarium lyse Av Vardag 720 Hobbyrum V"
   mode: single
-  trigger: 
+  initial_state: true
+  trigger:
     - platform: time
-      at: '11:00:00'
+      at: input_datetime.akvarium_off
   condition:
     - condition: state
-      entity_id: binary_sensor.workday_sensor
-      state: 'off'
+      entity_id: binary_sensor.workday_tomorrow
+      state: "on"
+    - condition: state
+      entity_id: input_boolean.720_hobbyrum_v_cyano
+      state: "off"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_hobbyrum_720_v
+#
+- alias: "aquarium_light_off_weekday_1200"
+  id: "Akvarium lyse Av Vardag 1200"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_tomorrow
+      state: "on"
+    - condition: state
+      entity_id: input_boolean.1200_cyano
+      state: "off"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_1200
+#
+# OFF WEEKEND
+#
+- alias: "aquarium_light_off_weekend_720_matsal"
+  id: "Akvarium lyse Av Helg 720 Matsal"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off_weekend
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_tomorrow
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.720_matsal_cyano
+      state: "off"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_720_matsal
+#
+- alias: "aquarium_light_off_weekend_mini"
+  id: "Akvarium lyse Av Helg Mini"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off_weekend
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_tomorrow
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.mini_cyano
+      state: "off"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_mini
+#
+- alias: "aquarium_light_off_weekend_400"
+  id: "Akvarium lyse Av Helg 400"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off_weekend
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_tomorrow
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.400_cyano
+      state: "off"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_400
+#
+- alias: "aquarium_light_off_weekend_720_hobbyrum_v"
+  id: "Akvarium lyse Av Helg 720 Hobbyrum V"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off_weekend
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_tomorrow
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.720_hobbyrum_v_cyano
+      state: "off"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_hobbyrum_720_v
+#
+- alias: "aquarium_light_off_weekend_1200"
+  id: "Akvarium lyse Av Helg 1200"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off_weekend
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday_tomorrow
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.1200_cyano
+      state: "off"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_1200
+#
+# OFF Cyano
+#
+- alias: "aquarium_light_off_cyano_720_matsal"
+  id: "Akvarium lyse Av Cyano 720 Matsal"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off_cyano
+  condition:
+    - condition: state
+      entity_id: input_boolean.720_matsal_cyano
+      state: "on"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_720_matsal
+#
+- alias: "aquarium_light_off_cyano_mini"
+  id: "Akvarium lyse Av Cyano Mini"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off_cyano
+  condition:
+    - condition: state
+      entity_id: input_boolean.mini_cyano
+      state: "on"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_mini
+#
+- alias: "aquarium_light_off_cyano_400"
+  id: "Akvarium lyse Av Cyano 400"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off_cyano
+  condition:
+    - condition: state
+      entity_id: input_boolean.400_cyano
+      state: "on"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_400
+#
+- alias: "aquarium_light_off_cyano_720_hobbyrum_v"
+  id: "Akvarium lyse Av Cyano 720 Hobbyrum V"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off_cyano
+  condition:
+    - condition: state
+      entity_id: input_boolean.720_hobbyrum_v_cyano
+      state: "on"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_hobbyrum_720_v
+#
+- alias: "aquarium_light_off_cyano_1200"
+  id: "Akvarium lyse Av Cyano 1200"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_off_cyano
+  condition:
+    - condition: state
+      entity_id: input_boolean.1200_cyano
+      state: "on"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_1200
+#
+# ON WEEKDAY
+#
+- alias: "aquarium_light_on_weekday_720_matsal"
+  id: "Akvarium lyse På vardag 720 Matsal"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_jimmy
+          state: "on"
+        - condition: state
+          entity_id: binary_sensor.workday_hanna
+          state: "on"
+    - condition: state
+      entity_id: input_boolean.720_matsal_cyano
+      state: "off"
   action:
     - service: switch.turn_on
-      data:
-        entity_id: switch.akvarium_mini
-    - service: switch.turn_on
-      data:
-        entity_id: switch.akvarium_720_matsal
-    - delay:
-        seconds: 1
-    - service: switch.turn_on
-      data:
-        entity_id: switch.akvarium_400
-    - service: switch.turn_on
-      data:
-        entity_id: switch.akvarium_hobbyrum_720_v
-    - delay:
-        seconds: 1
-    - service: switch.turn_on
-      data:
-        entity_id: switch.akvarium_1200
+      target:
+        entity_id:
+          - switch.akvarium_720_matsal
 #
-- alias: "Akvarium för varmt 720 matsal"
+- alias: "aquarium_light_on_weekday_mini"
+  id: "Akvarium lyse På vardag Mini"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_jimmy
+          state: "on"
+        - condition: state
+          entity_id: binary_sensor.workday_hanna
+          state: "on"
+    - condition: state
+      entity_id: input_boolean.mini_cyano
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_mini
+#
+- alias: "aquarium_light_on_weekday_400"
+  id: "Akvarium lyse På vardag 400"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_jimmy
+          state: "on"
+        - condition: state
+          entity_id: binary_sensor.workday_hanna
+          state: "on"
+    - condition: state
+      entity_id: input_boolean.400_cyano
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_400
+#
+- alias: "aquarium_light_on_weekday_720_hobbyrum_v"
+  id: "Akvarium lyse På vardag 720 Hobbyrum V"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_jimmy
+          state: "on"
+        - condition: state
+          entity_id: binary_sensor.workday_hanna
+          state: "on"
+    - condition: state
+      entity_id: input_boolean.720_hobbyrum_v_cyano
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_hobbyrum_720_v
+#
+- alias: "aquarium_light_on_weekday_1200"
+  id: "Akvarium lyse På vardag 1200"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_jimmy
+          state: "on"
+        - condition: state
+          entity_id: binary_sensor.workday_hanna
+          state: "on"
+    - condition: state
+      entity_id: input_boolean.1200_cyano
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_1200
+#
+# ON REGULAR WEEKEND
+#
+- alias: "aquarium_light_on_weekend_720_matsal"
+  id: "Akvarium lyse På helg 720 Matsal"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on_weekend
+  condition:
+    - condition: and
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_jimmy
+          state: "off"
+        - condition: state
+          entity_id: binary_sensor.workday_hanna
+          state: "off"
+    - condition: state
+      entity_id: input_boolean.720_matsal_cyano
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_720_matsal
+#
+- alias: "aquarium_light_on_weekend_mini"
+  id: "Akvarium lyse På helg Mini"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on_weekend
+  condition:
+    - condition: and
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_jimmy
+          state: "off"
+        - condition: state
+          entity_id: binary_sensor.workday_hanna
+          state: "off"
+    - condition: state
+      entity_id: input_boolean.mini_cyano
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_mini
+#
+- alias: "aquarium_light_on_weekend_400"
+  id: "Akvarium lyse På helg 400"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on_weekend
+  condition:
+    - condition: and
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_jimmy
+          state: "off"
+        - condition: state
+          entity_id: binary_sensor.workday_hanna
+          state: "off"
+    - condition: state
+      entity_id: input_boolean.400_cyano
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_400
+#
+- alias: "aquarium_light_on_weekend_720_hobbyrum_v"
+  id: "Akvarium lyse På helg 720 Hobbyrum V"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on_weekend
+  condition:
+    - condition: and
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_jimmy
+          state: "off"
+        - condition: state
+          entity_id: binary_sensor.workday_hanna
+          state: "off"
+    - condition: state
+      entity_id: input_boolean.720_hobbyrum_v_cyano
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_hobbyrum_720_v
+#
+- alias: "aquarium_light_on_weekend_1200"
+  id: "Akvarium lyse På helg 1200"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on_weekend
+  condition:
+    - condition: and
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.workday_jimmy
+          state: "off"
+        - condition: state
+          entity_id: binary_sensor.workday_hanna
+          state: "off"
+    - condition: state
+      entity_id: input_boolean.1200_cyano
+      state: "off"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_1200
+#
+# ON CYANO
+#
+- alias: "aquarium_light_on_cyano_720_matsal"
+  id: "Akvarium lyse På Cyano 720 Matsal"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on_cyano
+  condition:
+    - condition: state
+      entity_id: input_boolean.720_matsal_cyano
+      state: "on"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_720_matsal
+#
+- alias: "aquarium_light_on_cyano_mini"
+  id: "Akvarium lyse På Cyano Mini"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on_cyano
+  condition:
+    - condition: state
+      entity_id: input_boolean.mini_cyano
+      state: "on"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_mini
+#
+- alias: "aquarium_light_on_cyano_400"
+  id: "Akvarium lyse På Cyano 400"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on_cyano
+  condition:
+    - condition: state
+      entity_id: input_boolean.400_cyano
+      state: "on"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_400
+#
+- alias: "aquarium_light_on_cyano_720_hobbyrum_v"
+  id: "Akvarium lyse På Cyano 720 Hobbyrum V"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on_cyano
+  condition:
+    - condition: state
+      entity_id: input_boolean.720_hobbyrum_v_cyano
+      state: "on"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_hobbyrum_720_v
+#
+- alias: "aquarium_light_on_cyano_1200"
+  id: "Akvarium lyse På Cyano 1200"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: time
+      at: input_datetime.akvarium_on_cyano
+  condition:
+    - condition: state
+      entity_id: input_boolean.1200_cyano
+      state: "on"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_1200
+#
+# TEMP WARNING
+#
+- alias: "Akvarium_for_varmt_720_matsal"
   id: "Akvarium för varmt 720 matsal"
   initial_state: true
   mode: single
   trigger:
-  - platform: time
-    at: '11:00:00'
-  - platform: time
-    at: '18:00:00'
+    - platform: time
+      at: "18:00:00"
   condition:
-  - "{{ states('sensor.akvarium_720_matsal') | float > 29 }}"
-#  - condition: template
-#    value_template: "{{ states('sensor.akvarium_720_matsal') | float > 29 }}"
+    - condition: numeric_state
+      entity_id: sensor.akvarium_720_matsal
+      above: 27
   action:
-  - service: notify.mobile_app_clt_l29
-    data: 
-      message: "Börjar bli lite varmt i 720 i matsalen {{ states('sensor.akvarium_720_matsal') }}"
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Börjar bli lite varmt i 720t i matsalen {{ states('sensor.akvarium_720_matsal') }}"
+#
+- alias: "Akvarium_for_kallt_720_matsal"
+  id: "Akvarium för kallt 720 matsal"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at:
+        - "21:00:00"
+        - "18:00:00"
+        - "15:00:00"
+        - "12:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.akvarium_720_matsal
+      below: 25.5
+    - condition: state
+      entity_id: input_boolean.720_matsal_water_change
+      state: "off"
+  action:
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Börjar bli lite kallt i 720t i matsalen {{ states('sensor.akvarium_720_matsal') }}"
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_720_matsal_heater
+#
+- alias: "Akvarium_for_varmt_720_hobbyrum_V"
+  id: "Akvarium för varmt 720 hobbyrum vänster"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.filtered_720_v_aquarium
+      above: 27
+  action:
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Börjar bli lite varmt i 720t till vänster i hobbyrummet {{ states('sensor.filtered_720_v_aquarium') }}"
+#
+- alias: "Akvarium_for_kallt_720_hobbyrum_v"
+  id: "Akvarium för kallt 720 hobbyrum vänster"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at:
+        - "21:00:00"
+        - "18:00:00"
+        - "15:00:00"
+        - "12:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.filtered_720_v_aquarium
+      below: 25.5
+    - condition: state
+      entity_id: input_boolean.720_hobbyrum_v_water_change
+      state: "off"
+  action:
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Börjar bli lite kallt i 720t till vänster i hobbyrummet {{ states('sensor.filtered_720_v_aquarium') }}"
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_720_hobbyrum_v_heater
+#
+- alias: "Akvarium_for_varmt_1200_hobbyrum"
+  id: "Akvarium för varmt 1200 hobbyrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.filtered_1200_aquarium
+      above: 27
+  action:
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Börjar bli lite varmt i 1200at i hobbyrummet {{ states('sensor.filtered_1200_aquarium') }}"
+#
+- alias: "Akvarium_for_kallt_1200_hobbyrum"
+  id: "Akvarium för kallt 1200 hobbyrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at:
+        - "21:00:00"
+        - "18:00:00"
+        - "15:00:00"
+        - "12:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.filtered_1200_aquarium
+      below: 25.5
+    - condition: state
+      entity_id: input_boolean.1200_water_change
+      state: "off"
+  action:
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Börjar bli lite kallt i 1200at i hobbyrummet {{ states('sensor.filtered_1200_aquarium') }}"
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_1200_heater
+#
+- alias: "Akvarium_for_varmt_400"
+  id: "Akvarium för varmt 400"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: 
+        - "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.akvarium_400
+      above: 27
+  action:
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Börjar bli lite varmt i 400at {{ states('sensor.akvarium_400') }}"
+#
+- alias: "Akvarium_for_kallt_400"
+  id: "Akvarium för kallt 400"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at:
+        - "21:00:00"
+        - "18:00:00"
+        - "15:00:00"
+        - "12:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.akvarium_400
+      below: 25.5
+    - condition: state
+      entity_id: input_boolean.400_water_change
+      state: "off"
+  action:
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Börjar bli lite kallt i 400at {{ states('sensor.akvarium_400') }}"
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_400_varmare
+#
+# HEATING
+#
+- alias: "Akvarium_for_kallt_400_heater"
+  id: "Akvarium för kallt 400 värmare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.akvarium_400
+      below: 26.0
+  condition:
+    - condition: state
+      entity_id: input_boolean.400_water_change
+      state: "off"
+    - "{{ (as_timestamp(now()) - as_timestamp(states.sensor.akvarium_400.last_updated) -60*60) | timestamp_custom('%H:%M:%S') < '00:30:00' }}"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_400_varmare
+#
+- alias: "Akvarium_for_varmt_400_heater"
+  id: "Akvarium för varmt 400 värmare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.akvarium_400
+      above: 26.2
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_400_varmare
+#
+- alias: "Akvarium_for_kallt_720_hobby_v_heater"
+  id: "Akvarium för kallt 720 hobby v värmare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.filtered_720_v_aquarium
+      below: 26.0
+  condition:
+    - condition: state
+      entity_id: input_boolean.720_hobbyrum_v_water_change
+      state: "off"
+    - "{{ (as_timestamp(now()) - as_timestamp(states.sensor.filtered_720_v_aquarium.last_updated) -60*60) | timestamp_custom('%H:%M:%S') < '00:30:00' }}"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_720_hobbyrum_v_heater
+#
+- alias: "Akvarium_for_varmt_720_hobby_v_heater"
+  id: "Akvarium för varmt 720 hobby v värmare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.filtered_720_v_aquarium
+      above: 26.2
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_720_hobbyrum_v_heater
+#
+- alias: "Akvarium_for_kallt_720_matsal_heater"
+  id: "Akvarium för kallt 720 matsal värmare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.akvarium_720_matsal
+      below: 26.0
+  condition:
+    - condition: state
+      entity_id: input_boolean.720_matsal_water_change
+      state: "off"
+    - "{{ (as_timestamp(now()) - as_timestamp(states.sensor.akvarium_720_matsal.last_updated) -60*60) | timestamp_custom('%H:%M:%S') < '00:30:00' }}"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_720_matsal_heater
+#
+- alias: "Akvarium_for_varmt_720_matsal_heater"
+  id: "Akvarium för varmt 720 matsal värmare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.akvarium_720_matsal
+      above: 26.2
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_720_matsal_heater
+#
+- alias: "Akvarium_for_kallt_1200_heater"
+  id: "Akvarium för kallt 1200 värmare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.filtered_1200_aquarium
+      below: 26.0
+  condition:
+    - condition: state
+      entity_id: input_boolean.1200_water_change
+      state: "off"
+    - "{{ (as_timestamp(now()) - as_timestamp(states.sensor.filtered_1200_aquarium.last_updated) -60*60) | timestamp_custom('%H:%M:%S') < '00:30:00' }}"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.akvarium_1200_heater
+#
+- alias: "Akvarium_for_varmt_1200_heater"
+  id: "Akvarium för varmt 1200 värmare"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.filtered_1200_aquarium
+      above: 26.4
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_1200_heater
+#
+# Water change
+#
+- alias: "Akvarium_400_water_change"
+  id: "Akvarium 400 vattenbyte"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/20"
+  condition:
+    - condition: state
+      entity_id: input_boolean.400_water_change
+      state: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Vattenbyte är aktivt för 400"
+        message: "värmare startar inte nu, glöm inte slå av denna switch när det är påfyllt"
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_400_varmare
+#
+- alias: "Akvarium_720_hobbyrum_v_water_change"
+  id: "Akvarium 720_hobbyrum_v vattenbyte"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/20"
+  condition:
+    - condition: state
+      entity_id: input_boolean.720_hobbyrum_v_water_change
+      state: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Vattenbyte är aktivt för 720 hobbyrum vänster"
+        message: "värmare startar inte nu, glöm inte slå av denna switch när det är påfyllt"
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_720_hobbyrum_v_heater
+#
+- alias: "Akvarium_720_matsal_water_change"
+  id: "Akvarium 720_matsal vattenbyte"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/20"
+  condition:
+    - condition: state
+      entity_id: input_boolean.720_matsal_water_change
+      state: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Vattenbyte är aktivt för 720 matsal"
+        message: "värmare startar inte nu, glöm inte slå av denna switch när det är påfyllt"
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_720_matsal_heater
+#
+- alias: "Akvarium_1200_water_change"
+  id: "Akvarium 1200 vattenbyte"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/20"
+  condition:
+    - condition: state
+      entity_id: input_boolean.1200_water_change
+      state: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Vattenbyte är aktivt för 1200"
+        message: "värmare startar inte nu, glöm inte slå av denna switch när det är påfyllt"
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.akvarium_1200_heater
 #

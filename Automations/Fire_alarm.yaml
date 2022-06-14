@@ -1,0 +1,96 @@
+#
+#
+#
+#
+- alias: "Smoke Sensor hall RÖK"
+  id: "Rökdeckare hall RÖK"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.hall_smoke_sensor_smoke_alarm_smoke_detected
+      from: "off"
+      to: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare hall övervåning: "
+        message: "******* RÖKLARM!!!! *******"
+#
+- alias: "Smoke Sensor hall ingen rök"
+  id: "Rökdeckare hall ingen mer rök"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.hall_smoke_sensor_smoke_alarm_smoke_detected
+      from: "on"
+      to: "off"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare hall övervåning: "
+        message: "******* Rök borta *******"
+#
+- alias: "Smoke Sensor hall VÄRME"
+  id: "Rökdeckare hall VARMT"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.hall_smoke_heat_alarm_overheat_detected
+      from: "off"
+      to: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare hall övervåning: "
+        message: "******* VÄRMELARM 55+ grader!!!! *******"
+#
+- alias: "Smoke Sensor hall ingen värme"
+  id: "Rökdeckare hall ingen mer värme"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.hall_smoke_heat_alarm_overheat_detected
+      from: "on"
+      to: "off"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare hall övervåning: "
+        message: "******* Värme borta *******"
+#
+#
+- alias: "Smoke Sensor vardagsrum RÖK"
+  id: "Rökdeckare vardagsrum RÖK"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.smoke_alarm_living_room_smoke
+      from: "off"
+      to: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare vardagsrum: "
+        message: "******* RÖKLARM!!!! *******"
+#
+- alias: "Smoke Sensor vardagsrum ingen rök"
+  id: "Rökdeckare vardagsrum ingen mer rök"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.smoke_alarm_living_room_smoke
+      from: "on"
+      to: "off"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare vardagsrum: "
+        message: "******* Rök borta *******"
+#
+#

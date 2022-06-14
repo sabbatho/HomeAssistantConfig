@@ -18,89 +18,86 @@
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: media_player.sovrum
-    from: 'off'
-    to: 'idle'
-  - platform: state
-    entity_id: media_player.sovrum
-    from: 'off'
-    to: 'playing'
+    - platform: state
+      entity_id: media_player.sovrum
+      from: "off"
+      to: "idle"
+    - platform: state
+      entity_id: media_player.sovrum
+      from: "off"
+      to: "inactive"
+    - platform: state
+      entity_id: media_player.sovrum
+      from: "off"
+      to: "playing"
   action:
-  - service: switch.turn_on
-    data:
-      entity_id: switch.sovrumstv
+    - delay: "00:00:05"
+    - service: media_player.volume_set
+      target:
+        entity_id: media_player.43pus6162_12
+      data:
+        volume_level: 0.4
 #
 - alias: "chromecast_bedroom_idle"
-  id: "Tittar inte längre på chromecast idle"
+  id: "Sovrumstv idle"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: media_player.sovrum
-    from: 'playing'
-    to: 'idle'
+    - platform: state
+      entity_id: media_player.sovrum
+      to: "idle"
+      for:
+        seconds: 30
   action:
-  - service: switch.turn_off
-    data:
-      entity_id: switch.sovrum22
+    - service: media_player.turn_off
+      target:
+        entity_id: 
+          - media_player.sovrum
+          - media_player.43pus6162_12
 #
 - alias: "chromecast_bedroom_off"
-  id: "Tittar inte längre på chromecast off"
+  id: "Sovrumstv off"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: media_player.sovrum
-    from: 'playing'
-    to: 'off'
+    - platform: state
+      entity_id: media_player.sovrum
+      to: "off"
+      for:
+        seconds: 30
   action:
-  - service: switch.turn_off
-    data:
-      entity_id: switch.sovrum22
+    - service: media_player.turn_off
+      target:
+        entity_id: media_player.43pus6162_12
 #
-- alias: "chromecast_bedroom_paused"
-  id: "Chromecast pausad"
+- alias: "chromecast_hobbyrum_idle"
+  id: "Chromecast hobbyrum idle"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: media_player.sovrum
-    from: 'playing'
-    to: 'paused'
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: "idle"
+      for:
+        seconds: 10
   action:
-  - service: switch.turn_on
-    data:
-      entity_id: switch.sovrum22
+    - service: remote.turn_off
+      data:
+        entity_id: remote.hobbyrum
+    - service: media_player.turn_off
+      target:
+        entity_id: media_player.hobbyrum
 #
 - alias: "chromecast_hobbyrum_off"
-  id: "Tittar inte längre på chromecast hobbyrum"
+  id: "Chromecast hobbyrum av"
   initial_state: true
   mode: single
   trigger:
-  - platform: state
-    entity_id: media_player.hobbyrum
-    to: 'off'
+    - platform: state
+      entity_id: media_player.hobbyrum
+      to: "off"
   action:
-  - service: switch.turn_off
-    data:
-      entity_id: switch.hobbyrumstv
-#
-- alias: "chromecast_hobbyrum_on"
-  id: "Hobbyrumstv På"
-  initial_state: true
-  mode: single
-  trigger:
-  - platform: state
-    entity_id: media_player.hobbyrum
-    from: 'off'
-    to: 'idle'
-  - platform: state
-    entity_id: media_player.hobbyrum
-    from: 'off'
-    to: 'playing'
-  action:
-  - service: switch.turn_on
-    data:
-      entity_id: switch.hobbyrumstv
+    - service: remote.turn_off
+      target:
+        entity_id: remote.hobbyrum
 #

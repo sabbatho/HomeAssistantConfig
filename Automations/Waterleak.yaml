@@ -1,0 +1,46 @@
+#
+#
+#
+- alias: "notification_water_leak_dish"
+  id: "Notifiering vattenläcka under diskho"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.water_dish
+      to: "on"
+  action:
+    - service: notify.lametric
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+    - service: notify.hanna_jimmy
+      data:
+        title: "Vattenläcka!"
+        message: "Vattenläcka under diskho"
+    - delay: "00:00:10"
+    - service: notify.lametric
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "notification4"
+          priority: "warning"
+          cycles: 3
+    - delay: "00:00:10"
+    - service: notify.lametric
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+#

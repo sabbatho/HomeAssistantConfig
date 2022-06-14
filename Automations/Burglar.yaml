@@ -1,0 +1,37 @@
+#
+#
+#
+- alias: "hall_entre_door_opens_when_not_home"
+  id: "Hall dörr Entre öppnas när ingen är hemma"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.hall_door_magnet
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
+    - not:
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
+    - not:
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: 
+          - light.hall_entre
+          - light.hall_stora
+          - light.hall_lilla
+          - light.kokstak
+      data:
+        brightness: 254
+    - service: notify.hanna_jimmy
+      data: 
+        message: "Ytterdörren har öppnats, men ingen är hemma"
+#

@@ -1,5 +1,7 @@
-
-
+#
+#
+#
+#
 
 
 - alias: "kitchen_cabinet_on_motion"
@@ -9,19 +11,22 @@
   trigger:
     - platform: state
       entity_id: binary_sensor.motion_kok
-      to: 'on'
+      to: "on"
   condition:
     - condition: or
       conditions:
         - condition: state
           entity_id: person.jimmy
-          state: 'home'
+          state: "home"
         - condition: state
           entity_id: person.hanna
-          state: 'home'
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
   action:
     - service: switch.turn_on
-      data:
+      target:
         entity_id: switch.kok_vitrin
 #
 - alias: "kitchen_roof_on_motion"
@@ -31,30 +36,66 @@
   trigger:
     - platform: state
       entity_id: binary_sensor.motion_kok
-      to: 'on'
+      to: "on"
   condition:
-    - "{{ state_attr('sun.sun', 'elevation') < 7 }}"
-    - "{{ is_state('input_boolean.kitchen_roof_override', 'off') }}"
-#  - condition: template
-#    value_template: '{{ state_attr("sun.sun", "elevation") < 7 }}'
     - condition: state
-      entity_id: binary_sensor.clt_l29_is_charging
-      state: 'off'
-    - condition: state
-      entity_id: binary_sensor.h8324_is_charging
-      state: 'off'
+      entity_id: input_boolean.kitchen_roof_override
+      state: "off"
     - condition: or
       conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "none"
+            - condition: state
+              entity_id: person.hanna
+              state: "not_home"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
+            - condition: state
+              entity_id: sensor.h8324_charger_type
+              state: "none"
+            - condition: state
+              entity_id: person.jimmy
+              state: "not_home"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
+            - condition: state
+              entity_id: sensor.h8324_charger_type
+              state: "none"
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "none"
         - condition: state
-          entity_id: person.jimmy
-          state: 'home'
-        - condition: state
-          entity_id: person.hanna
-          state: 'home'
+          entity_id: input_boolean.visitors
+          state: "on"
+    - condition: or
+      conditions:
+        - condition: numeric_state
+          entity_id: sun.sun
+          attribute: elevation
+          below: 6
+        - condition: numeric_state
+          entity_id: sensor.ljus_ute
+          below: 1000
   action:
     - service: light.turn_on
-      data:
+      target:
         entity_id: light.kokstak
+      data:
         brightness: >-
           {% if state_attr("sun.sun", "elevation") | float <= -5 %}
             2
@@ -80,17 +121,21 @@
   trigger:
     - platform: state
       entity_id: binary_sensor.motion_kok
-      to: 'off'
-      for: '00:05:00'
+      to: "off"
+      for: "00:05:00"
   condition:
-    - "{{ is_state('input_boolean.kitchen_roof_override', 'off') }}"
+    - condition: state
+      entity_id: input_boolean.kitchen_roof_override
+      state: "off"
   action:
     - service: switch.turn_off
-      data:
+      target:
         entity_id: switch.kok_vitrin
     - service: light.turn_off
-      data:
+      target:
         entity_id: light.kokstak
+      data:
+        transition: 20
 #
 - alias: "kitchen_roof_Reset_manual_override"
   id: "Kökstak override reset"
@@ -101,6 +146,6 @@
       at: "04:00:00"
   action:
     - service: input_boolean.turn_off
-      data:
+      target:
         entity_id: input_boolean.kitchen_roof_override
 #

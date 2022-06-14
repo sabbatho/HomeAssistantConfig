@@ -13,31 +13,194 @@
 ############################################
 
 
-- id: "tv_pc_on"
-  alias: "Tvdator På"
+- id: "tv_pc_and_avr_on_early_hdmi1"
+  alias: "Tvdator och avr På tidigt HDMI1"
   initial_state: true
   mode: single
   trigger:
     - platform: state
-      entity_id: remote.vardagsrum
-      to: 'on'
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "HDMI1"
+      for:
+        seconds: 5
+  condition:
+    - condition: state
+      entity_id: sensor.clt_l29_charger_type
+      state: "ac"
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
   action:
     - service: switch.turn_on
-      data:
+      target:
         entity_id: switch.tvdator
+    - service: media_player.turn_on
+      target:
+        entity_id: media_player.marantz_sr8012
+    - delay:
+        seconds: 3
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        source: DATOR
+    - delay:
+        seconds: 3
+    - service: media_player.volume_set
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        volume_level: 0.395
 #
-- id: "tv_pc_off"
-  alias: "Tvdator Av"
+- id: "tv_pc_and_avr_on_ordinary_hdmi1"
+  alias: "Tvdator och avr På vanlig tid HDMI1"
   initial_state: true
   mode: single
   trigger:
     - platform: state
-      entity_id: remote.vardagsrum
-      to: 'off'
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "HDMI1"
+      for:
+        seconds: 5
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
+        - condition: state
+          entity_id: person.jimmy
+          state: "not_home"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.tvdator
+    - service: media_player.turn_on
+      target:
+        entity_id: media_player.marantz_sr8012
+    - delay:
+        seconds: 3
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        source: DATOR
+    - delay:
+        seconds: 3
+    - service: media_player.volume_set
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        volume_level: 0.51
+#
+- id: "avr_on_netflix_hdmi2_early"
+  alias: "AVR På Netflix och Hdmi2 tidigt"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "HDMI2"
+    - platform: state
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "Netflix"
+  condition:
+    - condition: state
+      entity_id: sensor.clt_l29_charger_type
+      state: "ac"
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
+  action:
+    - service: media_player.turn_on
+      target:
+        entity_id: media_player.marantz_sr8012
+    - delay:
+        seconds: 3
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        source: TV Audio
+    - delay:
+        seconds: 3
+    - service: media_player.volume_set
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        volume_level: 0.42
+#
+- id: "avr_on_netflix_hdmi2_ordinary"
+  alias: "AVR På Netflix o Hdmi2 vanlig tid"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "HDMI2"
+    - platform: state
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "Netflix"
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
+        - condition: state
+          entity_id: person.jimmy
+          state: "not_home"
+  action:
+    - service: media_player.turn_on
+      target:
+        entity_id: media_player.marantz_sr8012
+    - delay:
+        seconds: 3
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        source: TV Audio
+    - delay:
+        seconds: 3
+    - service: media_player.volume_set
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        volume_level: 0.6
+#
+- id: "tv_pc_and_avr_off"
+  alias: "Tvdator och avr Av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: template
+      value_template: "{{ not is_state_attr('media_player.living_room_tv', 'source', 'HDMI1') }}"
+      for:
+        seconds: 20
   action:
     - service: switch.turn_off
-      data:
+      target:
         entity_id: switch.tvdator
+#
+- id: "avr_off_when_tv_off"
+  alias: "AVR Av när tv stängs av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.living_room_tv
+      to: "off"
+  action:
+    - service: media_player.turn_off
+      target:
+        entity_id: media_player.marantz_sr8012
 #
 - id: "avr_on"
   alias: "AVR På"
@@ -46,10 +209,10 @@
   trigger:
     - platform: state
       entity_id: media_player.marantz_sr8012
-      to: 'on'
+      to: "on"
   action:
     - service: switch.turn_on
-      data:
+      target:
         entity_id: switch.bassteg
 #
 - id: "avr_off"
@@ -59,9 +222,9 @@
   trigger:
     - platform: state
       entity_id: media_player.marantz_sr8012
-      to: 'off'
+      to: "off"
   action:
     - service: switch.turn_off
-      data:
+      target:
         entity_id: switch.bassteg
 #

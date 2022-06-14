@@ -1,0 +1,89 @@
+#
+#
+#
+
+- alias: "bathroom_downstairs_on_motion"
+  id: "Badrum källare På Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_bathroom_downstairs
+      to: "on"
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: 
+          - light.badrum_kallare_handfat_vanster
+          - light.badrum_kallare_handfat_hoger
+          - light.kallare_badrum_tak_1
+          - light.kallare_badrum_tak_2
+      data:
+        brightness: 253
+        color_temp: 153
+        transition: 20
+#
+- alias: "bathroom_downstairs_off_motion"
+  id: "Badrum källare Av Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_bathroom_downstairs
+      to: "off"
+      for: "00:03:00"
+  action:
+    - service: light.turn_off
+      target:
+        entity_id:
+          - light.badrum_kallare_handfat_vanster
+          - light.badrum_kallare_handfat_hoger
+          - light.kallare_badrum_tak_1
+          - light.kallare_badrum_tak_2
+      data:
+        transition: 20
+#
+- alias: "bathroom_light_turned_off"
+  id: "Badrum källare lyse avstängt"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - light.badrum_kallare_handfat_vanster
+        - light.badrum_kallare_handfat_hoger
+        - light.kallare_badrum_tak_1
+        - light.kallare_badrum_tak_2
+      to: "unavailable"
+      for: "00:00:30"
+  condition:
+  - condition: state
+    entity_id: light.badrum_kallare_handfat_vanster
+    state: "unavailable"
+  - condition: state
+    entity_id: light.badrum_kallare_handfat_hoger
+    state: "unavailable"
+  - condition: state
+    entity_id: light.kallare_badrum_tak_1
+    state: "unavailable"
+  - condition: state
+    entity_id: light.kallare_badrum_tak_2
+    state: "unavailable"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        message: "Du stängde av brytaren på toan där nere, slå på den igen"
+#
+

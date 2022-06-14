@@ -13,20 +13,25 @@
   condition:
     - condition: or
       conditions:
-      - condition: state
-        entity_id: person.jimmy
-        state: "home"
-      - condition: state
-        entity_id: person.hanna
-        state: "home"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
   action:
     - service: light.turn_on
-      entity_id: light.kallartrapp
+      target:
+        entity_id: light.kallartrapp
       data:
         brightness: 180
         color_temp: 153
     - service: light.turn_on
-      entity_id: light.kallarhall
+      target:
+        entity_id: light.kallarhall
       data:
         brightness: 200
         color_temp: 153
@@ -39,11 +44,15 @@
     - platform: state
       entity_id: binary_sensor.motion_kallartrapp
       to: "off"
-      for: "00:10:01"
+      for: "00:05:01"
     - platform: state
       entity_id: binary_sensor.motion_hallway_downstairs_presence
       to: "off"
-      for: "00:10:01"
+      for: "00:05:01"
+    - platform: state
+      entity_id: binary_sensor.vibration_kattlucka_vibration
+      to: "off"
+      for: "00:01:00"
   condition:
     - condition: state
       entity_id:
@@ -54,11 +63,12 @@
         minutes: 5
   action:
     - service: light.turn_off
+      target:
+        entity_id: 
+          - light.kallartrapp
+          - light.kallarhall
       data:
-        entity_id: light.kallartrapp
-    - service: light.turn_off
-      data:
-        entity_id: light.kallarhall
+        transition: 20
 #
 - alias: "basement_hallway_on_motion_office"
   id: "Källarhall På Rörelse hobbyrum"
@@ -69,20 +79,53 @@
       entity_id: binary_sensor.motion_hallway_downstairs_presence
       to: "on"
   condition:
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
     - condition: or
       conditions:
-      - condition: state
-        entity_id: person.jimmy
-        state: "home"
-      - condition: state
-        entity_id: person.hanna
-        state: "home"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
   action:
     - service: light.turn_on
+      target:
+        entity_id: light.kontor_color_roof
       data:
-        entity_id: light.trust_e27_color_1
         brightness: 254
         color_temp: 153
+#
+- alias: "basement_hallway_off_motion_office"
+  id: "Källarhall Av Rörelse hobbyrum"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_kallartrapp
+      to: "off"
+      for: "00:05:01"
+    - platform: state
+      entity_id: binary_sensor.motion_hallway_downstairs_presence
+      to: "off"
+      for: "00:05:01"
+  condition:
+    - condition: state
+      entity_id: binary_sensor.motion_office
+      state: "off"
+      for: "00:19:59"
+    - condition: state
+      entity_id: binary_sensor.motion_hobbyrum_speldator
+      state: "off"
+      for: "00:19:59"
+  action:
+    - service: light.turn_off
+      target:
+        entity_id: light.kontor_color_roof
+      data:
+        transition: 20
 #
 - alias: "basement_foodstorage_on"
   id: "Matkällare På"
@@ -95,15 +138,19 @@
   condition:
     - condition: or
       conditions:
-      - condition: state
-        entity_id: person.jimmy
-        state: "home"
-      - condition: state
-        entity_id: person.hanna
-        state: "home"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
   action:
     - service: light.turn_on
-      entity_id: light.kallare_matkallare
+      target:
+        entity_id: light.kallare_matkallare
       data:
         brightness: 254
         color_temp: 153
@@ -116,10 +163,76 @@
     - platform: state
       entity_id: binary_sensor.kallare_matkallare
       to: "off"
-#      for: "00:00:05"
-#  condition:
   action:
     - service: light.turn_off
-      data:
+      target:
         entity_id: light.kallare_matkallare
+      data:
+        transition: 20
+#
+- alias: "boiler_room_downstairs_on_motion"
+  id: "Pannrum källare På Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_kallare_pannrum_occupancy
+      to: "on"
+  condition:
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.kallare_pannrum_tak
+      data:
+        brightness: 253
+        color_temp: 153
+#
+- alias: "boiler_room_downstairs_off_motion"
+  id: "Pannrum källare Av Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_kallare_pannrum_occupancy
+      to: "off"
+      for: "00:03:00"
+  action:
+    - service: light.turn_off
+      target:
+        entity_id:
+          - light.kallare_pannrum_tak
+      data:
+        transition: 20
+#
+- alias: "basement_cat_on_vibration"
+  id: "Källare kattlucka På Vibration"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.vibration_kattlucka_vibration
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.kallarhall
+      data:
+        brightness: 30
+        color_temp: 153
 #

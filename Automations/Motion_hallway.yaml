@@ -11,21 +11,50 @@
       entity_id: binary_sensor.motion_hall
       to: "on"
   condition:
-    - "{{ is_state('input_boolean.hallway_man_override', 'off') }}"
     - condition: state
-      entity_id: binary_sensor.clt_l29_is_charging
-      state: "off"
-    - condition: state
-      entity_id: binary_sensor.h8324_is_charging
+      entity_id: input_boolean.hallway_man_override
       state: "off"
     - condition: or
       conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "none"
+            - condition: state
+              entity_id: person.hanna
+              state: "not_home"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
+            - condition: state
+              entity_id: sensor.h8324_charger_type
+              state: "none"
+            - condition: state
+              entity_id: person.jimmy
+              state: "not_home"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
+            - condition: state
+              entity_id: sensor.h8324_charger_type
+              state: "none"
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "none"
         - condition: state
-          entity_id: person.jimmy
-          state: "home"
-        - condition: state
-          entity_id: person.hanna
-          state: "home"
+          entity_id: input_boolean.visitors
+          state: "on"
     - condition: or
       conditions:
         - condition: numeric_state
@@ -34,51 +63,15 @@
           below: 7
         - condition: numeric_state
           entity_id: sensor.ljus_ute
-          below: 750
+          below: 1300
   action:
     - service: light.turn_on
+      target:
+        entity_id:
+          - light.hall_stora
+          - light.hall_lilla
+          - light.hall_entre
       data:
-        entity_id: light.hall_stora
-        brightness: >-
-          {% if state_attr("sun.sun", "elevation") | float <= -5 %}
-            2
-          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
-            35
-          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 1 %}
-            70
-          {% elif state_attr("sun.sun", "elevation") | float > 1 and state_attr("sun.sun", "elevation") | float <= 5 %}
-            100
-          {% elif state_attr("sun.sun", "elevation") | float > 5 and state_attr("sun.sun", "elevation") | float < 7 %}
-            130
-          {% elif state_attr("sun.sun", "elevation") | float >= 7 %}
-            170
-          {% else %}
-            0
-          {% endif %}
-        color_temp: 153
-    - service: light.turn_on
-      data:
-        entity_id: light.hall_lilla
-        brightness: >-
-          {% if state_attr("sun.sun", "elevation") | float <= -5 %}
-            2
-          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
-            35
-          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 1 %}
-            70
-          {% elif state_attr("sun.sun", "elevation") | float > 1 and state_attr("sun.sun", "elevation") | float <= 5 %}
-            100
-          {% elif state_attr("sun.sun", "elevation") | float > 5 and state_attr("sun.sun", "elevation") | float < 7 %}
-            130
-          {% elif state_attr("sun.sun", "elevation") | float >= 7 %}
-            170
-          {% else %}
-            0
-          {% endif %}
-        color_temp: 153
-    - service: light.turn_on
-      data:
-        entity_id: light.hall_entre
         brightness: >-
           {% if state_attr("sun.sun", "elevation") | float <= -5 %}
             2
@@ -106,30 +99,48 @@
       entity_id: binary_sensor.motion_hall
       to: "on"
   condition:
-    - "{{ state_attr('sun.sun', 'elevation') < 7 }}"
-    - "{{ is_state('input_boolean.hallway_man_override', 'off') }}"
-    #  - condition: template
-    #    value_template: '{{ state_attr("sun.sun", "elevation") < 7 }}'
     - condition: or
       conditions:
-        - condition: state
-          entity_id: binary_sensor.clt_l29_is_charging
-          state: "on"
-        - condition: state
-          entity_id: binary_sensor.h8324_is_charging
-          state: "on"
+        - condition: numeric_state
+          entity_id: sun.sun
+          attribute: elevation
+          below: 7
+        - condition: numeric_state
+          entity_id: sensor.ljus_ute
+          below: 1300
+    - condition: state
+      entity_id: input_boolean.hallway_man_override
+      state: "off"
     - condition: or
       conditions:
-        - condition: state
-          entity_id: person.jimmy
-          state: "home"
-        - condition: state
-          entity_id: person.hanna
-          state: "home"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "ac"
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
+            - condition: state
+              entity_id: input_boolean.visitors
+              state: "off"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: sensor.h8324_charger_type
+              state: "ac"
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
+            - condition: state
+              entity_id: input_boolean.visitors
+              state: "off"
   action:
     - service: light.turn_on
+      target:
+        entity_id:
+          - light.hall_lilla
       data:
-        entity_id: light.hall_lilla
         brightness: >-
           {% if state_attr("sun.sun", "elevation") | float <= -5 %}
             2
@@ -148,29 +159,69 @@
           {% endif %}
         color_temp: 153
 #
-- alias: "hallway_roof_off_motion"
-  id: "Halltak Av Rörelse"
+- alias: "hallway_roof_off_motion_not_charging"
+  id: "Halltak Av Rörelse vakna"
   initial_state: true
   mode: single
   trigger:
     - platform: state
       entity_id: binary_sensor.motion_hall
       to: "off"
-      for: "00:05:00"
+      for: "00:02:00"
   condition:
-    - "{{ is_state('input_boolean.hallway_man_override', 'off') }}"
-  #  - condition: template
-  #    value_template: '{{ state_attr("sun.sun", "elevation") < 7 }}'
+    - condition: state
+      entity_id: input_boolean.hallway_man_override
+      state: "off"
   action:
     - service: light.turn_off
+      target:
+        entity_id: 
+          - light.hall_entre
+          - light.hall_lilla
+          - light.hall_stora
       data:
-        entity_id: light.hall_entre
+        transition: 20
+#
+- alias: "hallway_roof_off_motion_charging"
+  id: "Halltak Av Rörelse Sover"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_hall
+      to: "off"
+      for: "00:00:30"
+  condition:
+    - condition: state
+      entity_id: input_boolean.hallway_man_override
+      state: "off"
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "off"
+      - and:
+        - condition: state
+          entity_id: sensor.h8324_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "off"
+  action:
     - service: light.turn_off
-      data:
+      target:
         entity_id: light.hall_lilla
-    - service: light.turn_off
       data:
-        entity_id: light.hall_stora
+        transition: 20
 #
 - alias: "hall_entre_door_open"
   id: "Hall dörr Entre öppnas"
@@ -181,65 +232,52 @@
       entity_id: binary_sensor.hall_door_magnet
       to: "on"
   condition:
-    - "{{ is_state('input_boolean.hallway_man_override', 'off') }}"
-  #  - condition: template
-  #    value_template: '{{ state_attr("sun.sun", "elevation") < 7 }}'
+    - condition: state
+      entity_id: input_boolean.hallway_man_override
+      state: "off"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.hall_entre
+      data:
+        brightness: 254
+        color_temp: 153
+#
+- alias: "hall_entre_door_open_warning_downstairs"
+  id: "Hall dörr Entre öppnas varning nere"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.hall_door_magnet
+      to: "on"
+  condition:
+    - condition: state
+      entity_id:
+        - input_boolean.visitors
+      state: "off"
+    - or:
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
   action:
     - service: light.turn_on
       data:
-        entity_id: light.hall_entre
-        brightness: 254
-        color_temp: 153
-    - service: light.turn_on
-      data:
         flash: short
         color_name: homeassistant
       target:
-        entity_id: light.trust_e27_color_1
-    - service: light.turn_on
-      data:
-        flash: short
-        color_name: homeassistant
-      target:
-        entity_id: light.kontor_color_1
-    - service: light.turn_on
-      data:
-        flash: short
-        color_name: homeassistant
-      target:
-        entity_id: light.kontor_color_2
-    - service: light.turn_on
-      data:
-        flash: short
-        color_name: homeassistant
-      target:
-        entity_id: light.kontor_color_3
-    - delay:
-        seconds: 15
-    - service: light.turn_on
-      data:
-        flash: short
-        color_name: homeassistant
-      target:
-        entity_id: light.trust_e27_color_1
-    - service: light.turn_on
-      data:
-        flash: short
-        color_name: homeassistant
-      target:
-        entity_id: light.kontor_color_1
-    - service: light.turn_on
-      data:
-        flash: short
-        color_name: homeassistant
-      target:
-        entity_id: light.kontor_color_2
-    - service: light.turn_on
-      data:
-        flash: short
-        color_name: homeassistant
-      target:
-        entity_id: light.kontor_color_3
+        entity_id:
+          - light.kontor_color_mitten_fram
+          - light.kontor_color_hoger_fram
+          - light.kontor_color_hoger_bak
+          - light.kontor_color_roof
+          - light.kontor_color_vanster_fram
+          - light.kontor_color_vanster_bak_ovre
+          - light.kontor_color_vanster_bak_mitten
+          - light.kontor_color_vanster_bak_nedre
 #
 - alias: "hall_entre_door_open_verandan"
   id: "Hall dörr Entre öppnas verandan"
@@ -250,14 +288,18 @@
       entity_id: binary_sensor.hall_door_magnet
       to: "on"
   condition:
-    #    - "{{ is_state('input_boolean.hallway_man_override', 'off') }}"
-    - "{{ is_state('input_boolean.verandan_override', 'off') }}"
-    - condition: template
-      value_template: '{{ state_attr("sun.sun", "elevation") < 7 }}'
+    - condition: state
+      entity_id: input_boolean.verandan_override
+      state: "off"
+    - condition: numeric_state
+      entity_id: sun.sun
+      attribute: elevation
+      below: 3
   action:
     - service: light.turn_on
-      data:
+      target:
         entity_id: light.verandan_matbord
+      data:
         brightness: 254
         color_name: >
           {% if states('sensor.ute') | float <= -8 %}
@@ -276,33 +318,62 @@
             white
           {% endif %}
 #
-- alias: "hall_entre_door_closed"
-  id: "Hall dörr Entre stängd"
+- alias: "hall_entre_door_closed_light_entrance"
+  id: "Hall dörr Entre stängd lampa entre"
   initial_state: true
   mode: single
   trigger:
     - platform: state
       entity_id: binary_sensor.hall_door_magnet
       to: "off"
-      for: "00:05:00"
+      for: "00:02:00"
   condition:
-    - "{{ is_state('input_boolean.hallway_man_override', 'off') }}"
+    - condition: state
+      entity_id: input_boolean.hallway_man_override
+      state: "off"
   action:
     - service: light.turn_off
-      data:
+      target:
         entity_id: light.hall_entre
-    - service: light.turn_off
       data:
-        entity_id: light.trust_e27_color_1
+        transition: 20
+#
+- alias: "hall_entre_door_closed_light_office"
+  id: "Hall dörr Entre stängd lampa kontor"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.hall_door_magnet
+      to: "off"
+      for: "00:00:30"
+  condition:
+    - condition: state
+      entity_id: binary_sensor.motion_office
+      state: "off"
+      for: "00:19:59"
+    - condition: state
+      entity_id: binary_sensor.motion_hobbyrum_speldator
+      state: "off"
+      for: "00:19:59"
+  action:
     - service: light.turn_off
+      target:
+        entity_id: light.kontor_color_mitten_fram
       data:
-        entity_id: light.kontor_color_1
+        transition: 20
     - service: light.turn_off
+      target:
+        entity_id:
+          - light.kontor_color_hoger_fram
+          - light.kontor_color_hoger_bak
+          - light.kontor_color_roof
+          - light.kontor_color_vanster_fram
+          - light.kontor_color_vanster_bak_ovre
+          - light.kontor_color_vanster_bak_mitten
+          - light.kontor_color_vanster_bak_nedre
       data:
-        entity_id: light.kontor_color_2
-    - service: light.turn_off
-      data:
-        entity_id: light.kontor_color_3
+        transition: 20
 #
 - alias: "hall_entre_door_closed_verandan"
   id: "Hall dörr Entre stängd verandan"
@@ -312,55 +383,56 @@
     - platform: state
       entity_id: binary_sensor.hall_door_magnet
       to: "off"
-      for: "00:05:00"
+      for: "00:02:00"
   condition:
-    - "{{ is_state('input_boolean.verandan_override', 'off') }}"
+    - condition: state
+      entity_id: input_boolean.verandan_override
+      state: "off"
   action:
     - service: light.turn_off
-      data:
+      target:
         entity_id: light.verandan_matbord
+      data:
+        transition: 20
 #
-- alias: "Hallway_manual_override"
+- alias: "Hallway_manual_override_reset"
   id: "Hall override reset"
   initial_state: true
   mode: single
   trigger:
-    #    platform: time
-    #    at: "04:00:00"
     - platform: state
-      entity_id: input_boolean.hallway_man_override
+      entity_id: binary_sensor.hall_door_magnet
       to: "off"
-      for: "04:00:00"
+      for: "01:00:00"
   action:
     - service: input_boolean.turn_off
-      data:
+      target:
         entity_id: input_boolean.hallway_man_override
     - service: light.turn_off
+      target:
+        entity_id: 
+          - light.hall_entre
+          - light.hall_lilla
+          - light.hall_stora
       data:
-        entity_id: light.hall_entre
-    - service: light.turn_off
-      data:
-        entity_id: light.hall_lilla
-    - service: light.turn_off
-      data:
-        entity_id: light.hall_stora
+        transition: 20
 #
 - alias: "Verandan_manual_override"
   id: "Verandan override reset"
   initial_state: true
   mode: single
   trigger:
-    #    platform: time
-    #    at: "04:00:00"
     - platform: state
       entity_id: input_boolean.verandan_override
       to: "off"
       for: "06:00:00"
   action:
     - service: input_boolean.turn_off
-      data:
+      target:
         entity_id: input_boolean.verandan_override
     - service: light.turn_off
-      data:
+      target:
         entity_id: light.verandan_matbord
+      data:
+        transition: 20
 #

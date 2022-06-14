@@ -1,0 +1,78 @@
+#
+#
+#
+- id: "tag_singalong_jimmy_matsal"
+  alias: "Taggen Sing-along Jimmy är skannad till matsal"
+  mode: single
+  trigger:
+    - platform: tag
+      tag_id: 5962d3be-cabc-41ef-92f6-adced3467c1f
+  action:
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.spotify_sabbatho
+      data:
+        source: "LMMatsal"
+    - delay:
+        seconds: 2
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.spotify_sabbatho
+      data:
+        media_content_id: "https://open.spotify.com/playlist/3jaZ0FBYc89jfqx0m5aIyt?si=8581a2a9b37e45b6"
+        media_content_type: playlist
+    - delay:
+        seconds: 1
+    - service: media_player.shuffle_set
+      target:
+        entity_id: media_player.spotify_sabbatho
+      data:
+        shuffle: true
+#
+- id: "tag_singalong_hanna_matsal"
+  alias: "Taggen Sing-along Hanna är skannad till matsal"
+  mode: single
+  trigger:
+    - platform: tag
+      tag_id: 51468b48-ce07-4c45-8929-0f6f0409f02e
+  action:
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.spotify_fafnesbane
+      data:
+        source: "LMMatsal"
+    - delay:
+        seconds: 2
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.spotify_fafnesbane
+      data:
+        media_content_id: "https://open.spotify.com/playlist/3jaZ0FBYc89jfqx0m5aIyt?si=8581a2a9b37e45b6"
+        media_content_type: playlist
+    - delay:
+        seconds: 1
+    - service: media_player.shuffle_set
+      target:
+        entity_id: media_player.spotify_fafnesbane
+      data:
+        shuffle: true
+#
+- alias: "entre_manual_override_on"
+  id: "Entre override på"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: tag
+      tag_id: 40c50937-eae6-43db-aacb-a7b2143e196c
+  action:
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.entrance_door_override
+    - service: light.turn_on
+      target:
+        entity_id: light.hall_entre
+      data:
+        brightness: 2
+        color_temp: 153
+        effect: blink
+#
