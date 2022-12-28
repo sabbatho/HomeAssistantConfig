@@ -18,21 +18,35 @@
   initial_state: true
   mode: single
   trigger:
-  - platform: homeassistant
-    event: start
+    - platform: homeassistant
+      event: start
   action:
-  - service: homeassistant.update_entity
-    entity_id: cover.blind_bedroom
+    - service: homeassistant.update_entity
+      entity_id: cover.blind_bedroom
 #
 - alias: "Hass restart notify Android"
   id: "Notifiering att HASS har startat om Android"
   initial_state: true
   mode: single
   trigger:
-    - platform: template
-      value_template: "{% if (as_timestamp(now()) +120) == as_timestamp(states('sensor.uptime')) %}true{% endif %}"
+    - platform: homeassistant
+      event: start
   action:
     - service: notify.mobile_app_clt_l29
       data: 
         message: "Home Assistant har av någon anledning startat om"
+#
+#- alias: "Hass restart gardena offline"
+#  id: "HASS startats om gardena nere"
+#  initial_state: true
+#  mode: single
+#  trigger:
+#    - platform: state
+#      entity_id:
+#        - binary_sensor.gardena_smart_system_connection
+#      to: "off"
+#      for:
+#        minutes: 5
+#  action:
+#    - service: homeassistant.restart
 #

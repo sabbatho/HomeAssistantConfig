@@ -13,30 +13,30 @@
 ############################################
 
 
-- alias: "chromecast_bedroom_on"
-  id: "Sovrumstv På"
-  initial_state: true
-  mode: single
-  trigger:
-    - platform: state
-      entity_id: media_player.sovrum
-      from: "off"
-      to: "idle"
-    - platform: state
-      entity_id: media_player.sovrum
-      from: "off"
-      to: "inactive"
-    - platform: state
-      entity_id: media_player.sovrum
-      from: "off"
-      to: "playing"
-  action:
-    - delay: "00:00:05"
-    - service: media_player.volume_set
-      target:
-        entity_id: media_player.43pus6162_12
-      data:
-        volume_level: 0.4
+#- alias: "chromecast_bedroom_on"
+#  id: "Sovrumstv På"
+#  initial_state: true
+#  mode: single
+#  trigger:
+#    - platform: state
+#      entity_id: media_player.sovrum
+#      from: "off"
+#      to: "idle"
+#    - platform: state
+#      entity_id: media_player.sovrum
+#      from: "off"
+#      to: "inactive"
+#    - platform: state
+#      entity_id: media_player.sovrum
+#      from: "off"
+#      to: "playing"
+#  action:
+#    - delay: "00:00:05"
+#    - service: media_player.volume_set
+#      target:
+#        entity_id: media_player.43pus6162_12
+#      data:
+#        volume_level: 0.4
 #
 - alias: "chromecast_bedroom_idle"
   id: "Sovrumstv idle"
@@ -53,7 +53,10 @@
       target:
         entity_id: 
           - media_player.sovrum
-          - media_player.43pus6162_12
+#          - media_player.43pus6162_12
+#    - service: switch.turn_off
+#      target:
+#        entity_id: switch.sovrumstv
 #
 - alias: "chromecast_bedroom_off"
   id: "Sovrumstv off"
@@ -62,13 +65,26 @@
   trigger:
     - platform: state
       entity_id: media_player.sovrum
+      from: "idle"
       to: "off"
       for:
-        seconds: 30
+        seconds: 10
+    - platform: state
+      entity_id: media_player.sovrum
+      from: "playing"
+      to: "off"
+      for:
+        seconds: 10
+    - platform: state
+      entity_id: media_player.sovrum
+      from: "paused"
+      to: "off"
+      for:
+        seconds: 10
   action:
-    - service: media_player.turn_off
+    - service: switch.toggle
       target:
-        entity_id: media_player.43pus6162_12
+        entity_id: switch.sovrumstv
 #
 - alias: "chromecast_hobbyrum_idle"
   id: "Chromecast hobbyrum idle"

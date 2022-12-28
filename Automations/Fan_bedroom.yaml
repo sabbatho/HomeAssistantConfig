@@ -36,7 +36,7 @@
               state: "ac"
             - condition: numeric_state
               entity_id: sensor.sovrum
-              above: "22.5"
+              above: "22.1"
             - condition: not
               conditions:
                 - condition: state
@@ -48,11 +48,11 @@
               entity_id: person.hanna
               state: "home"
             - condition: state
-              entity_id: sensor.h8324_charger_type
+              entity_id: sensor.hanna_charger_type
               state: "ac"
             - condition: numeric_state
               entity_id: sensor.sovrum
-              above: "22.5"
+              above: "22.1"
             - condition: not
               conditions:
                 - condition: state
@@ -77,6 +77,9 @@
     - platform: time_pattern
       minutes: 45
   condition:
+    - condition: state
+      entity_id: input_boolean.bedroom_fan_override
+      state: "off"
     - condition: or
       conditions:
         - condition: state
@@ -92,22 +95,22 @@
               state: "ac"
             - condition: numeric_state
               entity_id: sensor.sovrum
-              below: "22.5"
+              below: "22.1"
         - condition: and
           conditions:
             - condition: state
               entity_id: person.hanna
               state: "home"
             - condition: state
-              entity_id: sensor.h8324_charger_type
+              entity_id: sensor.hanna_charger_type
               state: "ac"
             - condition: numeric_state
               entity_id: sensor.sovrum
-              below: "22.5"
+              below: "22.1"
         - condition: and
           conditions:
             - condition: state
-              entity_id: sensor.h8324_charger_type
+              entity_id: sensor.hanna_charger_type
               state: "none"
             - condition: state
               entity_id: sensor.clt_l29_charger_type
@@ -116,4 +119,27 @@
     - service: switch.turn_off
       target:
         entity_id: switch.flakt_sovrum
+#
+- alias: "bedroom_fan_override_reset"
+  id: "Sovrumsfläktoverride resett"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: 0
+    - platform: time_pattern
+      minutes: 15
+    - platform: time_pattern
+      minutes: 30
+    - platform: time_pattern
+      minutes: 45
+  condition:
+    - condition: state
+      entity_id: input_boolean.bedroom_fan_override
+      state: "on"
+      for:
+        hours: 2
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.bedroom_fan_override
 #

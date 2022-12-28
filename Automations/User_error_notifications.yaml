@@ -1,0 +1,117 @@
+#
+#
+#
+#
+- alias: "bathroom_lights_downstairs_turned_off"
+  id: "Badrum källare lyse avstängt"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/5"
+  condition:
+    - condition: state
+      entity_id: light.badrum_kallare_handfat_vanster
+      state: "unavailable"
+    - condition: state
+      entity_id: light.badrum_kallare_handfat_hoger
+      state: "unavailable"
+    - condition: state
+      entity_id: light.kallare_badrum_tak_1
+      state: "unavailable"
+    - condition: state
+      entity_id: light.kallare_badrum_tak_2
+      state: "unavailable"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        message: "Brytaren på toan där nere är avstängd, slå på den igen"
+    - service: notify.lmhobbyrum
+      data:
+        message: "Brytaren på toan där nere är avstängd, slå på den igen"
+        data:
+          icon: "a42473"
+          icon_type: "none"
+          sound: "lose2"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmmatsal
+      data:
+        message: "Brytaren på toan där nere är avstängd, slå på den igen"
+        data:
+          icon: "a42473"
+          icon_type: "none"
+          sound: "lose2"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmsovrum
+      data:
+        message: "Brytaren på toan där nere är avstängd, slå på den igen"
+        data:
+          icon: "a42473"
+          icon_type: "none"
+          sound: "lose2"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmvardagsrum
+      data:
+        message: "Brytaren på toan där nere är avstängd, slå på den igen"
+        data:
+          icon: "a42473"
+          icon_type: "none"
+          sound: "lose2"
+          priority: "warning"
+          cycles: 2
+#
+- alias: "bathroom_upstairs_light_turned_off"
+  id: "Badrum uppe lyse avstängt"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/5"
+  condition:
+    - condition: state
+      entity_id: light.bathroom_uppstairs_sink
+      state: "unavailable"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        message: "Brytaren på toan uppe är avstängd, slå på den igen"
+    - service: notify.lmhobbyrum
+      data:
+        message: "Brytaren på toan uppe är avstängd, slå på den igen"
+        data:
+          icon: "a42473"
+          icon_type: "none"
+          sound: "lose2"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmmatsal
+      data:
+        message: "Brytaren på toan uppe är avstängd, slå på den igen"
+        data:
+          icon: "a42473"
+          icon_type: "none"
+          sound: "lose2"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmsovrum
+      data:
+        message: "Brytaren på toan uppe är avstängd, slå på den igen"
+        data:
+          icon: "a42473"
+          icon_type: "none"
+          sound: "lose2"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmvardagsrum
+      data:
+        message: "Brytaren på toan uppe är avstängd, slå på den igen"
+        data:
+          icon: "a42473"
+          icon_type: "none"
+          sound: "lose2"
+          priority: "warning"
+          cycles: 2
+#

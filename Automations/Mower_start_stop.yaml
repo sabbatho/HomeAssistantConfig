@@ -39,6 +39,9 @@
     - platform: numeric_state
       entity_id: sensor.ute
       above: 8
+    - platform: numeric_state
+      entity_id: sensor.sun_elevation
+      above: 15
     - platform: state
       entity_id: person.jimmy
       to: "home"
@@ -61,6 +64,9 @@
     - condition: numeric_state
       entity_id: sensor.ute
       above: 8
+    - condition: numeric_state
+      entity_id: sensor.sun_elevation
+      above: 15
     - condition: or
       conditions:
         - condition: state
@@ -124,6 +130,7 @@
       - condition: state
         entity_id: person.hanna
         state: "home"
+    - not:
       - condition: state
         entity_id: person.jimmy
         state: "home"
@@ -149,6 +156,9 @@
     - platform: numeric_state
       entity_id: sensor.ute
       below: 8
+    - platform: numeric_state
+      entity_id: sensor.sun_elevation
+      below: 15
   condition:
     - condition: state
       entity_id: input_boolean.sileno_winter_sleep
@@ -166,11 +176,15 @@
       - condition: numeric_state
         entity_id: sensor.ute
         below: 8
+      - condition: numeric_state
+        entity_id: sensor.sun_elevation
+        below: 15
       - and:
         - not:
           - condition: state
             entity_id: person.hanna
             state: "home"
+        - not:
           - condition: state
             entity_id: person.jimmy
             state: "home"

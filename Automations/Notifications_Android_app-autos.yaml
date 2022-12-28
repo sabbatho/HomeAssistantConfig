@@ -4,14 +4,11 @@
 ##
 ############################################
 
-
-
 ############################################
 ##
 ## All
 ##
 ############################################
-
 
 #
 - alias: "door_to_outside_open"
@@ -31,9 +28,41 @@
       state: "off"
   action:
     - service: notify.hanna_jimmy
-      data: 
+      data:
         message: "Någon har glömt stänga ytterdörren"
-    - service: notify.lametric
+        data:
+          notification_icon: "mdi:door-open"
+          actions:
+            - action: "DOOR_OPEN_OUTSIDE"
+              title: "Aktivera override"
+    - service: notify.lmhobbyrum
+      data:
+        message: "Ytterdörren är öppen"
+        data:
+          icon: "a15588"
+          icon_type: "none"
+          sound: "positive3"
+          priority: "warning"
+          cycles: 1
+    - service: notify.lmsovrum
+      data:
+        message: "Ytterdörren är öppen"
+        data:
+          icon: "a15588"
+          icon_type: "none"
+          sound: "positive3"
+          priority: "warning"
+          cycles: 1
+    - service: notify.lmmatsal
+      data:
+        message: "Ytterdörren är öppen"
+        data:
+          icon: "a15588"
+          icon_type: "none"
+          sound: "positive3"
+          priority: "warning"
+          cycles: 1
+    - service: notify.lmvardagsrum
       data:
         message: "Ytterdörren är öppen"
         data:
@@ -63,7 +92,7 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: sensor.h8324_charger_type
+      entity_id: sensor.hanna_charger_type
       to: "ac"
   condition:
     - condition: state
@@ -77,6 +106,8 @@
       data:
         title: "Garagelåset"
         message: "Garaget är inte låst"
+        data:
+          notification_icon: "mdi:garage-lock"
 #
 - alias: "sleep_jimmy_garagelas"
   id: "Jimmy Sover Garagelåset"
@@ -95,9 +126,11 @@
       state: "on"
   action:
     - service: notify.hanna_jimmy
-      data: 
+      data:
         title: "Garagelåset"
         message: "Garaget är inte låst"
+        data:
+          notification_icon: "mdi:garage-lock"
 #
 - alias: "leaving_home_garagelas"
   id: "Inte hemma - Garaget ej låst"
@@ -112,19 +145,21 @@
       from: "home"
   condition:
     - not:
-      - condition: state
-        entity_id: person.jimmy
-        state: "home"
-      - condition: state
-        entity_id: person.hanna
-        state: home"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: home"
     - condition: state
       entity_id: binary_sensor.garagelas
       state: "on"
   action:
     - service: notify.hanna_jimmy
-      data: 
+      data:
         message: "Garaget är inte låst"
+        data:
+          notification_icon: "mdi:garage-lock"
 #
 - alias: "Svullo dead notify Android"
   id: "Notifiering att Svullo har dött"
@@ -136,8 +171,10 @@
       to: "down"
   action:
     - service: notify.mobile_app_clt_l29
-      data: 
+      data:
         message: "Svullo har dött"
+        data:
+          notification_icon: "mdi:nas"
 #
 - alias: "Qtorr dead notify Android"
   id: "Notifiering att Qtorr har dött"
@@ -149,8 +186,10 @@
       to: "down"
   action:
     - service: notify.mobile_app_clt_l29
-      data: 
+      data:
         message: "Qtorr har dött"
+        data:
+          notification_icon: "mdi:monitor-arrow-down"
 #
 - alias: "fas1_dead"
   id: "Fas1 har dött"
@@ -159,16 +198,17 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.home_energy_meter_gen5_electric_consumption_v_1
-      below: 100
-      for: "00:00:10"
+      below: 50
+      for: "00:02:00"
   action:
     - service: notify.hanna_jimmy
-      data: 
+      data:
         message: "Ström har gått på fas 1"
         data:
           ttl: 0
           priority: high
           channel: alarm_stream
+          notification_icon: "mdi:lightning-bolt"
 #
 - alias: "fas2_dead"
   id: "Fas2 har dött"
@@ -177,16 +217,17 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.home_energy_meter_gen5_electric_consumption_v_2
-      below: 100
-      for: "00:00:10"
+      below: 50
+      for: "00:02:00"
   action:
     - service: notify.hanna_jimmy
-      data: 
+      data:
         message: "Ström har gått på fas 2"
         data:
           ttl: 0
           priority: high
           channel: alarm_stream
+          notification_icon: "mdi:lightning-bolt"
 #
 - alias: "fas3_dead"
   id: "Fas3 har dött"
@@ -195,16 +236,17 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.home_energy_meter_gen5_electric_consumption_v_3
-      below: 100
-      for: "00:00:10"
+      below: 50
+      for: "00:02:00"
   action:
     - service: notify.hanna_jimmy
-      data: 
+      data:
         message: "Ström har gått på fas 3"
         data:
           ttl: 0
           priority: high
           channel: alarm_stream
+          notification_icon: "mdi:lightning-bolt"
 #
 - alias: "fas1_overcharge"
   id: "Fas1 är överbelastad"
@@ -217,9 +259,38 @@
       for: "00:05:00"
   action:
     - service: notify.hanna_jimmy
-      data: 
+      data:
         message: "Fas 1 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_1') }}"
-    - service: notify.lametric
+        data:
+          notification_icon: "mdi:meter-electric"
+    - service: notify.lmhobbyrum
+      data:
+        message: "Fas 1 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_1') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmmatsal
+      data:
+        message: "Fas 1 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_1') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmsovrum
+      data:
+        message: "Fas 1 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_1') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmvardagsrum
       data:
         message: "Fas 1 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_1') }}"
         data:
@@ -240,9 +311,38 @@
       for: "00:05:00"
   action:
     - service: notify.hanna_jimmy
-      data: 
+      data:
         message: "Fas 2 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_2') }}"
-    - service: notify.lametric
+        data:
+          notification_icon: "mdi:meter-electric"
+    - service: notify.lmhobbyrum
+      data:
+        message: "Fas 2 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_2') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmmatsal
+      data:
+        message: "Fas 2 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_2') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmsovrum
+      data:
+        message: "Fas 2 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_2') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmvardagsrum
       data:
         message: "Fas 2 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_2') }}"
         data:
@@ -263,9 +363,38 @@
       for: "00:05:00"
   action:
     - service: notify.hanna_jimmy
-      data: 
+      data:
         message: "Fas 3 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_3') }}"
-    - service: notify.lametric
+        data:
+          notification_icon: "mdi:meter-electric"
+    - service: notify.lmhobbyrum
+      data:
+        message: "Fas 3 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_3') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmmatsal
+      data:
+        message: "Fas 3 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_3') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmsovrum
+      data:
+        message: "Fas 3 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_3') }}"
+        data:
+          icon: "a10341"
+          icon_type: "none"
+          sound: "energy"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmvardagsrum
       data:
         message: "Fas 3 har varit överbelastad i över 5min: {{ states('sensor.home_energy_meter_gen5_electric_consumption_w_3') }}"
         data:
@@ -292,10 +421,36 @@
           entity_id: sensor.billig_soppa_maxi_borlange_14d
           state: "unavailable"
   action:
-    - service: notify.hanna_jimmy
-      data: 
+    - service: notify.mobile_app_clt_l29
+      data:
         title: "Soppan är billig: OKQ8 blge maxi"
         message: "Passa på att tanka: {{ states('sensor.95_okq8_borlange_vid_maxi') }}"
+        data:
+          notification_icon: "mdi:gas-station"
+#
+- alias: "soppan okq8 ingarvet notify Android"
+  id: "Notifiering att soppan är billig OKQ8 ingarvet"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: template
+      value_template: "{{ states('sensor.billig_soppa_ingarvet_14d') > states('sensor.95_okq8_falun_ingarvet') }}"
+  condition:
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: sensor.95_okq8_falun_ingarvet
+          state: "unavailable"
+        - condition: state
+          entity_id: sensor.billig_soppa_ingarvet_14d
+          state: "unavailable"
+  action:
+    - service: notify.mobile_app_hanna
+      data:
+        title: "Soppan är billig: OKQ8 Falun ingarvet"
+        message: "Passa på att tanka: {{ states('sensor.95_okq8_falun_ingarvet') }}"
+        data:
+          notification_icon: "mdi:gas-station"
 #
 - alias: "adguard_filter_off"
   id: "adguard filter avstängt"
@@ -310,6 +465,27 @@
       state: "off"
   action:
     - service: notify.hanna_jimmy
-      data: 
+      data:
         message: "AdGuard filter avstängt"
+        data:
+          notification_icon: "mdi:dns"
+#
+- alias: "Notifierng_Gardena_unavailabe"
+  id: "Notif_gardena_unavailable"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.gardena_smart_system_connection
+      to: "off"
+      for:
+        minutes: 5
+  action:
+    - service: notify.mobile_app_clt_l29
+      data:
+        title: "Gardena offline"
+        message: "Kolla om omstart behövs"
+        data:
+          notification_icon: "mdi:mower"
 #

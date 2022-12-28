@@ -841,6 +841,9 @@
     - platform: numeric_state
       entity_id: sensor.akvarium_400
       above: 26.2
+    - platform: state
+      entity_id: sensor.akvarium_400
+      to: "unavailable"
   action:
     - service: switch.turn_off
       target:
@@ -874,6 +877,9 @@
     - platform: numeric_state
       entity_id: sensor.filtered_720_v_aquarium
       above: 26.2
+    - platform: state
+      entity_id: sensor.filtered_720_v_aquarium
+      to: "unavailable"
   action:
     - service: switch.turn_off
       target:
@@ -907,6 +913,9 @@
     - platform: numeric_state
       entity_id: sensor.akvarium_720_matsal
       above: 26.2
+    - platform: state
+      entity_id: sensor.akvarium_720_matsal
+      to: "unavailable"
   action:
     - service: switch.turn_off
       target:
@@ -939,7 +948,10 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.filtered_1200_aquarium
-      above: 26.4
+      above: 26.2
+    - platform: state
+      entity_id: sensor.filtered_1200_aquarium
+      to: "unavailable"
   action:
     - service: switch.turn_off
       target:
@@ -964,10 +976,35 @@
       data:
         title: "Vattenbyte är aktivt för 400"
         message: "värmare startar inte nu, glöm inte slå av denna switch när det är påfyllt"
+        data:
+          notification_icon: "mdi:fishbowl"
+          actions:
+            - action: "400_WATER_CHANGE_OFF"
+              title: "Stänga av vattenbytet"
     - service: switch.turn_off
       target:
         entity_id:
           - switch.akvarium_400_varmare
+#
+- alias: "Akvarium_400_water_change_switch_off"
+  id: "Akvarium 400 vattenbyte stänga av vattenbytet"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "400_WATER_CHANGE_OFF"
+  condition:
+    - condition: state
+      entity_id: input_boolean.400_water_change
+      state: "on"
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id:
+          - input_boolean.400_water_change
+#
 #
 - alias: "Akvarium_720_hobbyrum_v_water_change"
   id: "Akvarium 720_hobbyrum_v vattenbyte"
@@ -985,10 +1022,35 @@
       data:
         title: "Vattenbyte är aktivt för 720 hobbyrum vänster"
         message: "värmare startar inte nu, glöm inte slå av denna switch när det är påfyllt"
+        data:
+          notification_icon: "mdi:fishbowl"
+          actions:
+            - action: "720_HV_WATER_CHANGE_OFF"
+              title: "Stänga av vattenbytet"
     - service: switch.turn_off
       target:
         entity_id:
           - switch.akvarium_720_hobbyrum_v_heater
+#
+- alias: "Akvarium_720_hobbyrum_v_water_change_switch_off"
+  id: "Akvarium 720 hobbyrum vänster vattenbyte stänga av vattenbytet"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "720_HV_WATER_CHANGE_OFF"
+  condition:
+    - condition: state
+      entity_id: input_boolean.720_hobbyrum_v_water_change
+      state: "on"
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id:
+          - input_boolean.720_hobbyrum_v_water_change
+#
 #
 - alias: "Akvarium_720_matsal_water_change"
   id: "Akvarium 720_matsal vattenbyte"
@@ -1006,10 +1068,35 @@
       data:
         title: "Vattenbyte är aktivt för 720 matsal"
         message: "värmare startar inte nu, glöm inte slå av denna switch när det är påfyllt"
+        data:
+          notification_icon: "mdi:fishbowl"
+          actions:
+            - action: "720_MATSAL_WATER_CHANGE_OFF"
+              title: "Stänga av vattenbytet"
     - service: switch.turn_off
       target:
         entity_id:
           - switch.akvarium_720_matsal_heater
+#
+- alias: "Akvarium_720_matsal_water_change_switch_off"
+  id: "Akvarium 720 matsal vattenbyte stänga av vattenbytet"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "720_MATSAL_WATER_CHANGE_OFF"
+  condition:
+    - condition: state
+      entity_id: input_boolean.720_matsal_water_change
+      state: "on"
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id:
+          - input_boolean.720_matsal_water_change
+#
 #
 - alias: "Akvarium_1200_water_change"
   id: "Akvarium 1200 vattenbyte"
@@ -1027,8 +1114,33 @@
       data:
         title: "Vattenbyte är aktivt för 1200"
         message: "värmare startar inte nu, glöm inte slå av denna switch när det är påfyllt"
+        data:
+          notification_icon: "mdi:fishbowl"
+          actions:
+            - action: "1200_HOBBYRUM_WATER_CHANGE_OFF"
+              title: "Stänga av vattenbytet"
     - service: switch.turn_off
       target:
         entity_id:
           - switch.akvarium_1200_heater
+#
+- alias: "Akvarium_1200_hobbyrum_water_change_switch_off"
+  id: "Akvarium 1200 hobbyrum vattenbyte stänga av vattenbytet"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "1200_HOBBYRUM_WATER_CHANGE_OFF"
+  condition:
+    - condition: state
+      entity_id: input_boolean.1200_water_change
+      state: "on"
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id:
+          - input_boolean.1200_water_change
+#
 #

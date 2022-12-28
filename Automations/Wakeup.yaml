@@ -4,14 +4,11 @@
 ##
 ############################################
 
-
-
 ############################################
 ##
 ## All
 ##
 ############################################
-
 
 #
 - id: "Both_awake_jimmy"
@@ -26,9 +23,14 @@
     - condition: state
       entity_id: person.jimmy
       state: "home"
-    - condition: state
-      entity_id: sensor.h8324_charger_type
-      state: "none"
+    - or:
+      - condition: state
+        entity_id: sensor.hanna_charger_type
+        state: "none"
+      - not:
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
   action:
     - service: cover.set_cover_position
       target:
@@ -46,15 +48,20 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: sensor.h8324_charger_type
+      entity_id: sensor.hanna_charger_type
       to: "none"
   condition:
     - condition: state
-      entity_id: sensor.clt_l29_charger_type
-      state: "none"
-    - condition: state
       entity_id: person.hanna
       state: "home"
+    - or:
+      - condition: state
+        entity_id: sensor.clt_l29_charger_type
+        state: "none"
+      - not:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
   action:
     - service: cover.set_cover_position
       target:
@@ -62,4 +69,88 @@
       data:
         position: 100
     - service: shell_command.lmsovrum_ssaver_off
+#
+- id: "awake_jimmy"
+  alias: "Vaknat Jimmy"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.clt_l29_charger_type
+      to: "none"
+  condition:
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.driveway_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.sheed_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.walkway_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.entrance_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.growhouse_cam_recordings
+    - delay:
+        seconds: 1
+    - service: shell_command.lmhobbyrum_ssaver_off
+    - service: shell_command.lmmatsal_ssaver_off
+    - service: shell_command.lmvardagsrum_ssaver_off
+#
+- id: "awake_hanna"
+  alias: Vaknat Hanna
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.hanna_charger_type
+      to: "none"
+  condition:
+    - condition: state
+      entity_id: person.hanna
+      state: "home"
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.driveway_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.sheed_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.walkway_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.entrance_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.growhouse_cam_recordings
+    - delay:
+        seconds: 1
+    - service: shell_command.lmhobbyrum_ssaver_off
+    - service: shell_command.lmmatsal_ssaver_off
+    - service: shell_command.lmvardagsrum_ssaver_off
 #

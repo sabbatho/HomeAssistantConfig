@@ -22,16 +22,12 @@
         entity_id: person.jimmy
         state: "home"
   action:
-    - service: light.turn_on
-      target:
-        entity_id: 
-          - light.hall_entre
-          - light.hall_stora
-          - light.hall_lilla
-          - light.kokstak
-      data:
-        brightness: 254
     - service: notify.hanna_jimmy
       data: 
         message: "Ytterdörren har öppnats, men ingen är hemma"
+        data:
+          notification_icon: "mdi:shield-home"
+    - service: scene.turn_on
+      target:
+        entity_id: scene.burglaralarm
 #

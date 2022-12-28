@@ -19,10 +19,15 @@
       entity_id: binary_sensor.motion_matsal
       to: "on"
   condition:
-    - condition: numeric_state
-      entity_id: sun.sun
-      attribute: elevation
-      below: 3
+    - condition: or
+      conditions:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: 3
+      - condition: numeric_state
+        entity_id: sensor.ljus_ute
+        below: 400
     - condition: or
       conditions:
         - condition: state
@@ -66,10 +71,15 @@
       entity_id: binary_sensor.motion_matsal
       to: "on"
   condition:
-    - condition: numeric_state
-      entity_id: sun.sun
-      attribute: elevation
-      below: 3
+    - condition: or
+      conditions:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: 3
+      - condition: numeric_state
+        entity_id: sensor.ljus_ute
+        below: 400
     - condition: state
       entity_id: input_boolean.ensis_man_override
       state: "off"

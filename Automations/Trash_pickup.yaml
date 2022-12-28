@@ -18,6 +18,8 @@
     - service: notify.hanna_jimmy
       data: 
         message: "Sophämtning imorgon, dags att köra fram tunnorna"
+        data:
+          notification_icon: "mdi:delete-empty"
     - service: notify.discord
       data: 
         message: "Sophämtning imorgon, dags att köra fram tunnorna"
@@ -38,7 +40,34 @@
       - mon
     - "{{ now().isocalendar()[1] % 2 == 1 }}"
   action:
-    - service: notify.lametric
+    - service: notify.lmhobbyrum
+      data:
+        message: "Sophämtning imorgon, är tunnorna framme?"
+        data:
+          icon: "i16307"
+          icon_type: "none"
+          sound: "open_door"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmmatsal
+      data:
+        message: "Sophämtning imorgon, är tunnorna framme?"
+        data:
+          icon: "i16307"
+          icon_type: "none"
+          sound: "open_door"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmsovrum
+      data:
+        message: "Sophämtning imorgon, är tunnorna framme?"
+        data:
+          icon: "i16307"
+          icon_type: "none"
+          sound: "open_door"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmvardagsrum
       data:
         message: "Sophämtning imorgon, är tunnorna framme?"
         data:

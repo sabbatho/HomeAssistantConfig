@@ -27,6 +27,7 @@
     - condition: state
       entity_id: binary_sensor.workday_hanna
       state: "on"
+    - "{{ as_timestamp(now()) >= as_timestamp(states('input_datetime.hanna_wakeup_pause')) }}"
   action:
     - service: switch.turn_on
       target:
@@ -67,19 +68,24 @@
       entity_id: person.hanna
       from: "home"
   condition:
-    - condition: not
-      conditions:
+    - and:
+      - not:
         - condition: state
           entity_id: person.jimmy
           state: "home"
+      - not:
         - condition: state
           entity_id: person.hanna
           state: "home"
-    - condition: state
-      entity_id: input_boolean.visitors
-      state: "on"
+      - condition: state
+        entity_id: input_boolean.visitors
+        state: "off"
   action:
     - service: script.turn_on
       target:
         entity_id: script.sleep_or_not_home
+    - service: shell_command.lmsovrum_ssaver_on
+    - service: shell_command.lmhobbyrum_ssaver_on
+    - service: shell_command.lmmatsal_ssaver_on
+    - service: shell_command.lmvardagsrum_ssaver_on
 #

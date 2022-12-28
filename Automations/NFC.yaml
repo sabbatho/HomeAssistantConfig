@@ -64,6 +64,10 @@
   trigger:
     - platform: tag
       tag_id: 40c50937-eae6-43db-aacb-a7b2143e196c
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "DOOR_OPEN_OUTSIDE"
   action:
     - service: input_boolean.turn_on
       target:
@@ -75,4 +79,16 @@
         brightness: 2
         color_temp: 153
         effect: blink
+#
+- alias: "living_room_tv_on_tag"
+  id: "Starta vardagsrumstvn via tag"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: tag
+      tag_id:  6dcec5fa-5ec2-4d02-9022-a2c49c3c29b7
+  action:
+    - service: switch.toggle
+      target:
+        entity_id: switch.webostv_lg
 #

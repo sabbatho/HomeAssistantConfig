@@ -138,6 +138,23 @@
         title: "Batteri slut"
         message: "Rörelsesensor i halltaket {{ states('sensor.motion_hall_battery_level') }}% kvar"
 #
+- alias: "battery_warning_motion_hall_entre"
+  id: "Batterivarning Rörelse Hall Entre"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "18:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.motion_hall_entre_battery
+      below: 5
+  action:
+    - service: notify.hanna_jimmy
+      data: 
+        title: "Batteri slut"
+        message: "Rörelsesensor i halltaket Entre {{ states('sensor.motion_hall_entre_battery') }}% kvar"
+#
 - alias: "battery_warning_water_dishwasher"
   id: "Batterivarning Vattenvarning under diskhon"
   initial_state: true

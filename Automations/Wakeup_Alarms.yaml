@@ -10,7 +10,6 @@
 ##
 ############################################
 
-
 - id: "bedroom_wakeup_jimmy"
   alias: Sovrum vakna Jimmy
   initial_state: true
@@ -96,7 +95,12 @@
           target:
             entity_id: media_player.sovrum
           data:
-            volume_level: 0.6
+            volume_level: 0.5
+        - service: media_player.volume_set
+          target:
+            entity_id: media_player.43pus6162_12
+          data:
+            volume_level: 0.4
       else:
         - stop: "Har gått upp"
     - delay: "00:20:00"
@@ -121,8 +125,9 @@
       entity_id: binary_sensor.workday_hanna
       state: "on"
     - condition: state
-      entity_id: sensor.h8324_charger_type
+      entity_id: sensor.hanna_charger_type
       state: "ac"
+    - "{{ as_timestamp(now()) >= as_timestamp(states('input_datetime.hanna_wakeup_pause')) }}"
   action:
     - service: light.turn_on
       target:

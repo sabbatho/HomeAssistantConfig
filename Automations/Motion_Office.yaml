@@ -10,23 +10,27 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_office
-      to: "on"
-    - platform: state
-      entity_id: binary_sensor.motion_hobbyrum_speldator
+      entity_id: binary_sensor.motion_office_group
       to: "on"
   condition:
-    - condition: or
-      conditions:
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
         - condition: state
           entity_id: person.jimmy
           state: "home"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
         - condition: state
           entity_id: person.hanna
           state: "home"
-        - condition: state
-          entity_id: input_boolean.visitors
-          state: "on"
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
     - condition: or
       conditions:
         - condition: state
@@ -68,14 +72,17 @@
           {% endif %}
     - service: light.turn_on
       target:
-        entity_id: 
+        entity_id:
           - light.kontor_color_hoger_fram
-          - light.kontor_color_hoger_bak
+          - light.kontor_color_hoger_sida
           - light.kontor_color_roof
           - light.kontor_color_vanster_fram
           - light.kontor_color_vanster_bak_ovre
           - light.kontor_color_vanster_bak_mitten
           - light.kontor_color_vanster_bak_nedre
+          - light.kontor_color_hoger_bak_ovre
+          - light.kontor_color_hoger_bak_mitten
+          - light.kontor_color_hoger_bak_nedre
       data:
         effect: finish_effect
         brightness: 254
@@ -102,23 +109,27 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_office
-      to: "on"
-    - platform: state
-      entity_id: binary_sensor.motion_hobbyrum_speldator
+      entity_id: binary_sensor.motion_office_group
       to: "on"
   condition:
-    - condition: or
-      conditions:
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
         - condition: state
           entity_id: person.jimmy
           state: "home"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
         - condition: state
           entity_id: person.hanna
           state: "home"
-        - condition: state
-          entity_id: input_boolean.visitors
-          state: "on"
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
     - condition: or
       conditions:
         - condition: state
@@ -139,23 +150,27 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_office
-      to: "on"
-    - platform: state
-      entity_id: binary_sensor.motion_hobbyrum_speldator
+      entity_id: binary_sensor.motion_office_group
       to: "on"
   condition:
-    - condition: or
-      conditions:
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
         - condition: state
           entity_id: person.jimmy
           state: "home"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
         - condition: state
           entity_id: person.hanna
           state: "home"
-        - condition: state
-          entity_id: input_boolean.visitors
-          state: "on"
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
     - condition: state
       entity_id: switch.speldator1
       state: "off"
@@ -181,14 +196,17 @@
         color_name: white
     - service: light.turn_on
       target:
-        entity_id: 
+        entity_id:
           - light.kontor_color_hoger_fram
-          - light.kontor_color_hoger_bak
+          - light.kontor_color_hoger_sida
           - light.kontor_color_roof
           - light.kontor_color_vanster_fram
           - light.kontor_color_vanster_bak_ovre
           - light.kontor_color_vanster_bak_mitten
           - light.kontor_color_vanster_bak_nedre
+          - light.kontor_color_hoger_bak_ovre
+          - light.kontor_color_hoger_bak_mitten
+          - light.kontor_color_hoger_bak_nedre
       data:
         brightness: 254
         color_name: white
@@ -199,23 +217,27 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_office
-      to: "on"
-    - platform: state
-      entity_id: binary_sensor.motion_hobbyrum_speldator
+      entity_id: binary_sensor.motion_office_group
       to: "on"
   condition:
-    - condition: or
-      conditions:
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
         - condition: state
           entity_id: person.jimmy
           state: "home"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
         - condition: state
           entity_id: person.hanna
           state: "home"
-        - condition: state
-          entity_id: input_boolean.visitors
-          state: "on"
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
     - condition: state
       entity_id: switch.speldator1
       state: "off"
@@ -234,10 +256,7 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_office
-      to: "on"
-    - platform: state
-      entity_id: binary_sensor.motion_hobbyrum_speldator
+      entity_id: binary_sensor.motion_office_group
       to: "on"
   condition:
     - condition: state
@@ -246,17 +265,24 @@
     - condition: state
       entity_id: switch.speldator1
       state: "on"
-    - condition: or
-      conditions:
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
         - condition: state
           entity_id: person.jimmy
           state: "home"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
         - condition: state
           entity_id: person.hanna
           state: "home"
-        - condition: state
-          entity_id: input_boolean.visitors
-          state: "on"
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
     - "{{ ( as_timestamp(now()) - as_timestamp(state_attr('automation.office_game_pc_on_motion_light', 'last_triggered')) |int(0) ) > 1 }}"
     - condition: or
       conditions:
@@ -300,16 +326,30 @@
         entity_id: number.wled_speldator_speed
         value: "{{ speeds | random }}"
 #
+- alias: "office_gamepc_override_wled"
+  id: "hobbyrum speldator override wled"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: input_boolean.speldator1_override
+      to: "on"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.wled_speldator
+      data:
+        brightness: 254
+        color_name: white
+        effect: "Solid"
+#
 - alias: "office_game_pc_on_motion_sound"
   id: "Kontor Speldator På Rörelse ljud"
   initial_state: true
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_office
-      to: "on"
-    - platform: state
-      entity_id: binary_sensor.motion_hobbyrum_speldator
+      entity_id: binary_sensor.motion_office_group
       to: "on"
   condition:
     - condition: state
@@ -318,17 +358,24 @@
     - condition: state
       entity_id: switch.speldator1
       state: "on"
-    - condition: or
-      conditions:
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
         - condition: state
           entity_id: person.jimmy
           state: "home"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
         - condition: state
           entity_id: person.hanna
           state: "home"
-        - condition: state
-          entity_id: input_boolean.visitors
-          state: "on"
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
     - "{{ ( as_timestamp(now()) - as_timestamp(state_attr('automation.office_game_pc_on_motion_sound', 'last_triggered')) |int(0) ) > 1 }}"
   action:
     - service: switch.turn_on
@@ -341,22 +388,9 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_office
+      entity_id: binary_sensor.motion_office_group
       to: "off"
       for: "00:20:00"
-    - platform: state
-      entity_id: binary_sensor.motion_hobbyrum_speldator
-      to: "off"
-      for: "00:20:00"
-  condition:
-    - condition: state
-      entity_id: binary_sensor.motion_office
-      state: "off"
-      for: "00:19:59"
-    - condition: state
-      entity_id: binary_sensor.motion_hobbyrum_speldator
-      state: "off"
-      for: "00:19:59"
   action:
     - service: switch.turn_off
       target:
@@ -365,15 +399,18 @@
           - switch.ljud_dator
     - service: light.turn_off
       target:
-        entity_id: 
+        entity_id:
           - light.kontor_color_mitten_fram
           - light.kontor_color_hoger_fram
-          - light.kontor_color_hoger_bak
+          - light.kontor_color_hoger_sida
           - light.kontor_color_roof
           - light.kontor_color_vanster_fram
           - light.kontor_color_vanster_bak_ovre
           - light.kontor_color_vanster_bak_mitten
           - light.kontor_color_vanster_bak_nedre
+          - light.kontor_color_hoger_bak_ovre
+          - light.kontor_color_hoger_bak_mitten
+          - light.kontor_color_hoger_bak_nedre
           - light.wled_speldator
       data:
         transition: 20

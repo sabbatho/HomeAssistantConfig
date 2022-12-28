@@ -10,7 +10,34 @@
       entity_id: binary_sensor.water_dish
       to: "on"
   action:
-    - service: notify.lametric
+    - service: notify.lmhobbyrum
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmmatsal
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmsovrum
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmvardagsrum
       data:
         message: "Vattenläcka under diskho!"
         data:
@@ -23,18 +50,74 @@
       data:
         title: "Vattenläcka!"
         message: "Vattenläcka under diskho"
+        data:
+          notification_icon: "mdi:pipe-leak"
     - delay: "00:00:10"
-    - service: notify.lametric
+    - service: notify.lmhobbyrum
       data:
         message: "Vattenläcka under diskho!"
         data:
           icon: "a12989"
           icon_type: "none"
-          sound: "notification4"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmmatsal
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmsovrum
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmvardagsrum
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
           priority: "warning"
           cycles: 3
     - delay: "00:00:10"
-    - service: notify.lametric
+    - service: notify.lmhobbyrum
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmmatsal
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmsovrum
+      data:
+        message: "Vattenläcka under diskho!"
+        data:
+          icon: "a12989"
+          icon_type: "none"
+          sound: "negative5"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmvardagsrum
       data:
         message: "Vattenläcka under diskho!"
         data:

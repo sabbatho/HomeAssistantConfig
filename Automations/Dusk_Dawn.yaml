@@ -18,18 +18,12 @@
     - platform: numeric_state
       entity_id: sun.sun
       attribute: elevation
-      below: 0.5
-    - platform: numeric_state
-      entity_id: sensor.ljus_ute
-      below: 50
+      below: 1
   condition:
     - condition: numeric_state
       entity_id: sun.sun
       attribute: elevation
-      below: 1.5
-    - condition: numeric_state
-      entity_id: sensor.ljus_ute
-      below: 100
+      below: 1.1
   action:
     - service: light.turn_on
       target:
@@ -54,6 +48,16 @@
       data:
         brightness: 2
         color_temp: 153
+    - delay:
+        seconds: 1
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.outside_impress_west_left
+          - light.outside_impress_west_right
+      data:
+        brightness: 60
+        color_temp: 320
 #
 - alias: "windows_off"
   id: "Fönster Av"
@@ -63,18 +67,12 @@
     - platform: numeric_state
       entity_id: sun.sun
       attribute: elevation
-      above: 1.5
-    - platform: numeric_state
-      entity_id: sensor.ljus_ute
-      above: 100
+      above: 1.1
   condition:
     - condition: numeric_state
       entity_id: sun.sun
       attribute: elevation
-      above: 0.5
-    - condition: numeric_state
-      entity_id: sensor.ljus_ute
-      above: 70
+      above: 1
   action:
     - service: light.turn_off
       target:
@@ -88,6 +86,8 @@
           - light.parkering_trapp_1
           - light.parkering_trapp_2
           - light.garage_ute
+          - light.outside_impress_west_left
+          - light.outside_impress_west_right
     - delay:
         seconds: 1
     - service: switch.turn_off
@@ -139,27 +139,112 @@
       entity_id: sensor.trafikverket_karlsvik_precipitation_type
       to: "Ingen nederbörd"
       for:
-        hours: 5
+        hours: 4
     - platform: state
       entity_id: sensor.gagnbro_precipitation_type
       to: "Ingen nederbörd"
       for:
-        hours: 5
+        hours: 4
   condition:
-    - or:
-      - condition: state
-        entity_id: sensor.trafikverket_karlsvik_precipitation_type
-        state: "Ingen nederbörd"
-        for: "04:59:50"
-      - "{{ as_timestamp(now()) - as_timestamp(states.sensor.trafikverket_karlsvik_precipitation_type.last_updated) > 14400 }}"
-    - or:
-      - condition: state
-        entity_id: sensor.gagnbro_precipitation_type
-        state: "Ingen nederbörd"
-        for: "04:59:50"
-      - "{{ as_timestamp(now()) - as_timestamp(states.sensor.gagnbro_precipitation_type.last_updated) > 14400 }}"
+    - and:
+      - or:
+        - condition: state
+          entity_id: sensor.trafikverket_karlsvik_precipitation_type
+          state: "Ingen nederbörd"
+          for: "03:59:50"
+#        - "{{ as_timestamp(now()) - as_timestamp(states.sensor.trafikverket_karlsvik_precipitation_type.last_updated) > 14400 }}"
+      - or:
+        - condition: state
+          entity_id: sensor.gagnbro_precipitation_type
+          state: "Ingen nederbörd"
+          for: "03:59:50"
+#        - "{{ as_timestamp(now()) - as_timestamp(states.sensor.gagnbro_precipitation_type.last_updated) > 14400 }}"
   action:
     - service: input_boolean.turn_off
       target:
         entity_id: input_boolean.bad_weather
+#
+- alias: "last time rained"
+  id: "Senast det kom nederbörd"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      from: "Snö"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      to: "Snö"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      from: "Snö"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      to: "Snö"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      from: "Regn"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      to: "Regn"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      from: "Regn"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      to: "Regn"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      from: "Duggregn"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      to: "Duggregn"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      from: "Duggregn"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      to: "Duggregn"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      from: "Hagel"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      to: "Hagel"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      from: "Hagel"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      to: "Hagel"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      from: "Snöblandat regn"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      to: "Snöblandat regn"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      from: "Snöblandat regn"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      to: "Snöblandat regn"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      from: "Underkylt regn"
+    - platform: state
+      entity_id: sensor.gagnbro_precipitation_type
+      to: "Underkylt regn"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      from: "Underkylt regn"
+    - platform: state
+      entity_id: sensor.trafikverket_karlsvik_precipitation_type
+      to: "Underkylt regn"
+  action:
+    - service: input_datetime.set_datetime
+      target:
+        entity_id: input_datetime.last_time_rained
+      data:
+        timestamp: "{{ now().timestamp() }}"
 #

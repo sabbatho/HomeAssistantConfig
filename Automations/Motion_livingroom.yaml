@@ -11,10 +11,15 @@
       entity_id: binary_sensor.motion_vardagsrum
       to: "on"
   condition:
-    - condition: numeric_state
-      entity_id: sun.sun
-      attribute: elevation
-      below: 3
+    - condition: or
+      conditions:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: 3
+      - condition: numeric_state
+        entity_id: sensor.ljus_ute
+        below: 400
     - condition: not
       conditions:
         - condition: state
@@ -58,6 +63,28 @@
           {% else %}
             white
           {% endif %}
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.vardagsrum_tak_aurelle
+      data:
+        brightness: >-
+          {% if state_attr("sun.sun", "elevation") | float <= -5 %}
+            50
+          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
+            80
+          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 1 %}
+            110
+          {% elif state_attr("sun.sun", "elevation") | float > 1 and state_attr("sun.sun", "elevation") | float <= 5 %}
+            140
+          {% elif state_attr("sun.sun", "elevation") | float > 5 and state_attr("sun.sun", "elevation") | float < 7 %}
+            170
+          {% elif state_attr("sun.sun", "elevation") | float >= 7 %}
+            0
+          {% else %}
+            0
+          {% endif %}
+        color_temp: 210
 #
 - alias: "livingroom_off_motion"
   id: "Vardagsrum Av Rörelse"
@@ -67,11 +94,41 @@
     - platform: state
       entity_id: binary_sensor.motion_vardagsrum
       to: "off"
-      for: "00:03:00"
+      for: "00:05:00"
   action:
     - service: light.turn_off
       target:
-        entity_id: light.osram_smart_e27_color_1
+        entity_id:
+          - light.osram_smart_e27_color_1
+          - light.vardagsrum_tak_aurelle
+      data:
+        transition: 20
+    - service: switch.turn_off
+      target:
+        entity_id: 
+          - switch.vardagsrum_spis
+          - switch.vardags2
+#
+- alias: "livingroom_off_media"
+  id: "Vardagsrum Av media"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.living_room_tv
+      to: "on"
+      for: "00:15:00"
+  condition:
+    - condition: state
+      entity_id: binary_sensor.motion_vardagsrum
+      state: "off"
+      for: "00:04:58"
+  action:
+    - service: light.turn_off
+      target:
+        entity_id:
+          - light.osram_smart_e27_color_1
+          - light.vardagsrum_tak_aurelle
       data:
         transition: 20
     - service: switch.turn_off

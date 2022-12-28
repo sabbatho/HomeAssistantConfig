@@ -1,0 +1,39 @@
+#
+#
+#
+- alias: "kattlucka_last_used"
+  id: "Kattlucka senast använd"
+  mode: single
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.vibration_kattlucka_vibration
+      to: "on"
+  action:
+    - service: input_datetime.set_datetime
+      target:
+        entity_id:
+          - input_datetime.kattlucka_used
+      data:
+        timestamp: "{{ now().timestamp() }}"
+#
+- alias: "basement_cat_on_vibration"
+  id: "Källare kattlucka På Vibration"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.vibration_kattlucka_vibration
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.kallarhall
+      data:
+        brightness: 30
+        color_temp: 153
+#

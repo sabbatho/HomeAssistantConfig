@@ -3,7 +3,6 @@
 #
 #
 
-
 - alias: "closet_on_motion"
   id: "Garderob På Rörelse"
   initial_state: true
@@ -19,7 +18,7 @@
           entity_id: sensor.clt_l29_charger_type
           state: "none"
         - condition: state
-          entity_id: sensor.h8324_charger_type
+          entity_id: sensor.hanna_charger_type
           state: "none"
         - condition: state
           entity_id: input_boolean.visitors

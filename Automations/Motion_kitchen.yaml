@@ -3,7 +3,6 @@
 #
 #
 
-
 - alias: "kitchen_cabinet_on_motion"
   id: "Kök Vitrin På Rörelse"
   initial_state: true
@@ -11,6 +10,95 @@
   trigger:
     - platform: state
       entity_id: binary_sensor.motion_kok
+      to: "on"
+  condition:
+    - condition: or
+      conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "none"
+            - not:
+              - condition: state
+                entity_id: person.hanna
+                state: "home"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
+            - condition: state
+              entity_id: sensor.hanna_charger_type
+              state: "none"
+            - not:
+              - condition: state
+                entity_id: person.jimmy
+                state: "home"
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
+            - condition: state
+              entity_id: sensor.hanna_charger_type
+              state: "none"
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "none"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
+    - condition: state
+      entity_id: binary_sensor.kok_spritskap_dorr_contact
+      state: "off"
+      for:
+        seconds: 30
+#    - condition: state
+#      entity_id: binary_sensor.motion_kok
+#      state: "off"
+#      for:
+#        minutes: 4
+  variables:
+    colors:
+      - yellow
+      - blue
+      - green
+      - purple
+      - red
+      - pink
+      - orange
+      - cyan
+      - indigo
+      - darkblue
+      - tomato
+      - darkgreen
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.spritskap
+      data:
+        brightness: 150
+        color_name: "{{ colors | random }}"
+        effect: "Random Colors"
+    - service: number.set_value
+      data:
+        entity_id: number.spritskap_speed
+        value: "8"
+#
+- alias: "kitchen_cabinet_door_open"
+  id: "Kök Vitrin dörr öppnas"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.kok_spritskap_dorr_contact
       to: "on"
   condition:
     - condition: or
@@ -25,9 +113,13 @@
           entity_id: input_boolean.visitors
           state: "on"
   action:
-    - service: switch.turn_on
+    - service: light.turn_on
       target:
-        entity_id: switch.kok_vitrin
+        entity_id: light.spritskap
+      data:
+        brightness: 254
+        color_name: white
+        effect: "Solid"
 #
 - alias: "kitchen_roof_on_motion"
   id: "Kökstak På Rörelse"
@@ -51,27 +143,29 @@
             - condition: state
               entity_id: sensor.clt_l29_charger_type
               state: "none"
-            - condition: state
-              entity_id: person.hanna
-              state: "not_home"
+            - not:
+              - condition: state
+                entity_id: person.hanna
+                state: "home"
         - condition: and
           conditions:
             - condition: state
               entity_id: person.hanna
               state: "home"
             - condition: state
-              entity_id: sensor.h8324_charger_type
+              entity_id: sensor.hanna_charger_type
               state: "none"
-            - condition: state
-              entity_id: person.jimmy
-              state: "not_home"
+            - not:
+              - condition: state
+                entity_id: person.jimmy
+                state: "home"
         - condition: and
           conditions:
             - condition: state
               entity_id: person.hanna
               state: "home"
             - condition: state
-              entity_id: sensor.h8324_charger_type
+              entity_id: sensor.hanna_charger_type
               state: "none"
             - condition: state
               entity_id: person.jimmy
@@ -128,9 +222,9 @@
       entity_id: input_boolean.kitchen_roof_override
       state: "off"
   action:
-    - service: switch.turn_off
+    - service: light.turn_off
       target:
-        entity_id: switch.kok_vitrin
+        entity_id: light.spritskap
     - service: light.turn_off
       target:
         entity_id: light.kokstak
@@ -148,4 +242,158 @@
     - service: input_boolean.turn_off
       target:
         entity_id: input_boolean.kitchen_roof_override
+#
+- alias: "kitchen_sink_on_motion_not_charging"
+  id: "kök diskbänk På Rörelse ej sova"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.kok_diskbank
+      to: "on"
+  condition:
+    - or:
+      - and:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
+      - and:
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
+      - condition: state
+        entity_id: input_boolean.visitors
+        state: "on"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.kok_diskbank
+      data:
+        brightness: 40
+#
+- alias: "kitchen_sink_on_motion_charging"
+  id: "Kök diskbänk På Rörelse när laddas"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.kok_diskbank
+      to: "on"
+  condition:
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "off"
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - not:
+          - condition: state
+            entity_id: person.hanna
+            state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "off"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - not:
+          - condition: state
+            entity_id: person.jimmy
+            state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "off"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.kok_diskbank
+      data:
+        brightness: 2
+#
+- alias: "kitchen_sink_off_motion_not_charging"
+  id: "Kök diskbänk Av Rörelse ej sova"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.kok_diskbank
+      to: "off"
+      for: "00:02:00"
+  action:
+    - service: light.turn_off
+      target:
+        entity_id:
+          - light.kok_diskbank
+      data:
+        transition: 20
+#
+- alias: "kitchen_sink_off_motion_charging"
+  id: "Kök diskbänk Av Rörelse Sover"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.kok_diskbank
+      to: "off"
+  condition:
+    - and:
+      - condition: state
+        entity_id: sensor.clt_l29_charger_type
+        state: "ac"
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: input_boolean.visitors
+        state: "off"
+    - and:
+      - condition: state
+        entity_id: sensor.hanna_charger_type
+        state: "ac"
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
+      - condition: state
+        entity_id: input_boolean.visitors
+        state: "off"
+  action:
+    - service: light.turn_off
+      target:
+        entity_id: light.kok_diskbank
+      data:
+        transition: 20
 #

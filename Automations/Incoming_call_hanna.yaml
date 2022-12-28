@@ -16,7 +16,7 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: sensor.h8324_telefonstatus
+      entity_id: sensor.hanna_phone_state
       to: "ringing"
   condition:
     - condition: state
@@ -31,7 +31,7 @@
           - light.sovrum_hanna
           - light.kontor_color_mitten_fram
           - light.kontor_color_hoger_fram
-          - light.kontor_color_hoger_bak
+          - light.kontor_color_hoger_sida
           - light.kontor_color_roof
           - light.kontor_color_vanster_fram
           - light.kontor_color_vanster_bak_ovre
@@ -43,7 +43,34 @@
     - service: switch.turn_on
       target:
         entity_id: switch.vardags_eld
-    - service: notify.lametric
+    - service: notify.lmhobbyrum
+      data:
+        message: "Hanna, mobilen ringer!"
+        data:
+          icon: "a35"
+          icon_type: "none"
+          sound: "cat"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmmatsal
+      data:
+        message: "Hanna, mobilen ringer!"
+        data:
+          icon: "a35"
+          icon_type: "none"
+          sound: "cat"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmsovrum
+      data:
+        message: "Hanna, mobilen ringer!"
+        data:
+          icon: "a35"
+          icon_type: "none"
+          sound: "cat"
+          priority: "warning"
+          cycles: 3
+    - service: notify.lmvardagsrum
       data:
         message: "Hanna, mobilen ringer!"
         data:
@@ -59,7 +86,7 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: sensor.h8324_telefonstatus
+      entity_id: sensor.hanna_phone_state
       from: "ringing"
   condition:
     - condition: state
@@ -74,12 +101,15 @@
           - light.sovrum_hanna
           - light.kontor_color_mitten_fram
           - light.kontor_color_hoger_fram
-          - light.kontor_color_hoger_bak
+          - light.kontor_color_hoger_sida
           - light.kontor_color_roof
           - light.kontor_color_vanster_fram
           - light.kontor_color_vanster_bak_ovre
           - light.kontor_color_vanster_bak_mitten
           - light.kontor_color_vanster_bak_nedre
+          - light.kontor_color_hoger_bak_ovre
+          - light.kontor_color_hoger_bak_mitten
+          - light.kontor_color_hoger_bak_nedre
     - service: switch.turn_off
       target:
         entity_id: switch.vardags_eld

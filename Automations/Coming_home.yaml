@@ -13,20 +13,48 @@
 ############################################
 
 
-#- alias: "coming_home_always"
-#  id: "Kommer hem always"
-#  initial_state: true
-#  mode: single
-#  trigger:
-#  - platform: state
-#    entity_id: person.jimmy
-#    to: 'home'
-#  - platform: state
-#    entity_id: person.hanna
-#    to: 'home'
-#  action:
-#  - service: switch.turn_off
-#    data:
-#      entity_id: switch.kamera1
-#  - service: shell_command.lametric_bright
+- alias: "coming_home_always"
+  id: "Kommer hem always"
+  initial_state: true
+  mode: single
+  trigger:
+  - platform: state
+    entity_id: person.jimmy
+    to: "home"
+  - platform: state
+    entity_id: person.hanna
+    to: "home"
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.driveway_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.sheed_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.walkway_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.entrance_cam_recordings
+    - delay:
+        seconds: 1
+    - service: switch.turn_off
+      data:
+        entity_id: switch.growhouse_cam_recordings
+    - delay:
+        seconds: 1
+    - service: shell_command.lmsovrum_ssaver_off
+    - service: shell_command.lmhobbyrum_ssaver_off
+    - service: shell_command.lmmatsal_ssaver_off
+    - service: shell_command.lmvardagsrum_ssaver_off
+#    - service: scene.turn_off
+#      target:
+#        entity_id: scene.burglaralarm
 #

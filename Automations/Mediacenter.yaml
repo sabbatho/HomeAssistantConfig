@@ -12,7 +12,165 @@
 ##
 ############################################
 
-
+#
+# Chromecast Ultra
+#
+- id: "tv_and_avr_on_chromecast_ultra"
+  alias: "Tv och avr På chromecast ultra"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.chromecast_ultra_vardags
+      to: "playing"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.webostv_lg
+    - service: media_player.turn_on
+      target:
+        entity_id: media_player.marantz_sr8012
+    - delay:
+        seconds: 3
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        source: CHROMECAST
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.living_room_tv
+      data:
+        source: HDMI1
+    - delay:
+        seconds: 3
+    - service: media_player.volume_set
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        volume_level: 0.395
+    - delay:
+        seconds: 10
+    - service: media_player.volume_up
+      target:
+        entity_id: media_player.marantz_sr8012
+#
+- id: "chrome_ultra_vardags_off_tv_off"
+  alias: "chrome ultra vardags av tv av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.living_room_tv
+      to: "off"
+      for:
+        seconds: 5
+  action:
+    - service: media_player.turn_off
+      target:
+        entity_id: media_player.chromecast_ultra_vardags
+#
+#Chromecast audio
+#
+- id: "avr_on_chromecast_audio_vardags"
+  alias: "avr På chromecast audio vardags"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.chromecastaudiovardagsrum
+      to: "playing"
+      for:
+        seconds: 3
+  action:
+    - service: media_player.turn_on
+      target:
+        entity_id: media_player.marantz_sr8012
+    - delay:
+        seconds: 3
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        source: CHROMEAUDIO
+    - delay:
+        seconds: 3
+    - service: media_player.volume_set
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        volume_level: 0.62
+#
+- id: "avr_off_when_chromeaudio_off"
+  alias: "AVR Av när chrome audio stängs av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.chromecastaudiovardagsrum
+      to: "off"
+      for:
+        seconds: 15
+  condition:
+    - and:
+      - not:
+        - condition: state
+          entity_id: media_player.chromecast_ultra_vardags
+          state: "playing"
+      - not:
+        - condition: state
+          entity_id: media_player.tvdatorn
+          state: "playing"
+      - not:
+        - condition: state
+          entity_id: media_player.living_room_tv
+          state: "on"
+  action:
+    - service: media_player.turn_off
+      target:
+        entity_id: media_player.marantz_sr8012
+#
+- id: "chromeaudiovardags_off"
+  alias: "chromeaudiovardags Av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.living_room_tv
+      to: "on"
+      for:
+        seconds: 3
+    - platform: state
+      entity_id: media_player.marantz_sr8012
+      to: "off"
+      for:
+        seconds: 3
+  action:
+    - service: media_player.turn_off
+      target:
+        entity_id: media_player.chromecastaudiovardagsrum
+#
+- id: "chromeaudiovardgs_on_tv_off"
+  alias: "chrome audio on tv off"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.chromecastaudiovardagsrum
+      to: "playing"
+      for:
+        seconds: 5
+  condition:
+    - condition: state
+      entity_id: switch.webostv_lg
+      state: "on"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id: switch.webostv_lg
+#
+#HDMI1 på
+#
 - id: "tv_pc_and_avr_on_early_hdmi1"
   alias: "Tvdator och avr På tidigt HDMI1"
   initial_state: true
@@ -31,6 +189,9 @@
     - condition: state
       entity_id: person.jimmy
       state: "home"
+    - condition: state
+      entity_id: media_player.chromecast_ultra_vardags
+      state: "off"
   action:
     - service: switch.turn_on
       target:
@@ -65,14 +226,21 @@
       for:
         seconds: 5
   condition:
-    - condition: or
-      conditions:
+    - or:
+      - and:
         - condition: state
           entity_id: sensor.clt_l29_charger_type
           state: "none"
         - condition: state
+          entity_id: media_player.chromecast_ultra_vardags
+          state: "off"
+      - and:
+        - condition: state
           entity_id: person.jimmy
           state: "not_home"
+        - condition: state
+          entity_id: media_player.chromecast_ultra_vardags
+          state: "off"
   action:
     - service: switch.turn_on
       target:
@@ -95,6 +263,55 @@
       data:
         volume_level: 0.51
 #
+- id: "tv_pc_and_avr_on_ordinary_hdmi1_from_ultra"
+  alias: "Tvdator och avr På vanlig tid HDMI1 från Ultra"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: media_player.marantz_sr8012
+      attribute: source
+      to: "DATOR"
+      for:
+        seconds: 5
+  condition:
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
+        - condition: state
+          entity_id: media_player.chromecast_ultra_vardags
+          state: "playing"
+      - and:
+        - condition: state
+          entity_id: person.jimmy
+          state: "not_home"
+        - condition: state
+          entity_id: media_player.chromecast_ultra_vardags
+          state: "playing"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.tvdator
+    - service: media_player.select_source
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        source: DATOR
+    - delay:
+        seconds: 3
+    - service: media_player.volume_set
+      target:
+        entity_id: media_player.marantz_sr8012
+      data:
+        volume_level: 0.51
+    - service: media_player.turn_off
+      target:
+        entity_id: media_player.chromecast_ultra_vardags
+#
+#Netflix, SVT play eller HDMI2 på
+#
 - id: "avr_on_netflix_hdmi2_early"
   alias: "AVR På Netflix och Hdmi2 tidigt"
   initial_state: true
@@ -108,6 +325,10 @@
       entity_id: media_player.living_room_tv
       attribute: source
       to: "Netflix"
+    - platform: state
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "SVT Play"
   condition:
     - condition: state
       entity_id: sensor.clt_l29_charger_type
@@ -147,6 +368,14 @@
       entity_id: media_player.living_room_tv
       attribute: source
       to: "Netflix"
+    - platform: state
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "Twitch"
+    - platform: state
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "SVT Play"
   condition:
     - condition: or
       conditions:
@@ -173,7 +402,16 @@
       target:
         entity_id: media_player.marantz_sr8012
       data:
-        volume_level: 0.6
+        volume_level: >
+          {% if state_attr('media_player.living_room_tv', 'source') == "Netflix" %}
+            0.6
+          {% elif state_attr('media_player.living_room_tv', 'source') == "SVT Play" %}
+            0.42
+          {% else %}
+            0.4
+          {% endif %}
+#
+# HDMI och DATOR av
 #
 - id: "tv_pc_and_avr_off"
   alias: "Tvdator och avr Av"
@@ -184,10 +422,16 @@
       value_template: "{{ not is_state_attr('media_player.living_room_tv', 'source', 'HDMI1') }}"
       for:
         seconds: 20
+    - platform: template
+      value_template: "{{ not is_state_attr('media_player.marantz_sr8012', 'source', 'DATOR') }}"
+      for:
+        seconds: 20
   action:
     - service: switch.turn_off
       target:
         entity_id: switch.tvdator
+#
+#TV off
 #
 - id: "avr_off_when_tv_off"
   alias: "AVR Av när tv stängs av"
@@ -197,10 +441,19 @@
     - platform: state
       entity_id: media_player.living_room_tv
       to: "off"
+      for:
+        seconds: 5
+  condition:
+    - not:
+      - condition: state
+        entity_id: media_player.chromecastaudiovardagsrum
+        state: "playing"
   action:
     - service: media_player.turn_off
       target:
         entity_id: media_player.marantz_sr8012
+#
+#AVR ON/OFF
 #
 - id: "avr_on"
   alias: "AVR På"
@@ -227,4 +480,5 @@
     - service: switch.turn_off
       target:
         entity_id: switch.bassteg
+#
 #

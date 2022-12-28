@@ -15,8 +15,8 @@
       target:
         entity_id: light.ensis_down
       data:
-        color_temp: 153
-        brightness: 150
+        color_temp: 185
+        brightness: 180
 #
 - id: "matsal_remote_ljud_ON"
   alias: "Matsal fjärr ljud PÅ"

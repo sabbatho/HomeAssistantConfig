@@ -1,0 +1,47 @@
+#
+#
+#
+- alias: "set_temp_bedroom_trv"
+  id: "Sätt temp sovrum TRV"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/30"
+  condition:
+    - not:
+      - condition: state
+        entity_id: sensor.sovrum
+        state: "unavailable"
+  action:
+    - service: number.set_value
+      data:
+        entity_id: number.termostat_sovrum_external_measured_room_sensor
+        value: "{{ (states('sensor.sovrum') | float * 100) | round(0) }}"
+#
+- alias: "window_open_bedroom_trv"
+  id: "Fönster öppet sovrum TRV"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: switch.flakt_sovrum
+      to: "on"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.termostat_sovrum_window_open_external
+#
+- alias: "window_closed_bedroom_trv"
+  id: "Fönster stängd sovrum TRV"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: switch.flakt_sovrum
+      to: "off"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id: switch.termostat_sovrum_window_open_external
+#

@@ -16,7 +16,7 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: sensor.h8324_charger_type
+      entity_id: sensor.hanna_charger_type
       to: "ac"
   condition:
     - condition: state
@@ -24,9 +24,10 @@
       state: "home"
     - condition: or
       conditions:
-        - condition: state
-          entity_id: person.jimmy
-          state: "not_home"
+        - not:
+          - condition: state
+            entity_id: person.jimmy
+            state: "home"
         - condition: and
           conditions:
             - condition: state
@@ -47,6 +48,9 @@
     - service: shell_command.shutdown_speldator2
     - delay:
         seconds: 1
+    - service: shell_command.lmhobbyrum_ssaver_on
+    - service: shell_command.lmmatsal_ssaver_on
+    - service: shell_command.lmvardagsrum_ssaver_on
 #
 - alias: "going_to_sleep_jimmy"
   id: "Släck allt när båda sover Jimmy"
@@ -62,13 +66,14 @@
       state: "home"
     - condition: or
       conditions:
-        - condition: state
-          entity_id: person.hanna
-          state: "not_home"
+        - not:
+          - condition: state
+            entity_id: person.hanna
+            state: "home"
         - condition: and
           conditions:
             - condition: state
-              entity_id: sensor.h8324_charger_type
+              entity_id: sensor.hanna_charger_type
               state: "ac"
             - condition: state
               entity_id: person.hanna
@@ -80,6 +85,9 @@
     - delay:
         seconds: 1
     - service: shell_command.lmsovrum_ssaver_on
+    - service: shell_command.lmhobbyrum_ssaver_on
+    - service: shell_command.lmmatsal_ssaver_on
+    - service: shell_command.lmvardagsrum_ssaver_on
     - delay:
         seconds: 1
     - service: media_player.turn_off
@@ -94,29 +102,32 @@
     - delay:
         seconds: 1
 #
-- alias: "sleep_hanna"
-  id: "Hanna Sover"
+- alias: "sleep_hanna_above_25"
+  id: "Hanna Sover över 25"
   initial_state: true
   mode: single
   trigger:
     - platform: state
-      entity_id: sensor.h8324_charger_type
+      entity_id: sensor.hanna_charger_type
       to: "ac"
   condition:
     - condition: state
       entity_id: person.hanna
       state: "home"
+    - condition: numeric_state
+      entity_id: sensor.sovrum
+      above: 25
   action:
     - service: cover.set_cover_position
       data:
         entity_id: cover.blind_bedroom
-        position: 2
+        position: 16
     - delay:
         minutes: 2
     - service: shell_command.lmsovrum_ssaver_on
 #
-- alias: "sleep_jimmy"
-  id: "Jimmy Sover"
+- alias: "sleep_jimmy_above_25"
+  id: "Jimmy Sover över 25"
   initial_state: true
   mode: single
   trigger:
@@ -127,6 +138,55 @@
     - condition: state
       entity_id: person.jimmy
       state: "home"
+    - condition: numeric_state
+      entity_id: sensor.sovrum
+      above: 25
+  action:
+    - service: cover.set_cover_position
+      target:
+        entity_id: cover.blind_bedroom
+      data:
+        position: 16
+#
+- alias: "sleep_hanna_below_25"
+  id: "Hanna Sover under 25"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.hanna_charger_type
+      to: "ac"
+  condition:
+    - condition: state
+      entity_id: person.hanna
+      state: "home"
+    - condition: numeric_state
+      entity_id: sensor.sovrum
+      below: 25
+  action:
+    - service: cover.set_cover_position
+      data:
+        entity_id: cover.blind_bedroom
+        position: 2
+    - delay:
+        minutes: 2
+    - service: shell_command.lmsovrum_ssaver_on
+#
+- alias: "sleep_jimmy_below_25"
+  id: "Jimmy Sover under 25"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.clt_l29_charger_type
+      to: "ac"
+  condition:
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
+    - condition: numeric_state
+      entity_id: sensor.sovrum
+      below: 25
   action:
     - service: cover.set_cover_position
       target:

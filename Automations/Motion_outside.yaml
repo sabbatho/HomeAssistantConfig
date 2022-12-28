@@ -8,26 +8,26 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_outside_garage_presence
+      entity_id: binary_sensor.motion_garage_and_ssw
       to: "on"
-    - platform: state
-      entity_id: binary_sensor.motion_outside_ssw_presence
-      to: "on"
+      for:
+        seconds: 3
     - platform: state
       entity_id: binary_sensor.garagelas
       to: "on"
   condition:
-    - condition: numeric_state
-      entity_id: sun.sun
-      attribute: elevation
-      below: 1.5
-    - condition: numeric_state
-      entity_id: sensor.ljus_ute
-      below: 100
+    - or:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: -1.5
+      - condition: numeric_state
+        entity_id: sensor.ljus_ute
+        below: 100
   action:
     - service: light.turn_on
       target:
-        entity_id: 
+        entity_id:
           - light.garage_ute
           - light.parkering_trapp_1
           - light.parkering_trapp_2
@@ -41,36 +41,31 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_outside_garage_presence
+      entity_id:
+        - binary_sensor.motion_garage_and_ssw
+        - binary_sensor.garagelas
       to: "off"
-      for: "00:10:00"
-    - platform: state
-      entity_id: binary_sensor.motion_outside_ssw_presence
-      to: "off"
-      for: "00:10:00"
-    - platform: state
-      entity_id: binary_sensor.garagelas
-      to: "off"
-      for: "00:10:00"
+      for:
+        minutes: 2
   condition:
-    - condition: numeric_state
-      entity_id: sun.sun
-      attribute: elevation
-      below: 1.5
-    - condition: numeric_state
-      entity_id: sensor.ljus_ute
-      below: 100
+    - or:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: -1.5
+      - condition: numeric_state
+        entity_id: sensor.ljus_ute
+        below: 100
     - condition: state
       entity_id: binary_sensor.garagelas
       state: "off"
+      for:
+        minutes: 2
     - condition: state
-      entity_id: binary_sensor.motion_outside_garage_presence
+      entity_id: binary_sensor.motion_garage_and_ssw
       state: "off"
-      for: "00:09:00"
-    - condition: state
-      entity_id: binary_sensor.motion_outside_ssw_presence
-      state: "off"
-      for: "00:09:00"
+      for:
+        minutes: 2
   action:
     - service: light.turn_on
       target:
@@ -81,61 +76,62 @@
       data:
         brightness: 2
         color_temp: 153
+##
+#- alias: "outside_garagedoor_magnetlock_on"
+#  id: "Garage ute På magnetlås"
+#  initial_state: true
+#  mode: single
+#  trigger:
+#    - platform: state
+#      entity_id: binary_sensor.garagelas
+#      to: "on"
+#  condition:
+#    - condition: numeric_state
+#      entity_id: sun.sun
+#      attribute: elevation
+#      below: 1.5
+#    - condition: numeric_state
+#      entity_id: sensor.ljus_ute
+#      below: 300
+#  action:
+#    - service: light.turn_on
+#      target:
+#        entity_id: light.garage_ute
+#      data:
+#        brightness: 254
+#        color_temp: 153
 #
-- alias: "outside_garagedoor_lock_on_motion"
-  id: "Garage ute På magnetlås"
-  initial_state: true
-  mode: single
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.garagelas
-      to: "on"
-  condition:
-    - condition: numeric_state
-      entity_id: sun.sun
-      attribute: elevation
-      below: 1.5
-    - condition: numeric_state
-      entity_id: sensor.ljus_ute
-      below: 100
-  action:
-    - service: light.turn_on
-      target:
-        entity_id: light.garage_ute
-      data:
-        brightness: 254
-        color_temp: 153
+# - alias: "outside_garagedoor_magnetlock_off_sundown"
+#   id: "Garage ute Av magnetlås"
+#   initial_state: true
+#   mode: single
+#   trigger:
+#     - platform: state
+#       entity_id: binary_sensor.garagelas
+#       to: "off"
+#       for:
+#         minutes:1
+#   condition:
+#     - condition: numeric_state
+#       entity_id: sun.sun
+#       attribute: elevation
+#       below: 1.5
+#     - condition: numeric_state
+#       entity_id: sensor.ljus_ute
+#       below: 300
+#     - condition: state
+#       entity_id: binary_sensor.garagelas
+#       state: "off"
+#   action:
+#     - service: light.turn_on
+#       target:
+#         entity_id: light.garage_ute
+#       data:
+#         brightness: 2
+#         color_temp: 153
 #
-- alias: "outside_garagedoor_lock_off_sundown"
-  id: "Garage ute Av magnetlås"
-  initial_state: true
-  mode: single
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.garagelas
-      to: "off"
-      for: "00:10:00"
-  condition:
-    - condition: numeric_state
-      entity_id: sun.sun
-      attribute: elevation
-      below: 1.5
-    - condition: numeric_state
-      entity_id: sensor.ljus_ute
-      below: 100
-    - condition: state
-      entity_id: binary_sensor.garagelas
-      state: "off"
-  action:
-    - service: light.turn_on
-      target:
-        entity_id: light.garage_ute
-      data:
-        brightness: 2
-        color_temp: 153
-#
-- alias: "outside_entrance_on_motion"
-  id: "Entre ute På Rörelse"
+- alias: "outside_entrance_on_motion_verandan"
+  id: "Entre ute På Rörelse verandan"
   initial_state: true
   mode: single
   trigger:
@@ -143,16 +139,53 @@
       entity_id: binary_sensor.motion_outside_entrance_presence
       to: "on"
   condition:
-    - condition: numeric_state
-      entity_id: sun.sun
-      attribute: elevation
-      below: 1.5
-    - condition: numeric_state
-      entity_id: sensor.ljus_ute
-      below: 100
+    - or:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: -1.5
+      - condition: numeric_state
+        entity_id: sensor.ljus_ute
+        below: 100
     - condition: state
       entity_id: input_boolean.verandan_override
       state: "off"
+    - or:
+        - and:
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "none"
+            - not:
+              - condition: state
+                entity_id: person.hanna
+                state: "home"
+        - and:
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
+            - condition: state
+              entity_id: sensor.hanna_charger_type
+              state: "none"
+            - not:
+              - condition: state
+                entity_id: person.jimmy
+                state: "home"
+        - and:
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
+            - condition: state
+              entity_id: sensor.hanna_charger_type
+              state: "none"
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "none"
   action:
     - service: light.turn_on
       target:
@@ -176,14 +209,15 @@
             white
           {% endif %}
 #
-- alias: "outside_entrance_off_motion"
-  id: "Entre ute AV Rörelse"
+- alias: "outside_entrance_off_motion_verandan"
+  id: "Entre ute AV Rörelse verandan"
   initial_state: true
   trigger:
     - platform: state
       entity_id: binary_sensor.motion_outside_entrance_presence
       to: "off"
-      for: "00:05:00"
+      for:
+        minutes: 5
   condition:
     - condition: state
       entity_id: input_boolean.verandan_override
@@ -194,4 +228,183 @@
         entity_id: light.verandan_matbord
       data:
         transition: 20
+#
+#
+- alias: "outside_entrance_on_motion_discovery"
+  id: "Entre ute På Rörelse Discovery"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_outside_entrance_presence
+      to: "on"
+      for:
+        seconds: 3
+  condition:
+    - or:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: -1.5
+      - condition: numeric_state
+        entity_id: sensor.ljus_ute
+        below: 100
+    - condition: state
+      entity_id: input_boolean.outside_entrance_override
+      state: "off"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.outside_entrance_discovery
+      data:
+        brightness: >
+          {% if state_attr("sun.sun", "elevation") | float <= -8 %}
+            80
+          {% elif state_attr("sun.sun", "elevation") | float > -8 and state_attr("sun.sun", "elevation") | float <= -5 %}
+            110
+          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
+            150
+          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 0 %}
+            180
+          {% elif state_attr("sun.sun", "elevation") | float > 0 and state_attr("sun.sun", "elevation") | float < 2 %}
+            210
+          {% elif state_attr("sun.sun", "elevation") | float >= 2 %}
+            254
+          {% else %}
+            0
+          {% endif %}
+        color_temp: 200
+#
+- alias: "outside_entrance_off_motion"
+  id: "Entre ute AV Rörelse"
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_outside_entrance_presence
+      to: "off"
+      for:
+        minutes: 2
+  condition:
+    - condition: state
+      entity_id: input_boolean.outside_entrance_override
+      state: "off"
+  action:
+    - service: light.turn_off
+      target:
+        entity_id: light.outside_entrance_discovery
+      data:
+        transition: 10
+#
+# boolean off trigger light off instead of direct off
+#
+- alias: outside_entrance_discovery_manual_override_on"
+  id: "Discovery override PÅ"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: input_boolean.outside_entrance_override
+      to: "on"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: 
+          - light.outside_entrance_discovery
+          - light.outside_impress_west_left
+          - light.outside_impress_west_right
+      data:
+        brightness: 254
+        color_temp: 153
+#
+- alias: outside_entrance_discovery_manual_override_reset"
+  id: "Discovery override reset"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: input_boolean.outside_entrance_override
+      to: "on"
+      for:
+        hours: 2
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.outside_entrance_override
+    - service: light.turn_off
+      target:
+        entity_id: light.outside_entrance_discovery
+      data:
+        transition: 10
+#
+#
+- alias: "outside_west_impress_on_motion"
+  id: "Väst impress ute På Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_ssw_and_entrance
+      to: "on"
+      for:
+        seconds: 3
+  condition:
+    - or:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: -1.5
+      - condition: numeric_state
+        entity_id: sensor.ljus_ute
+        below: 100
+    - condition: state
+      entity_id: input_boolean.outside_entrance_override
+      state: "off"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.outside_impress_west_left
+          - light.outside_impress_west_right
+      data:
+        brightness: 254
+        color_temp: 320
+#
+- alias: "outside_west_impress_motion_off_sundown"
+  id: "Väst impress ute Av Rörelse"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_ssw_and_entrance
+      to: "off"
+      for:
+        minutes: 3
+  condition:
+    - or:
+      - condition: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: -1.5
+      - condition: numeric_state
+        entity_id: sensor.ljus_ute
+        below: 100
+    - condition: state
+      entity_id: binary_sensor.motion_ssw_and_entrance
+      state: "off"
+      for:
+        minutes: 2
+        seconds: 33
+    - condition: state
+      entity_id: input_boolean.outside_entrance_override
+      state: "off"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.outside_impress_west_left
+          - light.outside_impress_west_right
+      data:
+        brightness: 60
+        color_temp: 320
+#
 #

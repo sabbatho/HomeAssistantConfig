@@ -13,7 +13,34 @@
     - service: switch.turn_on
       target:
         entity_id: switch.door_bell_bell
-    - service: notify.lametric
+    - service: notify.lmhobbyrum
+      data:
+        message: "Det ringer på dörren!"
+        data:
+          icon: "a42480"
+          icon_type: "none"
+          sound: "knock-knock"
+          priority: "warning"
+          cycles: 1
+    - service: notify.lmmatsal
+      data:
+        message: "Det ringer på dörren!"
+        data:
+          icon: "a42480"
+          icon_type: "none"
+          sound: "knock-knock"
+          priority: "warning"
+          cycles: 1
+    - service: notify.lmsovrum
+      data:
+        message: "Det ringer på dörren!"
+        data:
+          icon: "a42480"
+          icon_type: "none"
+          sound: "knock-knock"
+          priority: "warning"
+          cycles: 1
+    - service: notify.lmvardagsrum
       data:
         message: "Det ringer på dörren!"
         data:
@@ -27,9 +54,24 @@
         entity_id: camera.kamera_entre
       data:
         filename: /config/www/tmp/snapshot1.jpg
+    - service: notify.hanna_jimmy
+      data:
+        title: "Det ringde på dörren!"
+        message: "Tryck på bilden för live-stream"
+        data:
+          sticky: "true"
+          notification_icon: "mdi:door"
+          image: "/api/camera_proxy/camera.kamera_entre"
+          clickAction: "ccab4aaf_frigate/dashboard"
+          actions:
+            - action: "URI"
+              title: "Se bild"
+              uri: "/lovelace/pic"
+            - action: "RETARDALARM"
+              title: "Starta retardlarmet"
     - delay:
         seconds: 10
-    - service: notify.lametric
+    - service: notify.lmhobbyrum
       data:
         message: "Det ringer på dörren!"
         data:
@@ -38,12 +80,33 @@
           sound: "knock-knock"
           priority: "warning"
           cycles: 1
-    - service: notify.hanna_jimmy
+    - service: notify.lmmatsal
       data:
-        title: "Det ringde på dörren!"
-        message: "Tryck här för att se vem det var"
+        message: "Det ringer på dörren!"
         data:
-          clickAction: !secret url_camera_entre
+          icon: "a42480"
+          icon_type: "none"
+          sound: "knock-knock"
+          priority: "warning"
+          cycles: 1
+    - service: notify.lmsovrum
+      data:
+        message: "Det ringer på dörren!"
+        data:
+          icon: "a42480"
+          icon_type: "none"
+          sound: "knock-knock"
+          priority: "warning"
+          cycles: 1
+    - service: notify.lmvardagsrum
+      data:
+        message: "Det ringer på dörren!"
+        data:
+          icon: "a42480"
+          icon_type: "none"
+          sound: "knock-knock"
+          priority: "warning"
+          cycles: 1
     - delay:
         seconds: 10
 #
@@ -71,11 +134,6 @@
           ttl: 0
           priority: high
           channel: alarm_stream_max
-    - service: notify.mobile_app_clt_l29
-      data:
-        title: "Det ringer på dörren!"
-        data:
-          image: "/api/camera_proxy/camera.kamera_entre"
     - delay:
         seconds: 20
 #
@@ -94,7 +152,7 @@
   action:
     - delay:
         seconds: 02
-    - service: notify.mobile_app_h8324
+    - service: notify.mobile_app_hanna
       data:
         title: "Det ringer på dörren!"
         message: TTS
@@ -103,12 +161,7 @@
           ttl: 0
           priority: high
           channel: alarm_stream_max
-    - service: notify.mobile_app_h8324
-      data:
-        title: "Det ringer på dörren!"
-        data:
-          image: "/api/camera_proxy/camera.kamera_entre"
-    - delay: 
+    - delay:
         seconds: 20
 #
 - alias: "hall_entre_door_bell_counter"
@@ -147,6 +200,10 @@
     - platform: numeric_state
       entity_id: counter.doorbell_pushes
       above: 9
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "RETARDALARM"
   action:
     - service: switch.turn_on
       target:

@@ -22,6 +22,10 @@
       entity_id: media_player.living_room_tv
       attribute: source
       to: "Netflix"
+    - platform: state
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "SVT Play"
   action:
     - service: switch.turn_off
       target:
@@ -30,7 +34,22 @@
       target:
         entity_id: light.osram_smart_e27_color_1
       data:
-        brightness: 100
+        brightness: >-
+          {% if state_attr("sun.sun", "elevation") | float <= -5 %}
+            130
+          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
+            160
+          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 1 %}
+            190
+          {% elif state_attr("sun.sun", "elevation") | float > 1 and state_attr("sun.sun", "elevation") | float <= 5 %}
+            220
+          {% elif state_attr("sun.sun", "elevation") | float > 5 and state_attr("sun.sun", "elevation") | float < 7 %}
+            254
+          {% elif state_attr("sun.sun", "elevation") | float >= 7 %}
+            0
+          {% else %}
+            0
+          {% endif %}
         transition: 30
         color_name: >
           {% if states('sensor.ute') | float <= -8 %}
@@ -48,6 +67,29 @@
           {% else %}
             white
           {% endif %}
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.vardagsrum_tak_aurelle
+      data:
+        transition: 30
+        brightness: >-
+          {% if state_attr("sun.sun", "elevation") | float <= -5 %}
+            50
+          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
+            80
+          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 1 %}
+            110
+          {% elif state_attr("sun.sun", "elevation") | float > 1 and state_attr("sun.sun", "elevation") | float <= 5 %}
+            140
+          {% elif state_attr("sun.sun", "elevation") | float > 5 and state_attr("sun.sun", "elevation") | float < 7 %}
+            170
+          {% elif state_attr("sun.sun", "elevation") | float >= 7 %}
+            0
+          {% else %}
+            0
+          {% endif %}
+        color_temp: 210
 #
 - alias: "play_lametric_tvdatorn"
   id: "Tittar på tv vardagsrum LaMetric"
@@ -58,25 +100,14 @@
       entity_id: media_player.tvdatorn
       to: "playing"
     - platform: time_pattern
-      minutes: 0
-    - platform: time_pattern
-      minutes: 10
-    - platform: time_pattern
-      minutes: 20
-    - platform: time_pattern
-      minutes: 30
-    - platform: time_pattern
-      minutes: 40
-    - platform: time_pattern
-      minutes: 50
+      minutes: "/5"
   condition:
     - condition: state
       entity_id: media_player.tvdatorn
       state: "playing"
   action:
-    - service: notify.lametric
+    - service: notify.lmvardagsrum
       data:
-        target: "LMVardagsrum"
         message: >-
           {% if is_state_attr('media_player.tvdatorn', 'media_content_type', 'tvshow') %}
             S{{ state_attr('media_player.tvdatorn', 'media_season') }}-{{ state_attr('media_player.tvdatorn', 'media_series_title') }} - E{{ state_attr('media_player.tvdatorn', 'media_episode') }}-{{ state_attr('media_player.tvdatorn', 'media_title') }}
@@ -110,6 +141,7 @@
       target:
         entity_id: light.osram_smart_e27_color_1
       data:
+        transition: 30
         brightness: 254
         color_name: >
           {% if states('sensor.ute') | float <= -8 %}
@@ -127,6 +159,28 @@
           {% else %}
             white
           {% endif %}
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.vardagsrum_tak_aurelle
+      data:
+        brightness: >-
+          {% if state_attr("sun.sun", "elevation") | float <= -5 %}
+            2
+          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
+            35
+          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 1 %}
+            70
+          {% elif state_attr("sun.sun", "elevation") | float > 1 and state_attr("sun.sun", "elevation") | float <= 5 %}
+            100
+          {% elif state_attr("sun.sun", "elevation") | float > 5 and state_attr("sun.sun", "elevation") | float < 7 %}
+            130
+          {% elif state_attr("sun.sun", "elevation") | float >= 7 %}
+            0
+          {% else %}
+            0
+          {% endif %}
+        color_temp: 210
 #
 - alias: "paused_tvdatorn"
   id: "Tv pausad vardagsrum"
@@ -149,6 +203,7 @@
       target:
         entity_id: light.osram_smart_e27_color_1
       data:
+        transition: 30
         brightness: 254
         color_name: >
           {% if states('sensor.ute') | float <= -8 %}
@@ -166,6 +221,28 @@
           {% else %}
             white
           {% endif %}
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.vardagsrum_tak_aurelle
+      data:
+        brightness: >-
+          {% if state_attr("sun.sun", "elevation") | float <= -5 %}
+            2
+          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
+            35
+          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 1 %}
+            70
+          {% elif state_attr("sun.sun", "elevation") | float > 1 and state_attr("sun.sun", "elevation") | float <= 5 %}
+            100
+          {% elif state_attr("sun.sun", "elevation") | float > 5 and state_attr("sun.sun", "elevation") | float < 7 %}
+            130
+          {% elif state_attr("sun.sun", "elevation") | float >= 7 %}
+            0
+          {% else %}
+            0
+          {% endif %}
+        color_temp: 210
 #
 - alias: "play_cover_tvdatorn"
   id: "Tittar på tv cover vardagsrum"
@@ -175,7 +252,12 @@
     - platform: state
       entity_id: media_player.tvdatorn
       to: "playing"
+    - platform: time_pattern
+      minutes: "/5"
   condition:
+    - condition: state
+      entity_id: media_player.tvdatorn
+      state: "playing"
     - condition: numeric_state
       entity_id: sun.sun
       attribute: elevation
@@ -219,6 +301,10 @@
       entity_id: media_player.living_room_tv
       attribute: source
       to: "Netflix"
+    - platform: state
+      entity_id: media_player.living_room_tv
+      attribute: source
+      to: "SVT Play"
   condition:
     - condition: numeric_state
       entity_id: sun.sun
@@ -238,17 +324,22 @@
     - platform: state
       entity_id: media_player.living_room_tv
       attribute: source
-      from: Netflix
+      from: "Netflix"
+    - platform: state
+      entity_id: media_player.living_room_tv
+      attribute: source
+      from: "SVT Play"
 #    - platform: template
 #      value_template: "{{ not is_state_attr('media_player.living_room_tv', 'source', 'Netflix') }}"
-#  condition:
-#    - or:
-#      - condition: state
-#        entity_id: media_player.living_room_tv
-#        state: "HDMI1"
-#      - condition: state
-#        entity_id: media_player.living_room_tv
-#        state: "HDMI2"
+  condition:
+    - not:
+      - condition: state
+        entity_id: media_player.living_room_tv
+        state: "Netflix"
+    - not:
+      - condition: state
+        entity_id: media_player.living_room_tv
+        state: "SVT Play"
   action:
     - service: cover.open_cover
       target:
@@ -257,6 +348,7 @@
       target:
         entity_id: light.osram_smart_e27_color_1
       data:
+        transition: 30
         brightness: 254
         color_name: >
           {% if states('sensor.ute') | float <= -8 %}
@@ -274,4 +366,26 @@
           {% else %}
             white
           {% endif %}
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.vardagsrum_tak_aurelle
+      data:
+        brightness: >-
+          {% if state_attr("sun.sun", "elevation") | float <= -5 %}
+            2
+          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
+            35
+          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 1 %}
+            70
+          {% elif state_attr("sun.sun", "elevation") | float > 1 and state_attr("sun.sun", "elevation") | float <= 5 %}
+            100
+          {% elif state_attr("sun.sun", "elevation") | float > 5 and state_attr("sun.sun", "elevation") | float < 7 %}
+            130
+          {% elif state_attr("sun.sun", "elevation") | float >= 7 %}
+            0
+          {% else %}
+            0
+          {% endif %}
+        color_temp: 210
 #

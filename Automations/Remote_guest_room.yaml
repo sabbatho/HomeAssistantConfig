@@ -1,0 +1,121 @@
+#
+#
+
+
+
+
+
+
+#
+- id: "guest_room_remote_light_ON_OFF"
+  alias: "Gästrum fjärr PÅ eller AV"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.guest_room_dimmer_switch_action
+      to: 
+        - "on_press"
+        - "on_hold"
+  action:
+    - service: light.toggle
+      target:
+        entity_id: light.guest_room_roof_aurelle
+      data:
+        brightness: 254
+        color_temp: 153
+#
+- id: "guest_room_remote_light_dim_up"
+  alias: "Gästrum fjärr dimma upp"
+  initial_state: true
+  mode: parallel
+  trigger:
+    - platform: state
+      entity_id: sensor.guest_room_dimmer_switch_action
+      to: "up_press"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.guest_room_roof_aurelle
+      data:
+        brightness_step: 10
+        transition: 1
+#
+- id: "guest_room_remote_light_dim_up_faster"
+  alias: "Gästrum fjärr dimma upp snabbare"
+  initial_state: true
+  mode: parallel
+  trigger:
+    - platform: state
+      entity_id: sensor.guest_room_dimmer_switch_action
+      to: "up_hold"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.guest_room_roof_aurelle
+      data:
+        brightness_step: 50
+        transition: 1
+#
+- id: "guest_room_remote_light_dim_down"
+  alias: "Gästrum fjärr dimma ner"
+  initial_state: true
+  mode: parallel
+  trigger:
+    - platform: state
+      entity_id: sensor.guest_room_dimmer_switch_action
+      to: "down_press"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.guest_room_roof_aurelle
+      data:
+        brightness_step: -10
+        transition: 1
+#
+- id: "guest_room_remote_light_dim_down_faster"
+  alias: "Gästrum fjärr dimma ner snabbare"
+  initial_state: true
+  mode: parallel
+  trigger:
+    - platform: state
+      entity_id: sensor.guest_room_dimmer_switch_action
+      to: "down_hold"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.guest_room_roof_aurelle
+      data:
+        brightness_step: -50
+        transition: 1
+#
+- id: "guest_room_remote_light_cold"
+  alias: "Gästrum fjärr dimma upp"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.guest_room_dimmer_switch_action
+      to: "off_press"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.guest_room_roof_aurelle
+      data:
+        color_temp: 153
+#
+- id: "guest_room_remote_light_warm"
+  alias: "Gästrum fjärr dimma ner"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.guest_room_dimmer_switch_action
+      to: "off_hold"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.guest_room_roof_aurelle
+      data:
+        color_temp: 400
+#

@@ -1,0 +1,134 @@
+#
+#
+#
+#
+- id: "hobbyrum_remote_light_ON_OFF"
+  alias: "Hobbyrum fjärr PÅ eller AV"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.switch_hobbyrum_action
+      to: 
+        - "on_press"
+  action:
+    - service: light.toggle
+      target:
+        entity_id: light.hobbyrum_alla_lampor
+#
+- id: "hobbyrum_remote_light_ON_OFF_max_bright"
+  alias: "Hobbyrum fjärr PÅ eller AV max ljusstyrka"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.switch_hobbyrum_action
+      to: 
+        - "on_hold"
+  action:
+    - service: light.toggle
+      target:
+        entity_id: light.hobbyrum_alla_lampor
+      data:
+        brightness: 254
+#
+- id: "hobbyrum_remote_light_dim_up"
+  alias: "Hobbyrum fjärr dimma upp"
+  initial_state: true
+  mode: parallel
+  trigger:
+    - platform: state
+      entity_id: sensor.switch_hobbyrum_action
+      to: "up_press"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.hobbyrum_alla_lampor
+      data:
+        brightness_step: 10
+        transition: 1
+#
+- id: "hobbyrum_remote_light_dim_up_faster"
+  alias: "Hobbyrum fjärr dimma upp snabbare"
+  initial_state: true
+  mode: parallel
+  trigger:
+    - platform: state
+      entity_id: sensor.switch_hobbyrum_action
+      to: "up_hold"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.hobbyrum_alla_lampor
+      data:
+        brightness_step: 50
+        transition: 1
+#
+- id: "hobbyrum_remote_light_dim_down"
+  alias: "Hobbyrum fjärr dimma ner"
+  initial_state: true
+  mode: parallel
+  trigger:
+    - platform: state
+      entity_id: sensor.switch_hobbyrum_action
+      to: "down_press"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.hobbyrum_alla_lampor
+      data:
+        brightness_step: -10
+        transition: 1
+#
+- id: "hobbyrum_remote_light_dim_down_faster"
+  alias: "Hobbyrum fjärr dimma ner snabbare"
+  initial_state: true
+  mode: parallel
+  trigger:
+    - platform: state
+      entity_id: sensor.switch_hobbyrum_action
+      to: "down_hold"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.hobbyrum_alla_lampor
+      data:
+        brightness_step: -50
+        transition: 1
+#
+- id: "hobbyrum_remote_light_cold"
+  alias: "Hobbyrum fjärr dimma upp"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.switch_hobbyrum_action
+      to: "off_press"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.hobbyrum_alla_lampor
+      data:
+        color_name: "{{ states('input_select.light_color_wheel') }}"
+    - service: input_select.select_next 
+      target:
+        entity_id: input_select.light_color_wheel
+#
+- id: "hobbyrum_remote_light_warm"
+  alias: "Hobbyrum fjärr dimma ner"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: sensor.switch_hobbyrum_action
+      to: "off_hold"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.hobbyrum_alla_lampor
+      data:
+        color_name: "{{ states('input_select.light_color_wheel') }}"
+    - service: input_select.select_next 
+      target:
+        entity_id: input_select.light_color_wheel
+#

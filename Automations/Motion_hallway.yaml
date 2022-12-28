@@ -8,43 +8,42 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_hall
+      entity_id:
+        - binary_sensor.motion_hallway
       to: "on"
   condition:
     - condition: state
       entity_id: input_boolean.hallway_man_override
       state: "off"
-    - condition: or
-      conditions:
-        - condition: and
-          conditions:
+    - or:
+        - and:
             - condition: state
               entity_id: person.jimmy
               state: "home"
             - condition: state
               entity_id: sensor.clt_l29_charger_type
               state: "none"
-            - condition: state
-              entity_id: person.hanna
-              state: "not_home"
-        - condition: and
-          conditions:
+            - not:
+                - condition: state
+                  entity_id: person.hanna
+                  state: "home"
+        - and:
             - condition: state
               entity_id: person.hanna
               state: "home"
             - condition: state
-              entity_id: sensor.h8324_charger_type
+              entity_id: sensor.hanna_charger_type
               state: "none"
-            - condition: state
-              entity_id: person.jimmy
-              state: "not_home"
-        - condition: and
-          conditions:
+            - not:
+                - condition: state
+                  entity_id: person.jimmy
+                  state: "home"
+        - and:
             - condition: state
               entity_id: person.hanna
               state: "home"
             - condition: state
-              entity_id: sensor.h8324_charger_type
+              entity_id: sensor.hanna_charger_type
               state: "none"
             - condition: state
               entity_id: person.jimmy
@@ -55,15 +54,17 @@
         - condition: state
           entity_id: input_boolean.visitors
           state: "on"
-    - condition: or
-      conditions:
+    - or:
         - condition: numeric_state
           entity_id: sun.sun
           attribute: elevation
           below: 7
         - condition: numeric_state
           entity_id: sensor.ljus_ute
-          below: 1300
+          below: 1000
+    - condition: state
+      entity_id: binary_sensor.hall_door_magnet
+      state: "off"
   action:
     - service: light.turn_on
       target:
@@ -96,7 +97,8 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_hall
+      entity_id:
+        - binary_sensor.motion_hallway
       to: "on"
   condition:
     - condition: or
@@ -107,7 +109,7 @@
           below: 7
         - condition: numeric_state
           entity_id: sensor.ljus_ute
-          below: 1300
+          below: 1000
     - condition: state
       entity_id: input_boolean.hallway_man_override
       state: "off"
@@ -127,7 +129,7 @@
         - condition: and
           conditions:
             - condition: state
-              entity_id: sensor.h8324_charger_type
+              entity_id: sensor.hanna_charger_type
               state: "ac"
             - condition: state
               entity_id: person.hanna
@@ -135,6 +137,9 @@
             - condition: state
               entity_id: input_boolean.visitors
               state: "off"
+    - condition: state
+      entity_id: binary_sensor.hall_door_magnet
+      state: "off"
   action:
     - service: light.turn_on
       target:
@@ -165,17 +170,21 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_hall
+      entity_id:
+        - binary_sensor.motion_hallway
       to: "off"
       for: "00:02:00"
   condition:
     - condition: state
       entity_id: input_boolean.hallway_man_override
       state: "off"
+    - condition: state
+      entity_id: binary_sensor.hall_door_magnet
+      state: "off"
   action:
     - service: light.turn_off
       target:
-        entity_id: 
+        entity_id:
           - light.hall_entre
           - light.hall_lilla
           - light.hall_stora
@@ -188,7 +197,8 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_hall
+      entity_id:
+        - binary_sensor.motion_hallway
       to: "off"
       for: "00:00:30"
   condition:
@@ -196,32 +206,36 @@
       entity_id: input_boolean.hallway_man_override
       state: "off"
     - or:
-      - and:
-        - condition: state
-          entity_id: sensor.clt_l29_charger_type
-          state: "ac"
-        - condition: state
-          entity_id: person.jimmy
-          state: "home"
-        - condition: state
-          entity_id: input_boolean.visitors
-          state: "off"
-      - and:
-        - condition: state
-          entity_id: sensor.h8324_charger_type
-          state: "ac"
-        - condition: state
-          entity_id: person.hanna
-          state: "home"
-        - condition: state
-          entity_id: input_boolean.visitors
-          state: "off"
+        - and:
+            - condition: state
+              entity_id: sensor.clt_l29_charger_type
+              state: "ac"
+            - condition: state
+              entity_id: person.jimmy
+              state: "home"
+            - condition: state
+              entity_id: input_boolean.visitors
+              state: "off"
+        - and:
+            - condition: state
+              entity_id: sensor.hanna_charger_type
+              state: "ac"
+            - condition: state
+              entity_id: person.hanna
+              state: "home"
+            - condition: state
+              entity_id: input_boolean.visitors
+              state: "off"
+    - condition: state
+      entity_id: binary_sensor.hall_door_magnet
+      state: "off"
   action:
     - service: light.turn_off
       target:
         entity_id: light.hall_lilla
       data:
         transition: 20
+#
 #
 - alias: "hall_entre_door_open"
   id: "Hall dörr Entre öppnas"
@@ -235,12 +249,45 @@
     - condition: state
       entity_id: input_boolean.hallway_man_override
       state: "off"
+    - or:
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: input_boolean.visitors
+        state: "on"
   action:
     - service: light.turn_on
       target:
         entity_id: light.hall_entre
       data:
         brightness: 254
+        color_temp: 153
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.hall_stora
+          - light.hall_lilla
+      data:
+        brightness: >-
+          {% if state_attr("sun.sun", "elevation") | float <= -5 %}
+            2
+          {% elif state_attr("sun.sun", "elevation") | float > -5 and state_attr("sun.sun", "elevation") | float <= -2 %}
+            35
+          {% elif state_attr("sun.sun", "elevation") | float > -2 and state_attr("sun.sun", "elevation") | float <= 1 %}
+            70
+          {% elif state_attr("sun.sun", "elevation") | float > 1 and state_attr("sun.sun", "elevation") | float <= 5 %}
+            100
+          {% elif state_attr("sun.sun", "elevation") | float > 5 and state_attr("sun.sun", "elevation") | float < 7 %}
+            130
+          {% elif state_attr("sun.sun", "elevation") | float >= 7 %}
+            170
+          {% else %}
+            0
+          {% endif %}
         color_temp: 153
 #
 - alias: "hall_entre_door_open_warning_downstairs"
@@ -257,12 +304,12 @@
         - input_boolean.visitors
       state: "off"
     - or:
-      - condition: state
-        entity_id: person.jimmy
-        state: "home"
-      - condition: state
-        entity_id: person.hanna
-        state: "home"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
   action:
     - service: light.turn_on
       data:
@@ -272,12 +319,15 @@
         entity_id:
           - light.kontor_color_mitten_fram
           - light.kontor_color_hoger_fram
-          - light.kontor_color_hoger_bak
+          - light.kontor_color_hoger_sida
           - light.kontor_color_roof
           - light.kontor_color_vanster_fram
           - light.kontor_color_vanster_bak_ovre
           - light.kontor_color_vanster_bak_mitten
           - light.kontor_color_vanster_bak_nedre
+          - light.kontor_color_hoger_bak_ovre
+          - light.kontor_color_hoger_bak_mitten
+          - light.kontor_color_hoger_bak_nedre
 #
 - alias: "hall_entre_door_open_verandan"
   id: "Hall dörr Entre öppnas verandan"
@@ -291,10 +341,15 @@
     - condition: state
       entity_id: input_boolean.verandan_override
       state: "off"
-    - condition: numeric_state
-      entity_id: sun.sun
-      attribute: elevation
-      below: 3
+    - condition: or
+      conditions:
+        - condition: numeric_state
+          entity_id: sun.sun
+          attribute: elevation
+          below: 3
+        - condition: numeric_state
+          entity_id: sensor.ljus_ute
+          below: 250
   action:
     - service: light.turn_on
       target:
@@ -326,7 +381,7 @@
     - platform: state
       entity_id: binary_sensor.hall_door_magnet
       to: "off"
-      for: "00:02:00"
+      for: "00:01:00"
   condition:
     - condition: state
       entity_id: input_boolean.hallway_man_override
@@ -366,12 +421,15 @@
       target:
         entity_id:
           - light.kontor_color_hoger_fram
-          - light.kontor_color_hoger_bak
+          - light.kontor_color_hoger_sida
           - light.kontor_color_roof
           - light.kontor_color_vanster_fram
           - light.kontor_color_vanster_bak_ovre
           - light.kontor_color_vanster_bak_mitten
           - light.kontor_color_vanster_bak_nedre
+          - light.kontor_color_hoger_bak_mitten
+          - light.kontor_color_hoger_bak_nedre
+          - light.kontor_color_hoger_bak_ovre
       data:
         transition: 20
 #
@@ -410,7 +468,7 @@
         entity_id: input_boolean.hallway_man_override
     - service: light.turn_off
       target:
-        entity_id: 
+        entity_id:
           - light.hall_entre
           - light.hall_lilla
           - light.hall_stora
@@ -424,7 +482,7 @@
   trigger:
     - platform: state
       entity_id: input_boolean.verandan_override
-      to: "off"
+      to: "on"
       for: "06:00:00"
   action:
     - service: input_boolean.turn_off

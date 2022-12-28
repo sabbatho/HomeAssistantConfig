@@ -139,7 +139,23 @@
       data:
         title: "Robot börjar"
         message: "Robot börjar städa!"
-    - service: notify.lametric
+        data:
+          notification_icon: "mdi:robot-vacuum"
+          actions:
+            - action: "ROBOT_AK_HEM"
+              title: "Docka robot"
+            - action: "ROBOT_STANNA"
+              title: "Pausa robot"
+#    - service: notify.lmhobbyrum
+#      data:
+#        message: "Robot börjar städa!"
+#        data:
+#          icon: "a13030"
+#          icon_type: "none"
+#          sound: "bicycle"
+#          priority: "warning"
+#          cycles: 2
+    - service: notify.lmmatsal
       data:
         message: "Robot börjar städa!"
         data:
@@ -148,6 +164,52 @@
           sound: "bicycle"
           priority: "warning"
           cycles: 2
+    - service: notify.lmsovrum
+      data:
+        message: "Robot börjar städa!"
+        data:
+          icon: "a13030"
+          icon_type: "none"
+          sound: "bicycle"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmvardagsrum
+      data:
+        message: "Robot börjar städa!"
+        data:
+          icon: "a13030"
+          icon_type: "none"
+          sound: "bicycle"
+          priority: "warning"
+          cycles: 2
+#
+- alias: "roborock_back_to_dock"
+  id: "Robot åk hem"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "ROBOT_AK_HEM"
+  action:
+    - service: vacuum.return_to_base
+      target:
+        entity_id: vacuum.roborock_s5_max
+#
+- alias: "roborock_paused"
+  id: "Robot pausa"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "ROBOT_STANNA"
+  action:
+    - service: vacuum.pause
+      target:
+        entity_id: vacuum.roborock_s5_max
 #
 - alias: "roborock_finished_cleaning"
   id: "Robot: Robot finished cleaning"
@@ -163,10 +225,39 @@
       data:
         title: "Robot klar"
         message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
+        data:
+          notification_icon: "mdi:robot-vacuum"
     - service: input_boolean.turn_on
       target:
         entity_id: input_boolean.cleaned_today
-    - service: notify.lametric
+#    - service: notify.lmhobbyrum
+#      data:
+#        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
+#        data:
+#          icon: "a13030"
+#          icon_type: "none"
+#          sound: "notification2"
+#          priority: "warning"
+#          cycles: 2
+    - service: notify.lmmatsal
+      data:
+        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
+        data:
+          icon: "a13030"
+          icon_type: "none"
+          sound: "notification2"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmsovrum
+      data:
+        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
+        data:
+          icon: "a13030"
+          icon_type: "none"
+          sound: "notification2"
+          priority: "warning"
+          cycles: 2
+    - service: notify.lmvardagsrum
       data:
         message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
         data:
@@ -197,4 +288,6 @@
       data:
         title: "Robot har stött på problem"
         message: "Error: {{ state_attr('vacuum.roborock_s5_max', 'error') }}."
+        data:
+          notification_icon: "mdi:robot-vacuum-alert"
 #

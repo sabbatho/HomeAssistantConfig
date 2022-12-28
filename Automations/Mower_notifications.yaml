@@ -28,6 +28,8 @@
       data:
         title: "Olle behöver hjälp!!"
         message: "Error: {{ state_attr('vacuum.sileno', 'error') }}"
+        data:
+          notification_icon: "mdi:mower"
 #
 - alias: "Sileno_should_charge"
   id: "Sileno borde ladda"
@@ -50,4 +52,6 @@
       data:
         title: "Olle behöver hjälp!!"
         message: "Jag borde ladda vid denna tiden, kom och hjälp mig."
+        data:
+          notification_icon: "mdi:mower"
 #

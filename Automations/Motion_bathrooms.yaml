@@ -8,7 +8,7 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_bathroom_downstairs
+      entity_id: binary_sensor.motion_badrum_nere_occupancy
       to: "on"
   condition:
     - condition: or
@@ -41,9 +41,9 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_bathroom_downstairs
+      entity_id: binary_sensor.motion_badrum_nere_occupancy
       to: "off"
-      for: "00:03:00"
+      for: "00:05:00"
   action:
     - service: light.turn_off
       target:
@@ -55,35 +55,143 @@
       data:
         transition: 20
 #
-- alias: "bathroom_light_turned_off"
-  id: "Badrum källare lyse avstängt"
+#
+- alias: "bathroom_upstairs_on_motion_not_charging"
+  id: "Badrum uppe På Rörelse"
   initial_state: true
   mode: single
   trigger:
     - platform: state
       entity_id:
-        - light.badrum_kallare_handfat_vanster
-        - light.badrum_kallare_handfat_hoger
-        - light.kallare_badrum_tak_1
-        - light.kallare_badrum_tak_2
-      to: "unavailable"
-      for: "00:00:30"
+        - binary_sensor.motion_badrum_uppe_occupancy
+      to: "on"
   condition:
-  - condition: state
-    entity_id: light.badrum_kallare_handfat_vanster
-    state: "unavailable"
-  - condition: state
-    entity_id: light.badrum_kallare_handfat_hoger
-    state: "unavailable"
-  - condition: state
-    entity_id: light.kallare_badrum_tak_1
-    state: "unavailable"
-  - condition: state
-    entity_id: light.kallare_badrum_tak_2
-    state: "unavailable"
+    - or:
+      - and:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
+      - and:
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
+      - condition: state
+        entity_id: input_boolean.visitors
+        state: "on"
   action:
-    - service: notify.hanna_jimmy
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.bathroom_uppstairs_sink
       data:
-        message: "Du stängde av brytaren på toan där nere, slå på den igen"
+        brightness: 254
 #
-
+- alias: "bathroom_upstairs_on_motion_charging"
+  id: "Badrum uppe På Rörelse när laddas"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.motion_badrum_uppe_occupancy
+      to: "on"
+  condition:
+    - and:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "off"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "off"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.bathroom_uppstairs_sink
+      data:
+        brightness: 20
+#
+- alias: "bathroom_upstairs_off_motion_not_charging"
+  id: "Badrum uppe Av Rörelse vakna"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.motion_badrum_uppe_occupancy
+      to: "off"
+      for: "00:05:00"
+#    - platform: template
+#      value_template: "{{ states('sensor.badrum_overvaning_humidity') | int < (states('sensor.badrum_medel_luftfukt_24h') | int + 10) }}"
+#  condition:
+#    - "{{ states('sensor.badrum_overvaning_humidity') | int < (states('sensor.badrum_medel_luftfukt_24h') | int + 10) }}"
+  action:
+    - service: light.turn_off
+      target:
+        entity_id:
+          - light.bathroom_uppstairs_sink
+      data:
+        transition: 20
+#
+- alias: "bathroom_upstairs_off_motion_charging"
+  id: "Badrum uppe Av Rörelse Sover"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.motion_badrum_uppe_occupancy
+      to: "off"
+      for: "00:01:30"
+#    - platform: template
+#      value_template: "{{ states('sensor.badrum_overvaning_humidity') | int < (states('sensor.badrum_medel_luftfukt_24h') | int + 10) }}"
+  condition:
+#    - "{{ states('sensor.badrum_overvaning_humidity') | int < (states('sensor.badrum_medel_luftfukt_24h') | int + 10) }}"
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "off"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "off"
+  action:
+    - service: light.turn_off
+      target:
+        entity_id: light.bathroom_uppstairs_sink
+      data:
+        transition: 20
+#

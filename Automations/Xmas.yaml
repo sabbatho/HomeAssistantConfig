@@ -4,8 +4,6 @@
 ##                                        ##
 ############################################
 
-
-
 ############################################
 ##                                        ##
 ## Inside                                 ##
@@ -23,15 +21,42 @@
       minutes: 45
   condition:
     - "{{ now().month > 11 and now().day > 0 or now().month < 2 and now().day < 14 }}"
-    - condition: state
-      entity_id: sensor.clt_l29_charger_type
-      state: "none"
-    - condition: state
-      entity_id: sensor.h8324_charger_type
-      state: "none"
-    - condition: state
-      entity_id: input_boolean.visitors
-      state: "off"
+    - or:
+      - and:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
+        - not:
+          - condition: state
+            entity_id: person.hanna
+            state: "home"
+      - and:
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
+        - not:
+          - condition: state
+            entity_id: person.jimmy
+            state: "home"
+      - and:
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
   variables:
     colors:
       - yellow
@@ -86,7 +111,7 @@
       entity_id: sensor.clt_l29_charger_type
       to: "ac"
     - platform: state
-      entity_id: sensor.h8324_charger_type
+      entity_id: sensor.hanna_charger_type
       to: "ac"
   condition:
     - "{{ now().month > 11 and now().day > 0 or now().month < 2 and now().day < 15 }}"
@@ -96,8 +121,6 @@
         entity_id:
           - light.jul_vardagsrum
           - light.wled_matsal
-
-
 
 ############################################
 ##                                        ##

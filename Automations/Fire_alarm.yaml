@@ -16,6 +16,9 @@
       data:
         title: "Brandvarnare hall övervåning: "
         message: "******* RÖKLARM!!!! *******"
+    - service: scene.turn_on
+      target:
+        entity_id: scene.firealarm
 #
 - alias: "Smoke Sensor hall ingen rök"
   id: "Rökdeckare hall ingen mer rök"
@@ -31,6 +34,9 @@
       data:
         title: "Brandvarnare hall övervåning: "
         message: "******* Rök borta *******"
+#    - service: scene.turn_off
+#      target:
+#        entity_id: scene.firealarm
 #
 - alias: "Smoke Sensor hall VÄRME"
   id: "Rökdeckare hall VARMT"
@@ -46,6 +52,9 @@
       data:
         title: "Brandvarnare hall övervåning: "
         message: "******* VÄRMELARM 55+ grader!!!! *******"
+    - service: scene.turn_on
+      target:
+        entity_id: scene.firealarm
 #
 - alias: "Smoke Sensor hall ingen värme"
   id: "Rökdeckare hall ingen mer värme"
@@ -61,6 +70,9 @@
       data:
         title: "Brandvarnare hall övervåning: "
         message: "******* Värme borta *******"
+#    - service: scene.turn_off
+#      target:
+#        entity_id: scene.firealarm
 #
 #
 - alias: "Smoke Sensor vardagsrum RÖK"
@@ -77,6 +89,9 @@
       data:
         title: "Brandvarnare vardagsrum: "
         message: "******* RÖKLARM!!!! *******"
+    - service: scene.turn_on
+      target:
+        entity_id: scene.firealarm
 #
 - alias: "Smoke Sensor vardagsrum ingen rök"
   id: "Rökdeckare vardagsrum ingen mer rök"
@@ -92,5 +107,156 @@
       data:
         title: "Brandvarnare vardagsrum: "
         message: "******* Rök borta *******"
+#    - service: scene.turn_off
+#      target:
+#        entity_id: scene.firealarm
+#
+#
+- alias: "Smoke Sensor källare hall RÖK"
+  id: "Rökdeckare källare hall RÖK"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.smoke_basement_hallway_smoke
+      from: "off"
+      to: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare hall källare: "
+        message: "******* RÖKLARM!!!! *******"
+    - service: scene.turn_on
+      target:
+        entity_id: scene.firealarm
+#
+- alias: "Smoke Sensor källare hall ingen rök"
+  id: "Rökdeckare källare hall ingen mer rök"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.smoke_basement_hallway_smoke
+      from: "on"
+      to: "off"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare hall källare: "
+        message: "******* Rök borta *******"
+#    - service: scene.turn_off
+#      target:
+#        entity_id: scene.firealarm
+#
+#
+- alias: "Smoke Sensor sovrum RÖK"
+  id: "Rökdeckare sovrum RÖK"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.smoke_bedroom_smoke
+      from: "off"
+      to: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare sovrum: "
+        message: "******* RÖKLARM!!!! *******"
+    - service: scene.turn_on
+      target:
+        entity_id: scene.firealarm
+#
+- alias: "Smoke Sensor sovrum ingen rök"
+  id: "Rökdeckare sovrum ingen mer rök"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.smoke_bedroom_smoke
+      from: "on"
+      to: "off"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare sovrum: "
+        message: "******* Rök borta *******"
+#    - service: scene.turn_off
+#      target:
+#        entity_id: scene.firealarm
+#
+#
+- alias: "Smoke Sensor hobbyrum RÖK"
+  id: "Rökdeckare hobbyrum RÖK"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.smoke_office_smoke
+      from: "off"
+      to: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare hobbyrum: "
+        message: "******* RÖKLARM!!!! *******"
+    - service: scene.turn_on
+      target:
+        entity_id: scene.firealarm
+#
+- alias: "Smoke Sensor hobbyrum ingen rök"
+  id: "Rökdeckare hobbyrum ingen mer rök"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.smoke_office_smoke
+      from: "on"
+      to: "off"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare hobbyrum: "
+        message: "******* Rök borta *******"
+#    - service: scene.turn_off
+#      target:
+#        entity_id: scene.firealarm
+#
+#
+- alias: "Smoke Sensor matsal RÖK"
+  id: "Rökdeckare matsal RÖK"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.smoke_dining_room_smoke
+      from: "off"
+      to: "on"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare matsal: "
+        message: "******* RÖKLARM!!!! *******"
+    - service: scene.turn_on
+      target:
+        entity_id: scene.firealarm
+#
+- alias: "Smoke Sensor matsal ingen rök"
+  id: "Rökdeckare matsal ingen mer rök"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.smoke_dining_room_smoke
+      from: "on"
+      to: "off"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Brandvarnare matsal: "
+        message: "******* Rök borta *******"
+#    - service: scene.turn_off
+#      target:
+#        entity_id: scene.firealarm
 #
 #

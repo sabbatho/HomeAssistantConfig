@@ -5,10 +5,7 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_kallartrapp
-      to: "on"
-    - platform: state
-      entity_id: binary_sensor.motion_hallway_downstairs_presence
+      entity_id: binary_sensor.motion_kallare_hall
       to: "on"
   condition:
     - condition: or
@@ -42,11 +39,7 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_kallartrapp
-      to: "off"
-      for: "00:05:01"
-    - platform: state
-      entity_id: binary_sensor.motion_hallway_downstairs_presence
+      entity_id: binary_sensor.motion_kallare_hall
       to: "off"
       for: "00:05:01"
     - platform: state
@@ -56,8 +49,7 @@
   condition:
     - condition: state
       entity_id:
-        - binary_sensor.motion_kallartrapp
-        - binary_sensor.motion_hallway_downstairs_presence
+        - binary_sensor.motion_kallare_hall
       state: "off"
       for:
         minutes: 5
@@ -79,17 +71,24 @@
       entity_id: binary_sensor.motion_hallway_downstairs_presence
       to: "on"
   condition:
-    - condition: state
-      entity_id: input_boolean.visitors
-      state: "off"
-    - condition: or
-      conditions:
+    - or:
+      - and:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
         - condition: state
           entity_id: person.jimmy
           state: "home"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
         - condition: state
           entity_id: person.hanna
           state: "home"
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
   action:
     - service: light.turn_on
       target:
@@ -104,20 +103,12 @@
   mode: single
   trigger:
     - platform: state
-      entity_id: binary_sensor.motion_kallartrapp
-      to: "off"
-      for: "00:05:01"
-    - platform: state
       entity_id: binary_sensor.motion_hallway_downstairs_presence
       to: "off"
       for: "00:05:01"
   condition:
     - condition: state
-      entity_id: binary_sensor.motion_office
-      state: "off"
-      for: "00:19:59"
-    - condition: state
-      entity_id: binary_sensor.motion_hobbyrum_speldator
+      entity_id: binary_sensor.motion_office_group
       state: "off"
       for: "00:19:59"
   action:
@@ -215,24 +206,4 @@
           - light.kallare_pannrum_tak
       data:
         transition: 20
-#
-- alias: "basement_cat_on_vibration"
-  id: "Källare kattlucka På Vibration"
-  initial_state: true
-  mode: single
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.vibration_kattlucka_vibration
-      to: "on"
-  condition:
-    - condition: state
-      entity_id: input_boolean.visitors
-      state: "off"
-  action:
-    - service: light.turn_on
-      target:
-        entity_id: light.kallarhall
-      data:
-        brightness: 30
-        color_temp: 153
 #
