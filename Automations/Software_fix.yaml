@@ -31,19 +31,304 @@
       data: 
         message: "HACS har tillgänglig uppdatering"
 #
-#- alias: "zigbee2mqtt_restart"
-#  id: "Omstart av Zigbee2mqtt"
-#  initial_state: true
-#  mode: single
-#  trigger:
-#    - platform: time
-#      at: "03:00:00"
-#  condition:
-#    - condition: time
-#      weekday:
-#        - thu
-#  action:
-#    - service: hassio.addon_restart
-#      data: 
-#        addon: 45df7312_zigbee2mqtt
+- alias: "zigbee2mqtt_restart"
+  id: "Omstart av Zigbee2mqtt"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "03:00:00"
+  condition:
+    - condition: time
+      weekday:
+        - thu
+  action:
+    - service: hassio.addon_restart
+      data: 
+        addon: 45df7312_zigbee2mqtt
+#
+- alias: "Pfsense restart adguard fix"
+  id: "Pfsense startat om fixa adguard"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: template
+      value_template: "{{ as_timestamp(now()) > as_timestamp(states('sensor.pfsense_system_boottime')) +120}}"
+  action:
+    - service: hassio.addon_restart
+      data: 
+        addon: a0d7b954_adguard
+    - service: notify.hanna_jimmy
+      data:
+        message: "Pfsense har startat om"
+        data:
+          ttl: 0
+          priority: high
+          channel: alarm_stream
+          notification_icon: "mdi:lightning-bolt"
+    - service: notify.discord
+      data: 
+        message: "Pfsense har startat om"
+        target: !secret discord_message
+    - delay:
+        seconds: 30
+    - service: homeassistant.restart
+#
+#
+#
+- alias: "samba not running"
+  id: "samba är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.samba_share_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: core_samba
+#
+- alias: "google drive not running"
+  id: "google drive är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.home_assistant_google_drive_backup_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: cebe7a76_hassio_google_drive_backup
+#
+- alias: "wireguard not running"
+  id: "wireguard är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.wireguard_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: a0d7b954_wireguard
+#
+- alias: "duckdns not running"
+  id: "duckdns är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.duck_dns_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: core_duckdns
+#
+- alias: "ftp not running"
+  id: "ftp är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.ftp_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: a0d7b954_ftp
+#
+- alias: "mqtt not running"
+  id: "mqtt är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.mosquitto_broker_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: core_mosquitto
+#
+- alias: "vscode not running"
+  id: "vscode är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.visual_studio_code_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: a0d7b954_vscode
+#
+- alias: "adguard not running"
+  id: "adguard är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.adguard_home_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: a0d7b954_adguard
+#
+- alias: "zigbee2mqtt not running"
+  id: "zigbee2mqtt är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.zigbee2mqtt_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: 45df7312_zigbee2mqtt
+#
+- alias: "ssh not running"
+  id: "ssh är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.ssh_web_terminal_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: a0d7b954_ssh
+#
+- alias: "unifi not running"
+  id: "unifi är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.unifi_network_application_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: a0d7b954_unifi
+#
+- alias: "airthings not running"
+  id: "airthings är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.airthings_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: ac75c65b_airthings
+#
+- alias: "spotify not running"
+  id: "spotify är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.spotify_connect_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: a0d7b954_spotify
+#
+- alias: "frigate not running"
+  id: "frigate är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.frigate_nvr_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: ccab4aaf_frigate
+#
+- alias: "zwave js not running"
+  id: "zwave js är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.z_wave_js_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: core_zwave_js
+#
+- alias: "esphome not running"
+  id: "esphome är inte igång"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: homeassistant
+      event: start
+  condition:
+    - condition: state
+      entity_id: binary_sensor.esphome_running
+      state: "off"
+  action:
+    - service: hassio.addon_start
+      data: 
+        addon: 5c53de3b_esphome
 #

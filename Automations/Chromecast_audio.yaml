@@ -70,9 +70,11 @@
   action:
     - delay:
         seconds: 3
-    - service: notify.lmmatsal
+    - service: rest_command.lmmatsal_post_notification
       data:
-        message: >
+        priority: warning
+        cycles: 2
+        text: >
           {% if is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'YouTube') %}
             {{ state_attr('media_player.chrome_audio_matsal', 'media_title') }}
           {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Twitch Chromecast Player') %}
@@ -90,28 +92,24 @@
           {% else %}
             {{ state_attr('media_player.chrome_audio_matsal', 'media_title') }}
           {% endif %}
-        data:
-          icon: >-
-            {% if is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'YouTube') %}
-              a7320
-            {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Twitch Chromecast Player') %}
-              a4741
-            {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'TV4Play') %}
-              a22705
-            {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Plex') and is_state_attr('media_player.chrome_audio_matsal', 'media_content_type', 'tvshow') %}
-              i15185
-            {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Plex') and is_state_attr('media_player.chrome_audio_matsal', 'media_content_type', 'movie') %}
-              i15185
-            {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Spotify') %}
-              a12676
-            {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Netflix') %} 
-              a1442
-            {% else %}
-              a15626
-            {% endif %}
-          icon_type: "none"
-          priority: "warning"
-          cycles: 2
+        icon: >-
+          {% if is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'YouTube') %}
+            a7320
+          {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Twitch Chromecast Player') %}
+            a4741
+          {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'TV4Play') %}
+            a22705
+          {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Plex') and is_state_attr('media_player.chrome_audio_matsal', 'media_content_type', 'tvshow') %}
+            i15185
+          {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Plex') and is_state_attr('media_player.chrome_audio_matsal', 'media_content_type', 'movie') %}
+            i15185
+          {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Spotify') %}
+            a12676
+          {% elif is_state_attr('media_player.chrome_audio_matsal', 'app_name', 'Netflix') %} 
+            a1442
+          {% else %}
+            a15626
+          {% endif %}
 #
 - id: "Lametric_whats_on_chrome_audio_vardags"
   alias: "LaMetric_-_Whats_on_chrome_audio_vardags"
@@ -130,9 +128,11 @@
   action:
     - delay:
         seconds: 3
-    - service: notify.lmvardagsrum
+    - service: rest_command.lmvardagsrum_post_notification
       data:
-        message: >
+        priority: warning
+        cycles: 2
+        text: >
           {% if is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'YouTube') %}
             {{ state_attr('media_player.chromecastaudiovardagsrum', 'media_title') }}
           {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Twitch Chromecast Player') %}
@@ -150,26 +150,22 @@
           {% else %}
             {{ state_attr('media_player.chromecastaudiovardagsrum', 'media_title') }}
           {% endif %}
-        data:
-          icon: >-
-            {% if is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'YouTube') %}
-              a7320
-            {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Twitch Chromecast Player') %}
-              a4741
-            {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'TV4Play') %}
-              a22705
-            {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Plex') and is_state_attr('media_player.chromecastaudiovardagsrum', 'media_content_type', 'tvshow') %}
-              i15185
-            {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Plex') and is_state_attr('media_player.chromecastaudiovardagsrum', 'media_content_type', 'movie') %}
-              i15185
-            {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Spotify') %}
-              a12676
-            {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Netflix') %} 
-              a1442
-            {% else %}
-              a15626
-            {% endif %}
-          icon_type: "none"
-          priority: "warning"
-          cycles: 2
+        icon: >-
+          {% if is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'YouTube') %}
+            a7320
+          {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Twitch Chromecast Player') %}
+            a4741
+          {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'TV4Play') %}
+            a22705
+          {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Plex') and is_state_attr('media_player.chromecastaudiovardagsrum', 'media_content_type', 'tvshow') %}
+            i15185
+          {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Plex') and is_state_attr('media_player.chromecastaudiovardagsrum', 'media_content_type', 'movie') %}
+            i15185
+          {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Spotify') %}
+            a12676
+          {% elif is_state_attr('media_player.chromecastaudiovardagsrum', 'app_name', 'Netflix') %} 
+            a1442
+          {% else %}
+            a15626
+          {% endif %}
 #

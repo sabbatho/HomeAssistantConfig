@@ -1,5 +1,9 @@
 #
+# TRV external temp and window open setting
 #
+
+#
+# Bedroom - Danfoss Ally
 #
 - alias: "set_temp_bedroom_trv"
   id: "Sätt temp sovrum TRV"
@@ -44,4 +48,42 @@
     - service: switch.turn_off
       target:
         entity_id: switch.termostat_sovrum_window_open_external
+#
+
+#
+# Dining room - Aqara E1
+#
+- alias: "set_temp_dining_room_trv"
+  id: "Sätt temp matsal TRV"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/30"
+  condition:
+    - not:
+      - condition: state
+        entity_id: sensor.motion_matsal_temp
+        state: "unavailable"
+  action:
+    - device_id: 0x54ef4410006754b5_sensor_zigbee2mqtt # Find this under Integrations and MQTT info and select.trv_matsal_bursprak_sensor and payload and unique_id
+      domain: select
+      entity_id: select.trv_matsal_bursprak_sensor
+      type: select_option
+      option: external
+    - device_id: 0x54ef441000673f88_sensor_zigbee2mqtt
+      domain: select
+      entity_id: select.trv_matsal_bord_sensor
+      type: select_option
+      option: external
+    - delay:
+        seconds: 10
+    - service: mqtt.publish
+      data:
+        topic: zigbee2mqtt/trv matsal bord/set/sensor_temp
+        payload: "{{ (states('sensor.motion_matsal_temp') | float(0) | round(1)) }}"
+    - service: mqtt.publish
+      data:
+        topic: zigbee2mqtt/trv matsal burspråk/set/sensor_temp # Find this under Integrations and MQTT info and select.trv_matsal_bursprak_sensor and payload and command_topic and add /sensor_temp
+        payload: "{{ (states('sensor.motion_matsal_temp') | float(0) | round(1)) }}"
 #

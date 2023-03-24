@@ -260,3 +260,134 @@
 #        entity_id: scene.firealarm
 #
 #
+
+#
+- alias: "Firealarm ON"
+  id: "Brandlarm PÅ"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.smoke_dining_room_smoke
+        - binary_sensor.smoke_office_smoke
+        - binary_sensor.smoke_bedroom_smoke
+        - binary_sensor.smoke_basement_hallway_smoke
+        - binary_sensor.smoke_alarm_living_room_smoke
+        - binary_sensor.hall_smoke_sensor_smoke_alarm_smoke_detected
+      from: "off"
+      to: "on"
+  action:
+    - service: input_boolean.turn_on
+      target:
+        entity_id:
+          - input_boolean.firealarm
+#
+- alias: "Firealarm OFF"
+  id: "Brandlarm AV"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.smoke_dining_room_smoke
+        - binary_sensor.smoke_office_smoke
+        - binary_sensor.smoke_bedroom_smoke
+        - binary_sensor.smoke_basement_hallway_smoke
+        - binary_sensor.smoke_alarm_living_room_smoke
+        - binary_sensor.hall_smoke_sensor_smoke_alarm_smoke_detected
+      from: "on"
+      to: "off"
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id:
+          - input_boolean.firealarm
+#
+
+#
+- alias: "Firealarm signal ON"
+  id: "Brandlarm signal PÅ"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: input_boolean.firealarm
+      from: "off"
+      to: "on"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.smoke_alarm_living_room_alarm
+          - switch.smoke_basement_hallway_alarm
+          - switch.smoke_bedroom_alarm
+          - switch.smoke_dining_room_alarm
+          - switch.smoke_office_alarm
+          - switch.hall_smoke_sensor
+    - service: rest_command.lmhobbyrum_ssaver_off
+    - service: rest_command.lmmatsal_ssaver_off
+    - service: rest_command.lmvardagsrum_ssaver_off
+    - service: rest_command.lmsovrum_ssaver_off
+    - service: scene.turn_on
+      target:
+        entity_id: scene.firealarm
+    - delay:
+        seconds: 2
+    - service: rest_command.lmhobbyrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a9832
+        text: BRANDLARM!
+        category: alarms
+        sound: alarm3
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a9832
+        text: BRANDLARM!
+        category: alarms
+        sound: alarm3
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a9832
+        text: BRANDLARM!
+        category: alarms
+        sound: alarm3
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a9832
+        text: BRANDLARM!
+        category: alarms
+        sound: alarm3
+        sound_repeat: 1
+#
+- alias: "Firealarm signal OFF"
+  id: "Brandlarm signal AV"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: input_boolean.firealarm
+      from: "on"
+      to: "off"
+  action:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.smoke_alarm_living_room_alarm
+          - switch.smoke_basement_hallway_alarm
+          - switch.smoke_bedroom_alarm
+          - switch.smoke_dining_room_alarm
+          - switch.smoke_office_alarm
+          - switch.hall_smoke_sensor
+#

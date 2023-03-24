@@ -27,7 +27,30 @@
     - condition: state
       entity_id: binary_sensor.workday_hanna
       state: "on"
-    - "{{ as_timestamp(now()) >= as_timestamp(states('input_datetime.hanna_wakeup_pause')) }}"
+    - "{{ as_timestamp(now()) > as_timestamp(states('input_datetime.hanna_wakeup_pause')) }}"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.motorvarmare_hanna
+#
+- alias: "Car_heater_manual_on"
+  id: "Motorvärmare PÅ manuellt"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: input_datetime.hanna_motorvarmare_manuell
+  condition:
+    - or:
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+    - condition: numeric_state
+      entity_id: sensor.ute
+      below: 6
   action:
     - service: switch.turn_on
       target:
@@ -84,8 +107,8 @@
     - service: script.turn_on
       target:
         entity_id: script.sleep_or_not_home
-    - service: shell_command.lmsovrum_ssaver_on
-    - service: shell_command.lmhobbyrum_ssaver_on
-    - service: shell_command.lmmatsal_ssaver_on
-    - service: shell_command.lmvardagsrum_ssaver_on
+    - service: rest_command.lmsovrum_ssaver_on
+    - service: rest_command.lmhobbyrum_ssaver_on
+    - service: rest_command.lmmatsal_ssaver_on
+    - service: rest_command.lmvardagsrum_ssaver_on
 #

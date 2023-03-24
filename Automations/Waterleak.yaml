@@ -10,42 +10,42 @@
       entity_id: binary_sensor.water_dish
       to: "on"
   action:
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
     - service: notify.hanna_jimmy
       data:
         title: "Vattenläcka!"
@@ -53,77 +53,77 @@
         data:
           notification_icon: "mdi:pipe-leak"
     - delay: "00:00:10"
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
     - delay: "00:00:10"
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Vattenläcka under diskho!"
-        data:
-          icon: "a12989"
-          icon_type: "none"
-          sound: "negative5"
-          priority: "warning"
-          cycles: 3
+        priority: warning
+        cycles: 3
+        icon: a12989
+        text: "Vattenläcka under diskho!"
+        category: notifications
+        sound: negative5
+        sound_repeat: 2
 #

@@ -1,0 +1,268 @@
+#
+#
+#
+- alias: "Robot cleanup downstairs if not cleaned for X days"
+  id: "Robot städa nere om inte städat på X antal dagar"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: input_datetime.vacuum_downstairs_start
+  condition:
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+    - condition: state
+      entity_id: input_boolean.cleaned_today_downstairs
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
+    - condition: state
+      entity_id: binary_sensor.workday_jimmy
+      state: "on"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+  action:
+    - service: vacuum.start
+      entity_id: vacuum.roborock_s5_max
+#
+- alias: "Robot_cleaned_empty_bin_downstairs"
+  id: "Robot städat dags att tömma källaren"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: person.jimmy
+      to: "home"
+    - platform: state
+      entity_id: person.hanna
+      to: "home"
+    - platform: numeric_state
+      entity_id: counter.robot_downstairs_counter_empty_bin
+      above: 8
+  condition:
+    - condition: numeric_state
+      entity_id: counter.robot_downstairs_counter_empty_bin
+      above: 8
+    - condition: state
+      entity_id: vacuum.roborock_s5_max
+      state: "docked"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+#    - condition: time
+#      weekday:
+#        - sat
+  action:
+    - delay:
+        seconds: 10
+    - service: vacuum.send_command
+      target:
+        entity_id: "vacuum.roborock_s5_max"
+      data:
+        command: app_goto_target
+        params: [22800, 30800]
+    - delay:
+        seconds: 10
+    - service: counter.reset
+      target:
+        entity_id: counter.robot_downstairs_counter_empty_bin
+#
+- alias: "Robot downstairs: Reset cleaned today counter"
+  id: "Robot källaren resetta städat räknaren"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "01:00:00"
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.cleaned_today_downstairs
+#
+- alias: "robot_downstairs_started_cleaning"
+  id: "Robot källaren: Robot started cleaning"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: vacuum.roborock_s5_max
+      from: "docked"
+      to: "cleaning"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Robot källaren börjar"
+        message: "Robot källarenbörjar städa!"
+        data:
+          notification_icon: "mdi:robot-vacuum"
+          actions:
+            - action: "ROBOT_DOWNSTAIRS_AK_HEM"
+              title: "Docka robot källaren"
+            - action: "ROBOT_DOWNSTAIRS_STANNA"
+              title: "Pausa robot källaren"
+    - service: rest_command.lmhobbyrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Robot källaren börjar städa!"
+        category: notifications
+        sound: bicycle
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Robot källaren börjar städa!"
+        category: notifications
+        sound: bicycle
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Robot källaren börjar städa!"
+        category: notifications
+        sound: bicycle
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Robot källaren börjar städa!"
+        category: notifications
+        sound: bicycle
+        sound_repeat: 1
+#
+- alias: "robot_downstairs_back_to_dock"
+  id: "Robot källaren åk hem"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "ROBOT_DOWNSTAIRS_AK_HEM"
+  action:
+    - service: vacuum.return_to_base
+      target:
+        entity_id: vacuum.roborock_s5_max
+#
+- alias: "robot_downstairs_paused"
+  id: "Robot källaren pausa"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: event
+      event_type: mobile_app_notification_action
+      event_data:
+        action: "ROBOT_DOWNSTAIRS_STANNA"
+  action:
+    - service: vacuum.pause
+      target:
+        entity_id: vacuum.roborock_s5_max
+#
+- alias: "robot_downstairs_finished_cleaning"
+  id: "Robot källaren: Robot finished cleaning"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: vacuum.roborock_s5_max
+      from: "returning"
+      to: "docked"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Robot klar"
+        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
+        data:
+          notification_icon: "mdi:robot-vacuum"
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.cleaned_today_downstairs
+    - service: rest_command.lmhobbyrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
+        category: notifications
+        sound: notification2
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
+        category: notifications
+        sound: notification2
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
+        category: notifications
+        sound: notification2
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
+        category: notifications
+        sound: notification2
+        sound_repeat: 1
+    - service: counter.increment
+      target:
+        entity_id: counter.robot_downstairs_counter_empty_bin
+    - service: input_datetime.set_datetime
+      target:
+        entity_id: input_datetime.vacuum_downstairs_last_run
+      data:
+        timestamp: "{{ (now().timestamp() +25*60*60) }}"
+#
+- alias: "robot_downstairs_error"
+  id: "Robot källaren: Error"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: vacuum.roborock_s5_max
+      to: "error"
+      for:
+        seconds: 2
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Robot källaren har stött på problem"
+        message: "Error: {{ states('vacuum.roborock_s5_max') }}."
+        data:
+          notification_icon: "mdi:robot-vacuum-alert"
+#
+
+#

@@ -48,9 +48,9 @@
     - service: shell_command.shutdown_speldator2
     - delay:
         seconds: 1
-    - service: shell_command.lmhobbyrum_ssaver_on
-    - service: shell_command.lmmatsal_ssaver_on
-    - service: shell_command.lmvardagsrum_ssaver_on
+    - service: rest_command.lmhobbyrum_ssaver_on
+    - service: rest_command.lmmatsal_ssaver_on
+    - service: rest_command.lmvardagsrum_ssaver_on
 #
 - alias: "going_to_sleep_jimmy"
   id: "Släck allt när båda sover Jimmy"
@@ -84,10 +84,10 @@
         entity_id: script.sleep_or_not_home
     - delay:
         seconds: 1
-    - service: shell_command.lmsovrum_ssaver_on
-    - service: shell_command.lmhobbyrum_ssaver_on
-    - service: shell_command.lmmatsal_ssaver_on
-    - service: shell_command.lmvardagsrum_ssaver_on
+    - service: rest_command.lmsovrum_ssaver_on
+    - service: rest_command.lmhobbyrum_ssaver_on
+    - service: rest_command.lmmatsal_ssaver_on
+    - service: rest_command.lmvardagsrum_ssaver_on
     - delay:
         seconds: 1
     - service: media_player.turn_off
@@ -124,7 +124,7 @@
         position: 16
     - delay:
         minutes: 2
-    - service: shell_command.lmsovrum_ssaver_on
+    - service: rest_command.lmsovrum_ssaver_on
 #
 - alias: "sleep_jimmy_above_25"
   id: "Jimmy Sover över 25"
@@ -170,7 +170,7 @@
         position: 2
     - delay:
         minutes: 2
-    - service: shell_command.lmsovrum_ssaver_on
+    - service: rest_command.lmsovrum_ssaver_on
 #
 - alias: "sleep_jimmy_below_25"
   id: "Jimmy Sover under 25"

@@ -11,8 +11,13 @@
       entity_id: binary_sensor.motion_vardagsrum
       to: "on"
   condition:
-    - condition: or
-      conditions:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
+    - condition: state
+      entity_id: input_boolean.dark_mode
+      state: "off"
+    - or:
       - condition: numeric_state
         entity_id: sun.sun
         attribute: elevation
@@ -20,28 +25,30 @@
       - condition: numeric_state
         entity_id: sensor.ljus_ute
         below: 400
-    - condition: not
-      conditions:
+    - not:
+      - condition: state
+        entity_id: media_player.tvdatorn
+        state: "playing"
+    - or:
+      - and:
         - condition: state
-          entity_id: media_player.tvdatorn
-          state: "playing"
-    - condition: or
-      conditions:
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
         - condition: state
           entity_id: person.jimmy
           state: "home"
+      - and:
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
         - condition: state
           entity_id: person.hanna
           state: "home"
-        - condition: state
-          entity_id: input_boolean.visitors
-          state: "on"
   action:
     - service: switch.turn_on
       target:
         entity_id: 
           - switch.vardagsrum_spis
-          - switch.vardags2
     - service: light.turn_on
       target:
         entity_id: light.osram_smart_e27_color_1
@@ -95,6 +102,10 @@
       entity_id: binary_sensor.motion_vardagsrum
       to: "off"
       for: "00:05:00"
+  condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
   action:
     - service: light.turn_off
       target:
@@ -107,7 +118,6 @@
       target:
         entity_id: 
           - switch.vardagsrum_spis
-          - switch.vardags2
 #
 - alias: "livingroom_off_media"
   id: "Vardagsrum Av media"
@@ -119,6 +129,9 @@
       to: "on"
       for: "00:15:00"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: state
       entity_id: binary_sensor.motion_vardagsrum
       state: "off"
@@ -135,5 +148,18 @@
       target:
         entity_id: 
           - switch.vardagsrum_spis
-          - switch.vardags2
+#
+- alias: "dark_mode_manual_override_reset"
+  id: "Dark mode override reset"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: input_boolean.dark_mode
+      to: "on"
+      for: "01:20:00"
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.dark_mode
 #

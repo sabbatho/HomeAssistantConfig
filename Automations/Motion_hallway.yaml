@@ -15,6 +15,9 @@
     - condition: state
       entity_id: input_boolean.hallway_man_override
       state: "off"
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - or:
         - and:
             - condition: state
@@ -101,6 +104,9 @@
         - binary_sensor.motion_hallway
       to: "on"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: or
       conditions:
         - condition: numeric_state
@@ -144,7 +150,7 @@
     - service: light.turn_on
       target:
         entity_id:
-          - light.hall_lilla
+          - light.hall_entre
       data:
         brightness: >-
           {% if state_attr("sun.sun", "elevation") | float <= -5 %}
@@ -176,6 +182,9 @@
       for: "00:02:00"
   condition:
     - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
+    - condition: state
       entity_id: input_boolean.hallway_man_override
       state: "off"
     - condition: state
@@ -202,6 +211,9 @@
       to: "off"
       for: "00:00:30"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: state
       entity_id: input_boolean.hallway_man_override
       state: "off"
@@ -232,7 +244,7 @@
   action:
     - service: light.turn_off
       target:
-        entity_id: light.hall_lilla
+        entity_id: light.hall_entre
       data:
         transition: 20
 #
@@ -246,6 +258,9 @@
       entity_id: binary_sensor.hall_door_magnet
       to: "on"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: state
       entity_id: input_boolean.hallway_man_override
       state: "off"

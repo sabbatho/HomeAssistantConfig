@@ -14,6 +14,9 @@
       to: "on"
   condition:
     - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
+    - condition: state
       entity_id: person.jimmy
       state: "home"
     - condition: or
@@ -43,6 +46,9 @@
       to: "on"
   condition:
     - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
+    - condition: state
       entity_id: person.jimmy
       state: "home"
     - condition: state
@@ -70,14 +76,17 @@
       to: "off"
       for: "00:00:10"
   condition:
-    condition: or
-    conditions:
-      - condition: state
-        entity_id: sensor.clt_l29_charger_type
-        state: "ac"
-      - condition: state
-        entity_id: sensor.hanna_charger_type
-        state: "ac"
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "ac"
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "ac"
   action:
     - service: light.turn_off
       target:
@@ -94,6 +103,10 @@
       entity_id: binary_sensor.motion_bedroom_jimmy
       to: "off"
       for: "00:05:00"
+  condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
   action:
     - service: light.turn_off
       target:
@@ -110,6 +123,9 @@
       entity_id: binary_sensor.motion_bedroom_hanna
       to: "on"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: not
       conditions:
         - condition: state
@@ -144,6 +160,9 @@
       entity_id: binary_sensor.motion_bedroom_hanna
       to: "on"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: not
       conditions:
         - condition: state
@@ -177,6 +196,9 @@
       to: "off"
       for: "00:00:10"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: not
       conditions:
         - condition: state
@@ -207,6 +229,9 @@
       to: "off"
       for: "00:05:00"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: not
       conditions:
         - condition: state
@@ -241,6 +266,9 @@
       to: "on"
   condition:
     - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
+    - condition: state
       entity_id:
         - person.hanna
       state: "home"
@@ -261,9 +289,51 @@
     - platform: state
       entity_id: input_boolean.hanna_sovrum_man_override
       to: "off"
+  condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
   action:
     - service: light.turn_off
       target:
         entity_id:
           - light.sovrum_hanna
+    - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.hanna_sovrum_timer
+#
+- alias: "Hanna_sovrum_timer_light_on"
+  id: "Hanna timer läslampa på"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: input_boolean.hanna_sovrum_timer
+      to: "on"
+  action:
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.hanna_sovrum_man_override
+#
+- alias: "Hanna_sovrum_timer_light_off"
+  id: "Hanna time läslampa av"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: input_boolean.hanna_sovrum_timer
+      to: "on"
+      for: 
+        minutes: "{{ states('input_number.timer_hanna_sovrum') | int }}"
+  condition:
+    - condition: state
+      entity_id: input_boolean.hanna_sovrum_timer
+      state: "on"
+  action:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.hanna_sovrum_timer
+    - service: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.hanna_sovrum_man_override
 #

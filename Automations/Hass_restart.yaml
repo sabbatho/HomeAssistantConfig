@@ -36,17 +36,22 @@
       data: 
         message: "Home Assistant har av någon anledning startat om"
 #
-#- alias: "Hass restart gardena offline"
-#  id: "HASS startats om gardena nere"
-#  initial_state: true
-#  mode: single
-#  trigger:
-#    - platform: state
-#      entity_id:
-#        - binary_sensor.gardena_smart_system_connection
-#      to: "off"
-#      for:
-#        minutes: 5
-#  action:
-#    - service: homeassistant.restart
+- alias: "Hass restart gardena offline"
+  id: "HASS startats om gardena nere"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id:
+        - binary_sensor.gardena_smart_system_connection
+      to: "off"
+      for:
+        minutes: 10
+  action:
+    - service: notify.mobile_app_clt_l29
+      data: 
+        message: "Home Assistant startar om på grund av Gardena"
+    - delay:
+        seconds: 3
+    - service: homeassistant.restart
 #

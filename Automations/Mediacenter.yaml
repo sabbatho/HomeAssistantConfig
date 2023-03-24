@@ -48,7 +48,14 @@
       target:
         entity_id: media_player.marantz_sr8012
       data:
-        volume_level: 0.395
+        volume_level: >
+          {% if state_attr('media_player.chromecast_ultra_vardags', 'source') == "Netflix" %}
+            0.5
+          {% elif state_attr('media_player.chromecast_ultra_vardags', 'source') == "SVT Play" %}
+            0.42
+          {% else %}
+            0.44
+          {% endif %}
     - delay:
         seconds: 10
     - service: media_player.volume_up
@@ -408,7 +415,7 @@
           {% elif state_attr('media_player.living_room_tv', 'source') == "SVT Play" %}
             0.42
           {% else %}
-            0.4
+            0.44
           {% endif %}
 #
 # HDMI och DATOR av

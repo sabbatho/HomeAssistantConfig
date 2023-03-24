@@ -11,7 +11,7 @@
       entity_id: binary_sensor.motion_garage_and_ssw
       to: "on"
       for:
-        seconds: 3
+        seconds: 5
     - platform: state
       entity_id: binary_sensor.garagelas
       to: "on"
@@ -46,7 +46,7 @@
         - binary_sensor.garagelas
       to: "off"
       for:
-        minutes: 2
+        minutes: 3
   condition:
     - or:
       - condition: numeric_state
@@ -252,6 +252,24 @@
     - condition: state
       entity_id: input_boolean.outside_entrance_override
       state: "off"
+    - or:
+      - and:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
+      - and:
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
+      - condition: state
+        entity_id: input_boolean.visitors
+        state: "on"
   action:
     - service: light.turn_on
       target:
@@ -294,8 +312,6 @@
         entity_id: light.outside_entrance_discovery
       data:
         transition: 10
-#
-# boolean off trigger light off instead of direct off
 #
 - alias: outside_entrance_discovery_manual_override_on"
   id: "Discovery override PÅ"

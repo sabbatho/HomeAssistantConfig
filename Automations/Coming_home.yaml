@@ -50,10 +50,10 @@
         entity_id: switch.growhouse_cam_recordings
     - delay:
         seconds: 1
-    - service: shell_command.lmsovrum_ssaver_off
-    - service: shell_command.lmhobbyrum_ssaver_off
-    - service: shell_command.lmmatsal_ssaver_off
-    - service: shell_command.lmvardagsrum_ssaver_off
+    - service: rest_command.lmsovrum_ssaver_off
+    - service: rest_command.lmhobbyrum_ssaver_off
+    - service: rest_command.lmmatsal_ssaver_off
+    - service: rest_command.lmvardagsrum_ssaver_off
 #    - service: scene.turn_off
 #      target:
 #        entity_id: scene.burglaralarm

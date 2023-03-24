@@ -14,37 +14,127 @@
 
 
 #
-# - id: 'plants_on'
-#   alias: Växtbelysning På vardagsrum
-#   initial_state: true
-#   mode: single
-#   trigger: 
-#   - platform: time
-#     at: input_datetime.vaxt_vardags_start
-#   condition:
-#     - condition: state
-#       entity_id: input_boolean.vaxtlampor_active
-#       state: 'on'
-#   action:
-#   - service: switch.turn_on
-#     data:
-#       entity_id: switch.vaxt_vardagsrum
-#   - service: switch.turn_on
-#     data:
-#       entity_id: switch.vaxt_vardags2
+- id: "water_big_hibiskus_dining_room"
+  alias: "Vattna stora hibiskusen matsalern"
+  initial_state: true
+  mode: single
+  trigger: 
+    - platform: time
+      at: "19:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.plant_sensor_stora_hibiskus_matsal_moisture
+      below: 7
+    - or:
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Dags att vattna"
+        message: "Vattna stora hibiskusen i matsalen"
+        data:
+          notification_icon: "mdi:watering-can"
+    - service: rest_command.lmhobbyrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a7699
+        text: "Vattna stora hibiskusen i matsalen"
+        category: notifications
+        sound: water1
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a7699
+        text: "Vattna stora hibiskusen i matsalen"
+        category: notifications
+        sound: water1
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a7699
+        text: "Vattna stora hibiskusen i matsalen"
+        category: notifications
+        sound: water1
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a7699
+        text: "Vattna stora hibiskusen i matsalen"
+        category: notifications
+        sound: water1
+        sound_repeat: 1
 #
-# - id: 'plants_off'
-#   alias: Växtbelysning Av vardagsrum
-#   initial_state: true
-#   mode: single
-#   trigger: 
-#   - platform: time
-#     at: input_datetime.vaxt_vardags_stop
-#   action:
-#   - service: switch.turn_off
-#     data:
-#       entity_id: switch.vaxt_vardagsrum
-#   - service: switch.turn_off
-#     data:
-#       entity_id: switch.vaxt_vardags2
+- id: "water_big_hibiskus_living_room"
+  alias: "Vattna stora hibiskusen vardagsrum"
+  initial_state: true
+  mode: single
+  trigger: 
+    - platform: time
+      at: "19:00:00"
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.plant_sensor_stora_hibiskus_vardags_moisture
+      below: 7
+    - or:
+      - condition: state
+        entity_id: person.jimmy
+        state: "home"
+      - condition: state
+        entity_id: person.hanna
+        state: "home"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        title: "Dags att vattna"
+        message: "Vattna stora hibiskusen i vardagsrum"
+        data:
+          notification_icon: "mdi:watering-can"
+    - service: rest_command.lmhobbyrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a7699
+        text: "Vattna stora hibiskusen i vardagsrum"
+        category: notifications
+        sound: water1
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a7699
+        text: "Vattna stora hibiskusen i vardagsrum"
+        category: notifications
+        sound: water1
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a7699
+        text: "Vattna stora hibiskusen i vardagsrum"
+        category: notifications
+        sound: water1
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a7699
+        text: "Vattna stora hibiskusen i vardagsrum"
+        category: notifications
+        sound: water1
+        sound_repeat: 1
 #

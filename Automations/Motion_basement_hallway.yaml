@@ -8,14 +8,31 @@
       entity_id: binary_sensor.motion_kallare_hall
       to: "on"
   condition:
-    - condition: or
-      conditions:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
+    - or:
+      - and:
         - condition: state
           entity_id: person.jimmy
           state: "home"
         - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
+      - and:
+        - condition: state
           entity_id: person.hanna
           state: "home"
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
+      - and:
+        - condition: state
+          entity_id: person.jimmy
+          state: "not_home"
+        - condition: state
+          entity_id: person.hanna
+          state: "not_home"
         - condition: state
           entity_id: input_boolean.visitors
           state: "on"
@@ -48,6 +65,9 @@
       for: "00:01:00"
   condition:
     - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
+    - condition: state
       entity_id:
         - binary_sensor.motion_kallare_hall
       state: "off"
@@ -74,21 +94,28 @@
     - or:
       - and:
         - condition: state
-          entity_id: sensor.clt_l29_charger_type
-          state: "none"
-        - condition: state
           entity_id: person.jimmy
           state: "home"
-      - and:
         - condition: state
-          entity_id: sensor.hanna_charger_type
+          entity_id: sensor.clt_l29_charger_type
           state: "none"
+      - and:
         - condition: state
           entity_id: person.hanna
           state: "home"
-    - condition: state
-      entity_id: input_boolean.visitors
-      state: "off"
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
+      - and:
+        - condition: state
+          entity_id: person.jimmy
+          state: "not_home"
+        - condition: state
+          entity_id: person.hanna
+          state: "not_home"
+        - condition: state
+          entity_id: input_boolean.visitors
+          state: "on"
   action:
     - service: light.turn_on
       target:
@@ -170,14 +197,28 @@
       entity_id: binary_sensor.motion_kallare_pannrum_occupancy
       to: "on"
   condition:
-    - condition: or
-      conditions:
+    - or:
+      - and:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
+      - and:
         - condition: state
           entity_id: person.hanna
           state: "home"
         - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
+      - and:
+        - condition: state
           entity_id: person.jimmy
-          state: "home"
+          state: "not_home"
+        - condition: state
+          entity_id: person.hanna
+          state: "not_home"
         - condition: state
           entity_id: input_boolean.visitors
           state: "on"

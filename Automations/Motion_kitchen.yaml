@@ -79,14 +79,16 @@
       - darkblue
       - tomato
       - darkgreen
+    effects:
+      - Random Colors
   action:
     - service: light.turn_on
       target:
         entity_id: light.spritskap
       data:
-        brightness: 150
+        brightness: 50
         color_name: "{{ colors | random }}"
-        effect: "Random Colors"
+        effect: "{{ effects | random }}"
     - service: number.set_value
       data:
         entity_id: number.spritskap_speed
@@ -130,6 +132,9 @@
       entity_id: binary_sensor.motion_kok
       to: "on"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: state
       entity_id: input_boolean.kitchen_roof_override
       state: "off"
@@ -218,6 +223,9 @@
       to: "off"
       for: "00:05:00"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: state
       entity_id: input_boolean.kitchen_roof_override
       state: "off"

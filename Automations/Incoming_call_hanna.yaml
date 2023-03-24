@@ -43,42 +43,42 @@
     - service: switch.turn_on
       target:
         entity_id: switch.vardags_eld
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Hanna, mobilen ringer!"
-        data:
-          icon: "a35"
-          icon_type: "none"
-          sound: "cat"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 3
+        icon: a35
+        text: "Hanna, mobilen ringer!"
+        category: notifications
+        sound: cat
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Hanna, mobilen ringer!"
-        data:
-          icon: "a35"
-          icon_type: "none"
-          sound: "cat"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 3
+        icon: a35
+        text: "Hanna, mobilen ringer!"
+        category: notifications
+        sound: cat
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Hanna, mobilen ringer!"
-        data:
-          icon: "a35"
-          icon_type: "none"
-          sound: "cat"
-          priority: "warning"
-          cycles: 3
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 3
+        icon: a35
+        text: "Hanna, mobilen ringer!"
+        category: notifications
+        sound: cat
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Hanna, mobilen ringer!"
-        data:
-          icon: "a35"
-          icon_type: "none"
-          sound: "cat"
-          priority: "warning"
-          cycles: 3
+        priority: warning
+        cycles: 3
+        icon: a35
+        text: "Hanna, mobilen ringer!"
+        category: notifications
+        sound: cat
+        sound_repeat: 1
 #
 - alias: "no_incoming_call_hanna"
   id: "Inkommande samtal ljusvarning AV hanna"

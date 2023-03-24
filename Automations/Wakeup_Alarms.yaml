@@ -28,7 +28,7 @@
       entity_id: sensor.clt_l29_charger_type
       state: "ac"
   action:
-    - service: shell_command.lmsovrum_ssaver_off
+    - service: rest_command.lmsovrum_ssaver_off
     - if:
         - condition: state
           entity_id: sensor.clt_l29_charger_type
@@ -96,11 +96,11 @@
             entity_id: media_player.sovrum
           data:
             volume_level: 0.5
-        - service: media_player.volume_set
-          target:
-            entity_id: media_player.43pus6162_12
-          data:
-            volume_level: 0.4
+#        - service: media_player.volume_set
+#          target:
+#            entity_id: media_player.43pus6162_12
+#          data:
+#            volume_level: 0.4
       else:
         - stop: "Har gått upp"
     - delay: "00:20:00"
@@ -127,7 +127,7 @@
     - condition: state
       entity_id: sensor.hanna_charger_type
       state: "ac"
-    - "{{ as_timestamp(now()) >= as_timestamp(states('input_datetime.hanna_wakeup_pause')) }}"
+    - "{{ as_timestamp(now()) > as_timestamp(states('input_datetime.hanna_wakeup_pause')) }}"
   action:
     - service: light.turn_on
       target:

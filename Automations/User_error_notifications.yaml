@@ -26,42 +26,42 @@
     - service: notify.hanna_jimmy
       data:
         message: "Brytaren på toan där nere är avstängd, slå på den igen"
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Brytaren på toan där nere är avstängd, slå på den igen"
-        data:
-          icon: "a42473"
-          icon_type: "none"
-          sound: "lose2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren på toan där nere är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Brytaren på toan där nere är avstängd, slå på den igen"
-        data:
-          icon: "a42473"
-          icon_type: "none"
-          sound: "lose2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren på toan där nere är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Brytaren på toan där nere är avstängd, slå på den igen"
-        data:
-          icon: "a42473"
-          icon_type: "none"
-          sound: "lose2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren på toan där nere är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Brytaren på toan där nere är avstängd, slå på den igen"
-        data:
-          icon: "a42473"
-          icon_type: "none"
-          sound: "lose2"
-          priority: "warning"
-          cycles: 2
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren på toan där nere är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
 #
 - alias: "bathroom_upstairs_light_turned_off"
   id: "Badrum uppe lyse avstängt"
@@ -78,40 +78,95 @@
     - service: notify.hanna_jimmy
       data:
         message: "Brytaren på toan uppe är avstängd, slå på den igen"
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Brytaren på toan uppe är avstängd, slå på den igen"
-        data:
-          icon: "a42473"
-          icon_type: "none"
-          sound: "lose2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren på toan uppe är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Brytaren på toan uppe är avstängd, slå på den igen"
-        data:
-          icon: "a42473"
-          icon_type: "none"
-          sound: "lose2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren på toan uppe är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Brytaren på toan uppe är avstängd, slå på den igen"
-        data:
-          icon: "a42473"
-          icon_type: "none"
-          sound: "lose2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren på toan uppe är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Brytaren på toan uppe är avstängd, slå på den igen"
-        data:
-          icon: "a42473"
-          icon_type: "none"
-          sound: "lose2"
-          priority: "warning"
-          cycles: 2
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren på toan uppe är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
+#
+- alias: "hallway_lights_upstairs_turned_off"
+  id: "Hall övervåning lyse avstängt"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time_pattern
+      minutes: "/5"
+  condition:
+    - condition: state
+      entity_id: light.hall_stora
+      state: "unavailable"
+    - condition: state
+      entity_id: light.hall_lilla
+      state: "unavailable"
+  action:
+    - service: notify.hanna_jimmy
+      data:
+        message: "Brytaren i hallen är avstängd, slå på den igen"
+    - service: rest_command.lmhobbyrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren i hallen är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren i hallen är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren i hallen är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
+      data:
+        priority: warning
+        cycles: 2
+        icon: a42473
+        text: "Brytaren i hallen är avstängd, slå på den igen"
+        category: notifications
+        sound: lose2
+        sound_repeat: 1
 #

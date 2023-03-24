@@ -648,12 +648,12 @@
       at: "18:00:00"
   condition:
     - condition: numeric_state
-      entity_id: sensor.akvarium_720_matsal
-      above: 27
+      entity_id: sensor.akvarium_matsal_720
+      above: 26.5
   action:
     - service: notify.mobile_app_clt_l29
       data:
-        message: "Börjar bli lite varmt i 720t i matsalen {{ states('sensor.akvarium_720_matsal') }}"
+        message: "Börjar bli lite varmt i 720t i matsalen {{ states('sensor.akvarium_matsal_720') }}"
 #
 - alias: "Akvarium_for_kallt_720_matsal"
   id: "Akvarium för kallt 720 matsal"
@@ -668,7 +668,7 @@
         - "12:00:00"
   condition:
     - condition: numeric_state
-      entity_id: sensor.akvarium_720_matsal
+      entity_id: sensor.akvarium_matsal_720
       below: 25.5
     - condition: state
       entity_id: input_boolean.720_matsal_water_change
@@ -676,7 +676,7 @@
   action:
     - service: notify.mobile_app_clt_l29
       data:
-        message: "Börjar bli lite kallt i 720t i matsalen {{ states('sensor.akvarium_720_matsal') }}"
+        message: "Börjar bli lite kallt i 720t i matsalen {{ states('sensor.akvarium_matsal_720') }}"
     - service: switch.turn_on
       target:
         entity_id:
@@ -691,12 +691,12 @@
       at: "18:00:00"
   condition:
     - condition: numeric_state
-      entity_id: sensor.filtered_720_v_aquarium
-      above: 27
+      entity_id: sensor.akvarium_720_hobbyrum_v
+      above: 26.5
   action:
     - service: notify.mobile_app_clt_l29
       data:
-        message: "Börjar bli lite varmt i 720t till vänster i hobbyrummet {{ states('sensor.filtered_720_v_aquarium') }}"
+        message: "Börjar bli lite varmt i 720t till vänster i hobbyrummet {{ states('sensor.akvarium_720_hobbyrum_v') }}"
 #
 - alias: "Akvarium_for_kallt_720_hobbyrum_v"
   id: "Akvarium för kallt 720 hobbyrum vänster"
@@ -711,7 +711,7 @@
         - "12:00:00"
   condition:
     - condition: numeric_state
-      entity_id: sensor.filtered_720_v_aquarium
+      entity_id: sensor.akvarium_720_hobbyrum_v
       below: 25.5
     - condition: state
       entity_id: input_boolean.720_hobbyrum_v_water_change
@@ -719,7 +719,7 @@
   action:
     - service: notify.mobile_app_clt_l29
       data:
-        message: "Börjar bli lite kallt i 720t till vänster i hobbyrummet {{ states('sensor.filtered_720_v_aquarium') }}"
+        message: "Börjar bli lite kallt i 720t till vänster i hobbyrummet {{ states('sensor.akvarium_720_hobbyrum_v') }}"
     - service: switch.turn_on
       target:
         entity_id:
@@ -734,12 +734,12 @@
       at: "18:00:00"
   condition:
     - condition: numeric_state
-      entity_id: sensor.filtered_1200_aquarium
-      above: 27
+      entity_id: sensor.akvarium_1200_hobbyrum
+      above: 26.5
   action:
     - service: notify.mobile_app_clt_l29
       data:
-        message: "Börjar bli lite varmt i 1200at i hobbyrummet {{ states('sensor.filtered_1200_aquarium') }}"
+        message: "Börjar bli lite varmt i 1200at i hobbyrummet {{ states('sensor.akvarium_1200_hobbyrum') }}"
 #
 - alias: "Akvarium_for_kallt_1200_hobbyrum"
   id: "Akvarium för kallt 1200 hobbyrum"
@@ -754,7 +754,7 @@
         - "12:00:00"
   condition:
     - condition: numeric_state
-      entity_id: sensor.filtered_1200_aquarium
+      entity_id: sensor.akvarium_1200_hobbyrum
       below: 25.5
     - condition: state
       entity_id: input_boolean.1200_water_change
@@ -762,7 +762,7 @@
   action:
     - service: notify.mobile_app_clt_l29
       data:
-        message: "Börjar bli lite kallt i 1200at i hobbyrummet {{ states('sensor.filtered_1200_aquarium') }}"
+        message: "Börjar bli lite kallt i 1200at i hobbyrummet {{ states('sensor.akvarium_1200_hobbyrum') }}"
     - service: switch.turn_on
       target:
         entity_id:
@@ -779,7 +779,7 @@
   condition:
     - condition: numeric_state
       entity_id: sensor.akvarium_400
-      above: 27
+      above: 26.5
   action:
     - service: notify.mobile_app_clt_l29
       data:
@@ -821,7 +821,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.akvarium_400
-      below: 26.0
+      below: 25.9
   condition:
     - condition: state
       entity_id: input_boolean.400_water_change
@@ -840,7 +840,7 @@
   trigger:
     - platform: numeric_state
       entity_id: sensor.akvarium_400
-      above: 26.2
+      above: 26.1
     - platform: state
       entity_id: sensor.akvarium_400
       to: "unavailable"
@@ -856,18 +856,17 @@
   mode: single
   trigger:
     - platform: numeric_state
-      entity_id: sensor.filtered_720_v_aquarium
-      below: 26.0
+      entity_id: sensor.akvarium_720_hobbyrum_v
+      below: 25.9
   condition:
     - condition: state
       entity_id: input_boolean.720_hobbyrum_v_water_change
       state: "off"
-    - "{{ (as_timestamp(now()) - as_timestamp(states.sensor.filtered_720_v_aquarium.last_updated) -60*60) | timestamp_custom('%H:%M:%S') < '00:30:00' }}"
+    - "{{ (as_timestamp(now()) - as_timestamp(states.sensor.akvarium_720_hobbyrum_v.last_updated) -60*60) | timestamp_custom('%H:%M:%S') < '00:30:00' }}"
   action:
     - service: switch.turn_on
       target:
-        entity_id:
-          - switch.akvarium_720_hobbyrum_v_heater
+        entity_id: switch.akvarium_720_hobbyrum_v_heater
 #
 - alias: "Akvarium_for_varmt_720_hobby_v_heater"
   id: "Akvarium för varmt 720 hobby v värmare"
@@ -875,16 +874,15 @@
   mode: single
   trigger:
     - platform: numeric_state
-      entity_id: sensor.filtered_720_v_aquarium
-      above: 26.2
+      entity_id: sensor.akvarium_720_hobbyrum_v
+      above: 26.1
     - platform: state
-      entity_id: sensor.filtered_720_v_aquarium
+      entity_id: sensor.akvarium_720_hobbyrum_v
       to: "unavailable"
   action:
     - service: switch.turn_off
       target:
-        entity_id:
-          - switch.akvarium_720_hobbyrum_v_heater
+        entity_id: switch.akvarium_720_hobbyrum_v_heater
 #
 - alias: "Akvarium_for_kallt_720_matsal_heater"
   id: "Akvarium för kallt 720 matsal värmare"
@@ -892,18 +890,17 @@
   mode: single
   trigger:
     - platform: numeric_state
-      entity_id: sensor.akvarium_720_matsal
-      below: 26.0
+      entity_id: sensor.akvarium_matsal_720
+      below: 25.9
   condition:
     - condition: state
       entity_id: input_boolean.720_matsal_water_change
       state: "off"
-    - "{{ (as_timestamp(now()) - as_timestamp(states.sensor.akvarium_720_matsal.last_updated) -60*60) | timestamp_custom('%H:%M:%S') < '00:30:00' }}"
+    - "{{ (as_timestamp(now()) - as_timestamp(states.sensor.akvarium_matsal_720.last_updated) -60*60) | timestamp_custom('%H:%M:%S') < '00:30:00' }}"
   action:
     - service: switch.turn_on
       target:
-        entity_id:
-          - switch.akvarium_720_matsal_heater
+        entity_id: switch.akvarium_720_matsal_heater
 #
 - alias: "Akvarium_for_varmt_720_matsal_heater"
   id: "Akvarium för varmt 720 matsal värmare"
@@ -911,16 +908,15 @@
   mode: single
   trigger:
     - platform: numeric_state
-      entity_id: sensor.akvarium_720_matsal
-      above: 26.2
+      entity_id: sensor.akvarium_matsal_720
+      above: 26.1
     - platform: state
-      entity_id: sensor.akvarium_720_matsal
+      entity_id: sensor.akvarium_matsal_720
       to: "unavailable"
   action:
     - service: switch.turn_off
       target:
-        entity_id:
-          - switch.akvarium_720_matsal_heater
+        entity_id: switch.akvarium_720_matsal_heater
 #
 - alias: "Akvarium_for_kallt_1200_heater"
   id: "Akvarium för kallt 1200 värmare"
@@ -928,18 +924,17 @@
   mode: single
   trigger:
     - platform: numeric_state
-      entity_id: sensor.filtered_1200_aquarium
-      below: 26.0
+      entity_id: sensor.akvarium_1200_hobbyrum
+      below: 25.9
   condition:
     - condition: state
       entity_id: input_boolean.1200_water_change
       state: "off"
-    - "{{ (as_timestamp(now()) - as_timestamp(states.sensor.filtered_1200_aquarium.last_updated) -60*60) | timestamp_custom('%H:%M:%S') < '00:30:00' }}"
+    - "{{ (as_timestamp(now()) - as_timestamp(states.sensor.akvarium_1200_hobbyrum.last_updated) -60*60) | timestamp_custom('%H:%M:%S') < '00:30:00' }}"
   action:
     - service: switch.turn_on
       target:
-        entity_id:
-          - switch.akvarium_1200_heater
+        entity_id: switch.akvarium_1200_heater
 #
 - alias: "Akvarium_for_varmt_1200_heater"
   id: "Akvarium för varmt 1200 värmare"
@@ -947,16 +942,15 @@
   mode: single
   trigger:
     - platform: numeric_state
-      entity_id: sensor.filtered_1200_aquarium
-      above: 26.2
+      entity_id: sensor.akvarium_1200_hobbyrum
+      above: 26.1
     - platform: state
-      entity_id: sensor.filtered_1200_aquarium
+      entity_id: sensor.akvarium_1200_hobbyrum
       to: "unavailable"
   action:
     - service: switch.turn_off
       target:
-        entity_id:
-          - switch.akvarium_1200_heater
+        entity_id: switch.akvarium_1200_heater
 #
 # Water change
 #
@@ -983,8 +977,7 @@
               title: "Stänga av vattenbytet"
     - service: switch.turn_off
       target:
-        entity_id:
-          - switch.akvarium_400_varmare
+        entity_id: switch.akvarium_400_varmare
 #
 - alias: "Akvarium_400_water_change_switch_off"
   id: "Akvarium 400 vattenbyte stänga av vattenbytet"
@@ -1002,8 +995,7 @@
   action:
     - service: input_boolean.turn_off
       target:
-        entity_id:
-          - input_boolean.400_water_change
+        entity_id: input_boolean.400_water_change
 #
 #
 - alias: "Akvarium_720_hobbyrum_v_water_change"
@@ -1029,8 +1021,7 @@
               title: "Stänga av vattenbytet"
     - service: switch.turn_off
       target:
-        entity_id:
-          - switch.akvarium_720_hobbyrum_v_heater
+        entity_id: switch.akvarium_720_hobbyrum_v_heater
 #
 - alias: "Akvarium_720_hobbyrum_v_water_change_switch_off"
   id: "Akvarium 720 hobbyrum vänster vattenbyte stänga av vattenbytet"
@@ -1048,8 +1039,7 @@
   action:
     - service: input_boolean.turn_off
       target:
-        entity_id:
-          - input_boolean.720_hobbyrum_v_water_change
+        entity_id: input_boolean.720_hobbyrum_v_water_change
 #
 #
 - alias: "Akvarium_720_matsal_water_change"
@@ -1075,8 +1065,7 @@
               title: "Stänga av vattenbytet"
     - service: switch.turn_off
       target:
-        entity_id:
-          - switch.akvarium_720_matsal_heater
+        entity_id: switch.akvarium_720_matsal_heater
 #
 - alias: "Akvarium_720_matsal_water_change_switch_off"
   id: "Akvarium 720 matsal vattenbyte stänga av vattenbytet"
@@ -1094,8 +1083,7 @@
   action:
     - service: input_boolean.turn_off
       target:
-        entity_id:
-          - input_boolean.720_matsal_water_change
+        entity_id: input_boolean.720_matsal_water_change
 #
 #
 - alias: "Akvarium_1200_water_change"
@@ -1121,8 +1109,7 @@
               title: "Stänga av vattenbytet"
     - service: switch.turn_off
       target:
-        entity_id:
-          - switch.akvarium_1200_heater
+        entity_id: switch.akvarium_1200_heater
 #
 - alias: "Akvarium_1200_hobbyrum_water_change_switch_off"
   id: "Akvarium 1200 hobbyrum vattenbyte stänga av vattenbytet"
@@ -1140,7 +1127,6 @@
   action:
     - service: input_boolean.turn_off
       target:
-        entity_id:
-          - input_boolean.1200_water_change
+        entity_id: input_boolean.1200_water_change
 #
 #

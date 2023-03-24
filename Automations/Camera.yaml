@@ -1,0 +1,81 @@
+#
+#
+#
+- alias: "camera_car_driveway_jimmy_home"
+  id: "Kamera bil infarten Jimmy hemma"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.driveway_cam_car_occupancy
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
+  action:
+    - delay:
+        seconds: 2
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Bil på infarten!"
+        data:
+          notification_icon: "mdi:camera"
+          image: "/api/camera_proxy/camera.driveway_cam"
+          ttl: 0
+          priority: high
+    - delay:
+        seconds: 20
+#
+- alias: "camera_person_entrance_jimmy_home"
+  id: "Kamera Person Entre Jimmy hemma"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.entrance_cam_person_occupancy
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
+  action:
+    - delay:
+        seconds: 2
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Person framför entren!"
+        data:
+          notification_icon: "mdi:camera"
+          image: "/api/camera_proxy/camera.kamera_entre"
+          ttl: 0
+          priority: high
+    - delay:
+        seconds: 20
+#
+- alias: "camera_cat_entrance_jimmy_home"
+  id: "Kamera Kattentre Jimmy hemma"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.vibration_kattlucka_vibration
+      to: "on"
+  condition:
+    - condition: state
+      entity_id: person.jimmy
+      state: "home"
+  action:
+    - delay:
+        seconds: 2
+    - service: notify.mobile_app_clt_l29
+      data:
+        message: "Kattluckan använd!"
+        data:
+          notification_icon: "mdi:camera"
+          image: "/api/camera_proxy/camera.camera_test2"
+          ttl: 0
+          priority: high
+    - delay:
+        seconds: 20
+#

@@ -24,42 +24,42 @@
           entity_id: input_boolean.visitors
           state: "on"
   action:
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Tvättmaskiner är klara!"
-        data:
-          icon: "a9482"
-          icon_type: "none"
-          sound: "negative4"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 2
+        icon: a9482
+        text: "Tvättmaskiner är klara!"
+        category: notifications
+        sound: negative4
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Tvättmaskiner är klara!"
-        data:
-          icon: "a9482"
-          icon_type: "none"
-          sound: "negative4"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 2
+        icon: a9482
+        text: "Tvättmaskiner är klara!"
+        category: notifications
+        sound: negative4
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Tvättmaskiner är klara!"
-        data:
-          icon: "a9482"
-          icon_type: "none"
-          sound: "negative4"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 2
+        icon: a9482
+        text: "Tvättmaskiner är klara!"
+        category: notifications
+        sound: negative4
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Tvättmaskiner är klara!"
-        data:
-          icon: "a9482"
-          icon_type: "none"
-          sound: "negative4"
-          priority: "warning"
-          cycles: 2
+        priority: warning
+        cycles: 2
+        icon: a9482
+        text: "Tvättmaskiner är klara!"
+        category: notifications
+        sound: negative4
+        sound_repeat: 1
     - service: notify.hanna_jimmy
       data:
         title: "Tvättmaskiner klara"
@@ -67,45 +67,42 @@
         data:
           notification_icon: "mdi:hanger"
     - delay: "00:01:00"
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Tvättmaskiner är klara!"
-        data:
-          icon: "a9482"
-          icon_type: "none"
-          sound: "negative4"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 2
+        icon: a9482
+        text: "Tvättmaskiner är klara!"
+        category: notifications
+        sound: negative4
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Tvättmaskiner är klara!"
-        data:
-          icon: "a9482"
-          icon_type: "none"
-          sound: "negative4"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 2
+        icon: a9482
+        text: "Tvättmaskiner är klara!"
+        category: notifications
+        sound: negative4
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Tvättmaskiner är klara!"
-        data:
-          icon: "a9482"
-          icon_type: "none"
-          sound: "negative4"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 2
+        icon: a9482
+        text: "Tvättmaskiner är klara!"
+        category: notifications
+        sound: negative4
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Tvättmaskiner är klara!"
-        data:
-          icon: "a9482"
-          icon_type: "none"
-          sound: "negative4"
-          priority: "warning"
-          cycles: 2
-#    - service: shell_command.lmvardagsrum_washers_ready
-#    - service: shell_command.lmsovrum_washers_ready
-#    - service: shell_command.lmmatsal_washers_ready
+        priority: warning
+        cycles: 2
+        icon: a9482
+        text: "Tvättmaskiner är klara!"
+        category: notifications
+        sound: negative4
+        sound_repeat: 1
     - service: switch.turn_off
       target:
         entity_id: switch.washers

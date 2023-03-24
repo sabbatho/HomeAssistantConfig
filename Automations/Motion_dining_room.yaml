@@ -71,6 +71,9 @@
       entity_id: binary_sensor.motion_matsal
       to: "on"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: or
       conditions:
       - condition: numeric_state
@@ -128,6 +131,9 @@
       for: "00:20:00"
   condition:
     - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
+    - condition: state
       entity_id: input_boolean.ensis_man_override
       state: "off"
   action:
@@ -147,6 +153,9 @@
       to: "off"
       for: "00:20:00"
   condition:
+    - condition: state
+      entity_id: input_boolean.firealarm
+      state: "off"
     - condition: state
       entity_id: input_boolean.ensis_man_override
       state: "off"

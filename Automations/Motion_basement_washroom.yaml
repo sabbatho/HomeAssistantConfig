@@ -12,14 +12,28 @@
       entity_id: binary_sensor.motion_tvattstuga_occupancy
       to: "on"
   condition:
-    - condition: or
-      conditions:
+    - or:
+      - and:
         - condition: state
           entity_id: person.jimmy
           state: "home"
         - condition: state
+          entity_id: sensor.clt_l29_charger_type
+          state: "none"
+      - and:
+        - condition: state
           entity_id: person.hanna
           state: "home"
+        - condition: state
+          entity_id: sensor.hanna_charger_type
+          state: "none"
+      - and:
+        - condition: state
+          entity_id: person.jimmy
+          state: "not_home"
+        - condition: state
+          entity_id: person.hanna
+          state: "not_home"
         - condition: state
           entity_id: input_boolean.visitors
           state: "on"

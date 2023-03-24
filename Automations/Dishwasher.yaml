@@ -34,50 +34,42 @@
           entity_id: person.hanna
           state: "home"
   action:
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmvardagsrum_post_notification
       data:
-        message: >
+        priority: info
+        cycles: 2
+        icon: a17590
+        text: >
           {{ states('sensor.diskmaskin_program_progress') }}% klart, 
           {{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int }} 
           minuter kvar, klar {{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom('%H:%M') }}
-        data:
-          icon: "a17590"
-          icon_type: "none"
-          priority: "info"
-          cycles: 2
-    - service: notify.lmmatsal
+    - service: rest_command.lmmatsal_post_notification
       data:
-        message: >
+        priority: info
+        cycles: 2
+        icon: a17590
+        text: >
           {{ states('sensor.diskmaskin_program_progress') }}% klart, 
           {{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int }} 
           minuter kvar, klar {{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom('%H:%M') }}
-        data:
-          icon: "a17590"
-          icon_type: "none"
-          priority: "info"
-          cycles: 2
-    - service: notify.lmsovrum
+    - service: rest_command.lmsovrum_post_notification
       data:
-        message: >
+        priority: info
+        cycles: 2
+        icon: a17590
+        text: >
           {{ states('sensor.diskmaskin_program_progress') }}% klart, 
           {{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int }} 
           minuter kvar, klar {{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom('%H:%M') }}
-        data:
-          icon: "a17590"
-          icon_type: "none"
-          priority: "info"
-          cycles: 2
-    - service: notify.lmvardagsrum
+    - service: rest_command.lmhobbyrum_post_notification
       data:
-        message: >
+        priority: info
+        cycles: 2
+        icon: a17590
+        text: >
           {{ states('sensor.diskmaskin_program_progress') }}% klart, 
           {{ ((as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) - as_timestamp(now())) /60) | int }} 
           minuter kvar, klar {{ as_timestamp(states.sensor.diskmaskin_remaining_program_time.state) | timestamp_custom('%H:%M') }}
-        data:
-          icon: "a17590"
-          icon_type: "none"
-          priority: "info"
-          cycles: 2
 #
 - alias: "notification_dishes_done"
   id: "Notifiering när diskmaskinen är klar"
@@ -110,42 +102,42 @@
           entity_id: input_boolean.visitors
           state: "on"
   action:
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Diskmaskinen är klar!"
-        data:
-          icon: "a17590"
-          icon_type: "none"
-          sound: "positive2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 2
+        icon: a17590
+        text: "Diskmaskinen är klar!"
+        category: notifications
+        sound: positive2
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Diskmaskinen är klar! - Det är {{ states('input_number.disktabletter') }} disktabletter kvar."
-        data:
-          icon: "a17590"
-          icon_type: "none"
-          sound: "positive2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 2
+        icon: a17590
+        text: "Diskmaskinen är klar!"
+        category: notifications
+        sound: positive2
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Diskmaskinen är klar!"
-        data:
-          icon: "a17590"
-          icon_type: "none"
-          sound: "positive2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 2
+        icon: a17590
+        text: "Diskmaskinen är klar!"
+        category: notifications
+        sound: positive2
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Diskmaskinen är klar!"
-        data:
-          icon: "a17590"
-          icon_type: "none"
-          sound: "positive2"
-          priority: "warning"
-          cycles: 2
+        priority: warning
+        cycles: 2
+        icon: a17590
+        text: "Diskmaskinen är klar!"
+        category: notifications
+        sound: positive2
+        sound_repeat: 1
     - service: notify.hanna_jimmy
       data:
         title: "Diskmaskin klar"
@@ -176,7 +168,7 @@
   trigger:
     - platform: numeric_state
       entity_id: input_number.disktabletter
-      below: 10
+      below: 20
   action:
     - service: shopping_list.add_item
       data:

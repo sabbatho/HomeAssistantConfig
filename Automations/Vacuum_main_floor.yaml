@@ -32,10 +32,10 @@
 #       state: "off"
 #   action:
 #     - service: vacuum.start
-#       entity_id: vacuum.roborock_s5_max
+#       entity_id: vacuum.dreame_bot_z10_pro
 #
-- alias: "Robot cleanup if not cleaned for X days"
-  id: "Robot städa om inte städat på X antal dagar"
+- alias: "Robot cleanup upstairs if not cleaned for X days"
+  id: "Robot uppe städa om inte städat på X antal dagar"
   initial_state: true
   mode: single
   trigger:
@@ -51,9 +51,9 @@
         - fri
         - sat
         - sun
-    - condition: state
-      entity_id: input_boolean.cleaned_today
-      state: "off"
+#    - condition: state
+#      entity_id: input_boolean.cleaned_today
+#      state: "off"
     - condition: state
       entity_id: input_boolean.visitors
       state: "off"
@@ -66,8 +66,61 @@
           entity_id: person.hanna
           state: "home"
   action:
-    - service: vacuum.start
-      entity_id: vacuum.roborock_s5_max
+#    - service: vacuum.start
+#      entity_id: vacuum.dreame_bot_z10_pro
+    - service: dreame_vacuum.vacuum_clean_segment
+      target:
+        entity_id: vacuum.dreame_bot_z10_pro
+      data:
+        segments:
+          - 4
+          - 3
+          - 2
+          - 5
+#
+- alias: "Robot cleanup upstairs if not cleaned for X days2"
+  id: "Robot uppe städa om inte städat på X antal dagar2"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: input_datetime.vacuum_main_floor_start2
+  condition:
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+        - sat
+        - sun
+#    - condition: state
+#      entity_id: input_boolean.cleaned_today
+#      state: "off"
+    - condition: state
+      entity_id: input_boolean.visitors
+      state: "off"
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: person.jimmy
+          state: "home"
+        - condition: state
+          entity_id: person.hanna
+          state: "home"
+  action:
+#    - service: vacuum.start
+#      entity_id: vacuum.dreame_bot_z10_pro
+    - service: dreame_vacuum.vacuum_clean_segment
+      target:
+        entity_id: vacuum.dreame_bot_z10_pro
+      data:
+        segments:
+          - 1
+          - 8
+          - 7
+          - 6
 #
 - alias: "Robot_cleaned_empty_bin"
   id: "Robot städat dags att tömma"
@@ -82,13 +135,13 @@
       to: "home"
     - platform: numeric_state
       entity_id: counter.robot_counter_empty_bin
-      above: 2
+      above: 8
   condition:
     - condition: numeric_state
       entity_id: counter.robot_counter_empty_bin
-      above: 2
+      above: 8
     - condition: state
-      entity_id: vacuum.roborock_s5_max
+      entity_id: vacuum.dreame_bot_z10_pro
       state: "docked"
     - condition: or
       conditions:
@@ -98,12 +151,15 @@
         - condition: state
           entity_id: person.hanna
           state: "home"
+    - condition: time
+      weekday:
+        - sat
   action:
     - delay:
         seconds: 10
     - service: vacuum.send_command
       target:
-        entity_id: "vacuum.roborock_s5_max"
+        entity_id: "vacuum.dreame_bot_z10_pro"
       data:
         command: app_goto_target
         params: [22800, 30800]
@@ -125,13 +181,13 @@
       target:
         entity_id: input_boolean.cleaned_today
 #
-- alias: "roborock_started_cleaning"
+- alias: "robot_upstairs_started_cleaning"
   id: "Robot: Robot started cleaning"
   initial_state: true
   mode: single
   trigger:
     - platform: state
-      entity_id: vacuum.roborock_s5_max
+      entity_id: vacuum.dreame_bot_z10_pro
       from: "docked"
       to: "cleaning"
   action:
@@ -146,44 +202,35 @@
               title: "Docka robot"
             - action: "ROBOT_STANNA"
               title: "Pausa robot"
-#    - service: notify.lmhobbyrum
-#      data:
-#        message: "Robot börjar städa!"
-#        data:
-#          icon: "a13030"
-#          icon_type: "none"
-#          sound: "bicycle"
-#          priority: "warning"
-#          cycles: 2
-    - service: notify.lmmatsal
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Robot börjar städa!"
-        data:
-          icon: "a13030"
-          icon_type: "none"
-          sound: "bicycle"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Robot börjar städa!"
+        category: notifications
+        sound: bicycle
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Robot börjar städa!"
-        data:
-          icon: "a13030"
-          icon_type: "none"
-          sound: "bicycle"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Robot börjar städa!"
+        category: notifications
+        sound: bicycle
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Robot börjar städa!"
-        data:
-          icon: "a13030"
-          icon_type: "none"
-          sound: "bicycle"
-          priority: "warning"
-          cycles: 2
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Robot börjar städa!"
+        category: notifications
+        sound: bicycle
+        sound_repeat: 1
 #
-- alias: "roborock_back_to_dock"
+- alias: "robot_upstairs_back_to_dock"
   id: "Robot åk hem"
   initial_state: true
   mode: single
@@ -195,9 +242,9 @@
   action:
     - service: vacuum.return_to_base
       target:
-        entity_id: vacuum.roborock_s5_max
+        entity_id: vacuum.dreame_bot_z10_pro
 #
-- alias: "roborock_paused"
+- alias: "robot_upstairs_paused"
   id: "Robot pausa"
   initial_state: true
   mode: single
@@ -209,63 +256,55 @@
   action:
     - service: vacuum.pause
       target:
-        entity_id: vacuum.roborock_s5_max
+        entity_id: vacuum.dreame_bot_z10_pro
 #
-- alias: "roborock_finished_cleaning"
+- alias: "robot_upstairs_finished_cleaning"
   id: "Robot: Robot finished cleaning"
   initial_state: true
   mode: single
   trigger:
     - platform: state
-      entity_id: vacuum.roborock_s5_max
+      entity_id: vacuum.dreame_bot_z10_pro
       from: "returning"
       to: "docked"
   action:
     - service: notify.hanna_jimmy
       data:
         title: "Robot klar"
-        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
+        message: "Städat klart! Tog {{ states('sensor.dreame_bot_z10_pro_cleaning_time') }} min, på {{ states('sensor.dreame_bot_z10_pro_cleaned_area') | round(0) }} kvadrat."
+#        message: "Städat klart! Tog {{ (states('sensor.dreame_bot_z10_pro_cleaning_time') | int /60) | round(0) }} min, på {{ states('sensor.dreame_bot_z10_pro_cleaned_area') | round(0) }} kvadrat."
         data:
           notification_icon: "mdi:robot-vacuum"
     - service: input_boolean.turn_on
       target:
         entity_id: input_boolean.cleaned_today
-#    - service: notify.lmhobbyrum
-#      data:
-#        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
-#        data:
-#          icon: "a13030"
-#          icon_type: "none"
-#          sound: "notification2"
-#          priority: "warning"
-#          cycles: 2
-    - service: notify.lmmatsal
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
-        data:
-          icon: "a13030"
-          icon_type: "none"
-          sound: "notification2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Städat klart! Tog {{ states('sensor.dreame_bot_z10_pro_cleaning_time') }} min, på {{ states('sensor.dreame_bot_z10_pro_cleaned_area') | round(0) }} kvadrat."
+        category: notifications
+        sound: notification2
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
-        data:
-          icon: "a13030"
-          icon_type: "none"
-          sound: "notification2"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Städat klart! Tog {{ states('sensor.dreame_bot_z10_pro_cleaning_time') }} min, på {{ states('sensor.dreame_bot_z10_pro_cleaned_area') | round(0) }} kvadrat."
+        category: notifications
+        sound: notification2
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Städat klart! Tog {{ (states('sensor.roborock_s5_max_last_clean_duration') | int /60) | round(0) }} min, på {{ states('sensor.roborock_s5_max_last_clean_area') | round(0) }} kvadrat."
-        data:
-          icon: "a13030"
-          icon_type: "none"
-          sound: "notification2"
-          priority: "warning"
-          cycles: 2
+        priority: warning
+        cycles: 2
+        icon: a13030
+        text: "Städat klart! Tog {{ states('sensor.dreame_bot_z10_pro_cleaning_time') }} min, på {{ states('sensor.dreame_bot_z10_pro_cleaned_area') | round(0) }} kvadrat."
+        category: notifications
+        sound: notification2
+        sound_repeat: 1
     - service: counter.increment
       target:
         entity_id: counter.robot_counter_empty_bin
@@ -275,19 +314,21 @@
       data:
         timestamp: "{{ (now().timestamp() +25*60*60) }}"
 #
-- alias: "roborock_error"
+- alias: "robot_upstairs_error"
   id: "Robot: Error"
   initial_state: true
   mode: single
   trigger:
     - platform: state
-      entity_id: vacuum.roborock_s5_max
+      entity_id: vacuum.dreame_bot_z10_pro
       to: "error"
+      for:
+        seconds: 2
   action:
     - service: notify.hanna_jimmy
       data:
         title: "Robot har stött på problem"
-        message: "Error: {{ state_attr('vacuum.roborock_s5_max', 'error') }}."
+        message: "Error: {{ states('vacuum.dreame_bot_z10_pro_error') }}."
         data:
           notification_icon: "mdi:robot-vacuum-alert"
 #

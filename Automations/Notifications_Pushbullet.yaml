@@ -1,0 +1,32 @@
+############################################
+##
+## Notifications Pushbullet automations
+##
+############################################
+
+
+
+############################################
+##
+## All
+##
+############################################
+
+
+#
+- id: "Update available notification"
+  alias: "Notifiering mobil ny uppdatering"
+  initial_state: true
+  mode: single
+  trigger:
+    - platform: time
+      at: "19:00:00"
+  condition:
+    - "{{ states('sensor.hass_installed_version') != states('sensor.hass_current_version') }}"
+  action:
+    - service: notify.pushbullet
+      data: 
+        title: "Ny Home Assistant version"
+        message: "Home Assistant {{ states('sensor.hass_current_version') }} finns nu att installeras"
+        target: device/privata
+#

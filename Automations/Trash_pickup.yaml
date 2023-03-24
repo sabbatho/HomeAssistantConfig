@@ -40,40 +40,40 @@
       - mon
     - "{{ now().isocalendar()[1] % 2 == 1 }}"
   action:
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Sophämtning imorgon, är tunnorna framme?"
-        data:
-          icon: "i16307"
-          icon_type: "none"
-          sound: "open_door"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 2
+        icon: i16307
+        text: "Sophämtning imorgon, är tunnorna framme?"
+        category: notifications
+        sound: open_door
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Sophämtning imorgon, är tunnorna framme?"
-        data:
-          icon: "i16307"
-          icon_type: "none"
-          sound: "open_door"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 2
+        icon: i16307
+        text: "Sophämtning imorgon, är tunnorna framme?"
+        category: notifications
+        sound: open_door
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Sophämtning imorgon, är tunnorna framme?"
-        data:
-          icon: "i16307"
-          icon_type: "none"
-          sound: "open_door"
-          priority: "warning"
-          cycles: 2
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 2
+        icon: i16307
+        text: "Sophämtning imorgon, är tunnorna framme?"
+        category: notifications
+        sound: open_door
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Sophämtning imorgon, är tunnorna framme?"
-        data:
-          icon: "i16307"
-          icon_type: "none"
-          sound: "open_door"
-          priority: "warning"
-          cycles: 2
+        priority: warning
+        cycles: 2
+        icon: i16307
+        text: "Sophämtning imorgon, är tunnorna framme?"
+        category: notifications
+        sound: open_door
+        sound_repeat: 1
 #

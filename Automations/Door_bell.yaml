@@ -13,42 +13,42 @@
     - service: switch.turn_on
       target:
         entity_id: switch.door_bell_bell
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Det ringer på dörren!"
-        data:
-          icon: "a42480"
-          icon_type: "none"
-          sound: "knock-knock"
-          priority: "warning"
-          cycles: 1
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 1
+        icon: a42480
+        text: Det ringer på dörren!
+        category: notifications
+        sound: knock-knock
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Det ringer på dörren!"
-        data:
-          icon: "a42480"
-          icon_type: "none"
-          sound: "knock-knock"
-          priority: "warning"
-          cycles: 1
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 1
+        icon: a42480
+        text: Det ringer på dörren!
+        category: notifications
+        sound: knock-knock
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Det ringer på dörren!"
-        data:
-          icon: "a42480"
-          icon_type: "none"
-          sound: "knock-knock"
-          priority: "warning"
-          cycles: 1
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 1
+        icon: a42480
+        text: Det ringer på dörren!
+        category: notifications
+        sound: knock-knock
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Det ringer på dörren!"
-        data:
-          icon: "a42480"
-          icon_type: "none"
-          sound: "knock-knock"
-          priority: "warning"
-          cycles: 1
+        priority: warning
+        cycles: 1
+        icon: a42480
+        text: Det ringer på dörren!
+        category: notifications
+        sound: knock-knock
+        sound_repeat: 1
     - service: camera.snapshot
       target:
         entity_id: camera.kamera_entre
@@ -71,42 +71,42 @@
               title: "Starta retardlarmet"
     - delay:
         seconds: 10
-    - service: notify.lmhobbyrum
+    - service: rest_command.lmhobbyrum_post_notification_sound
       data:
-        message: "Det ringer på dörren!"
-        data:
-          icon: "a42480"
-          icon_type: "none"
-          sound: "knock-knock"
-          priority: "warning"
-          cycles: 1
-    - service: notify.lmmatsal
+        priority: warning
+        cycles: 1
+        icon: a42480
+        text: Det ringer på dörren!
+        category: notifications
+        sound: knock-knock
+        sound_repeat: 1
+    - service: rest_command.lmmatsal_post_notification_sound
       data:
-        message: "Det ringer på dörren!"
-        data:
-          icon: "a42480"
-          icon_type: "none"
-          sound: "knock-knock"
-          priority: "warning"
-          cycles: 1
-    - service: notify.lmsovrum
+        priority: warning
+        cycles: 1
+        icon: a42480
+        text: Det ringer på dörren!
+        category: notifications
+        sound: knock-knock
+        sound_repeat: 1
+    - service: rest_command.lmsovrum_post_notification_sound
       data:
-        message: "Det ringer på dörren!"
-        data:
-          icon: "a42480"
-          icon_type: "none"
-          sound: "knock-knock"
-          priority: "warning"
-          cycles: 1
-    - service: notify.lmvardagsrum
+        priority: warning
+        cycles: 1
+        icon: a42480
+        text: Det ringer på dörren!
+        category: notifications
+        sound: knock-knock
+        sound_repeat: 1
+    - service: rest_command.lmvardagsrum_post_notification_sound
       data:
-        message: "Det ringer på dörren!"
-        data:
-          icon: "a42480"
-          icon_type: "none"
-          sound: "knock-knock"
-          priority: "warning"
-          cycles: 1
+        priority: warning
+        cycles: 1
+        icon: a42480
+        text: Det ringer på dörren!
+        category: notifications
+        sound: knock-knock
+        sound_repeat: 1
     - delay:
         seconds: 10
 #
@@ -130,7 +130,8 @@
         title: "Det ringer på dörren!"
         message: TTS
         data:
-          image: "/api/camera_proxy/camera.kamera_entre"
+          tts_text: "Det ringer på dörren!"
+#          image: "/api/camera_proxy/camera.kamera_entre"
           ttl: 0
           priority: high
           channel: alarm_stream_max
@@ -157,7 +158,8 @@
         title: "Det ringer på dörren!"
         message: TTS
         data:
-          image: "/api/camera_proxy/camera.kamera_entre"
+          tts_text: "Det ringer på dörren!"
+#          image: "/api/camera_proxy/camera.kamera_entre"
           ttl: 0
           priority: high
           channel: alarm_stream_max
